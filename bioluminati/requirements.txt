@@ -1,0 +1,2 @@
+django-bootstrap3==6.2.2
+wheel==0.24.0

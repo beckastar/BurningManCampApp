@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from models import mealShifts
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import MealForm
@@ -23,7 +24,7 @@ def signup(request):
 	else:
 		form = MealForm()
 			
-	return HttpResponse('signup.html', context_data)
+	return render_to_response('signup.html', {'form':form})
 
 
 
