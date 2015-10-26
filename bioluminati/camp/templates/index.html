@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>HELLO WORLD</h1>
+
+<ul>
+	{% for shift in shifts %}
+	<li>{{ shift.meal }}</li>
+	<li>{{ shift.camper }}</li>
+	{% endfor %}
+</ul>
+
+</form>
+{% endblock %}
