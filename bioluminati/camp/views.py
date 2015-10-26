@@ -24,14 +24,6 @@ def signup(request):
 	else:
 		form = MealForm()
 			
-	return render_to_response('signup.html', {'form':form,})
+	return render_to_response('signup.html', {'form':form,}, context_instance = RequestContext(request))
 
 
-
-# class MealView(FormView):
-# 	template_name = 'signup.html'
-# 	form_class = MealForm
-# 	success_url = '/thanks/'
-
-# 	def form_valid(self, form):
-# 		return super(MealView, self).form_valid(form)

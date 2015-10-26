@@ -7,12 +7,7 @@ from .models import mealShifts
 
 
 class MealForm(ModelForm):
-	day = forms.CharField(max_length = 100, widget=forms.Select()) 
 		
 	class Meta:
 		model = mealShifts
 		fields = '__all__'
-
-# form = MealForm(request.POST)
-# new_mealShift = form.save()
-

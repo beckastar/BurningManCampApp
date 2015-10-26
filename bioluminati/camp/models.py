@@ -4,17 +4,18 @@ from django.forms import ModelForm
 
 class mealShifts(models.Model):
 	Sunday = "Sunday"
-	Monday="Monday"
+	Monday = "Monday"
 	Tuesday = "Tuesday"
 	Wednesday = "Wednesday"
 	Thursday = "Thursday"
 	Friday = "Friday"
-	Days_with_meals = (
+	Days = (
 		(Sunday, "Sunday"),
 		(Monday, "Monday"),
 		(Tuesday, "Tuesday"),
 		(Wednesday, "Wednesday"),
 		(Thursday, "Thursday"),
+		(Friday, "Friday"),
 		)
 	Breakfast = "Breakfast"
 	Dinner = "Dinner"
@@ -31,8 +32,8 @@ class mealShifts(models.Model):
 		(KP, "KP"),
 		)
 	assigned = models.BooleanField(default=False)
-	day = models.CharField(max_length = 7, choices=Days_with_meals, default=Sunday)
-	meal = models.CharField(max_length = 10, choices=Meals, default=Breakfast)
+	day = models.CharField(max_length = 10, choices=Days, default=Sunday)
+	meal = models.CharField(max_length = 10, choices=Meals, default=Dinner)
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
 	camper = models.CharField(max_length = 30, default="none")
 
