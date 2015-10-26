@@ -11,7 +11,8 @@ class MealForm(ModelForm):
 		
 	class Meta:
 		model = mealShifts
-		fields = ['day']
+		fields = '__all__'
 
-form = MealForm()
+# form = MealForm(request.POST)
+# new_mealShift = form.save()
 

@@ -18,13 +18,13 @@ def signup(request):
 		form = MealForm(request.POST)
 		if form.is_valid():
 			form.save(commit=True)
-			return index(request)
-		else:
-			print form.errors 
+			# return index(request)
+		# else:
+		# 	print form.errors 
 	else:
 		form = MealForm()
 			
-	return render_to_response('signup.html', {'form':form})
+	return render_to_response('signup.html', {'form':form,})
 
 
 
