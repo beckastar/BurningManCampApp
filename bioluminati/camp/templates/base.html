@@ -1,20 +1,36 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shifts</title>
-    <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-   <div class="container">
-   <h1>Hello</h1>
-    {% block content %}
-    {% endblock %}
-   
+    <!-- <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css"> -->
+    <script src="{% static 'javascript/parallax/parallax.min.js' %}"></script>
+    <script src="{% static 'javascript/scripts/base.js' %}"></script>
+ </head>
+ <body>
+    <header>
+        <div class="headercontainer">
+          <ul id="nav">
+            <li><a href="#">Kitchen</a></li>
+            <li><a href="#">Bikes</a></li>
+            <li><a href="#">Luminaries</a></li>
+            <li><a href="#">Board</a></li>
+          </ul>
+        </div>
+      </header>
+      <!-- <div id="main"> -->
+        <div id="main" class ="parallax-window" data-parallax='scroll'  data-image-src="{% static 'images/stilts.jpeg' %}">
+          {% block content %}
+          {% endblock %}
+        </div>
+      <footer>content
+      <img id="logo" src="{% static 'images/manlogo.png' %}">
+      </footer>
    </div>
   </body>
 </html>

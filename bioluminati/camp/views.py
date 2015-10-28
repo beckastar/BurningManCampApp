@@ -13,17 +13,18 @@ def index(request):
 	return render(request, "index.html", {'shifts':shifts})
 
 def signup(request):
+	shifts = mealShifts.objects.all()
 	# context = RequestContext(request)
 	if request.method == 'POST':
 		form = MealForm(request.POST)
 		if form.is_valid():
-			form.save(commit=True)
-			# return index(request)
+			form.save()
+			return index(request)
 		# else:
 		# 	print form.errors 
 	else:
 		form = MealForm()
 			
-	return render_to_response('signup.html', {'form':form,}, context_instance = RequestContext(request))
+	return render_to_response('signup.html', RequestContext(request, {'form':form,'shifts':shifts},))
 
 

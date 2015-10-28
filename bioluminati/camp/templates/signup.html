@@ -1,12 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Signup!</h1>
+<div class="formfloatleft">
+	<h2>Shifts</h2>
+	<div id="datatable">
+		<ul>
+			{% for shift in shifts %}
+			<li>{{shift.day}} {{ shift.meal }} {{ shift.camper }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
 
-<form method="post" action="">
-	{% csrf_token %}
-    {{ form }}
-<input type="submit" value="sign me up!">
-
+<div class="formfloatright">
+	<h2>Sign up for a shift</h2>
+	<form method="post" action="">
+		{% csrf_token %}
+	    <!-- {{ form }} -->
+	   <ul>
+	    <li>{{form.day}}</li>
+	    <li>{{form.shift}}</li>
+	    <li>{{form.meal}}</li>
+	    <li>{{form.camper}}</li>
+	    </ul>
+	    <input type="submit" value="sign me up!">
+	</form>
+</div>
 
 {% endblock %}

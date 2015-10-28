@@ -11,3 +11,8 @@ class MealForm(ModelForm):
 	class Meta:
 		model = mealShifts
 		fields = '__all__'
+	def clean(self):		
+	    data = self.cleaned_data
+	    #check whether data is present as your wish 
+	    #if exists raise Validation error.
+	    return super(MealForm, self).clean()

@@ -37,5 +37,10 @@ class mealShifts(models.Model):
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
 	camper = models.CharField(max_length = 30, default="none")
 
+	class Meta:
+		unique_together = ("day", "meal", "shift")
+
 	def __str__(self):
-		return self.day
+		return '%s %s %s %s'%(self.day, self.meal, self.shift, self.camper)
+
+		 
