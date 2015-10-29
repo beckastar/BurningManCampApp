@@ -15,16 +15,18 @@
  <body>
     <header>
         <div class="headercontainer">
+          <img id="zeroninebio" src="{% static 'images/2009bio.png' %}">
           <ul id="nav">
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Campers</a></li>
+            <li><a href="#">Burn Prep</a></li>
             <li><a href="#">Kitchen</a></li>
-            <li><a href="#">Bikes</a></li>
-            <li><a href="#">Luminaries</a></li>
-            <li><a href="#">Board</a></li>
+            <li><a href="#">Login</a></li>
           </ul>
         </div>
       </header>
       <!-- <div id="main"> -->
-        <div id="main" class ="parallax-window" data-parallax='scroll'  data-image-src="{% static 'images/stilts.jpeg' %}">
+        <div id="main" class ="parallax-window" data-parallax='scroll'  data-image-src="{% static 'images/' %}">
           {% block content %}
           {% endblock %}
         </div>
