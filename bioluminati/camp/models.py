@@ -35,7 +35,7 @@ class mealShifts(models.Model):
 	day = models.CharField(max_length = 10, choices=Days, default=Sunday)
 	meal = models.CharField(max_length = 10, choices=Meals, default=Dinner)
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
-	camper = models.OneToOneField(User)
+	camper = models.ForeignKey(User, unique=False)
 	# change above to models.OneToOneField(User)
 
 	class Meta:

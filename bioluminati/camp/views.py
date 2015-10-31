@@ -16,11 +16,16 @@ def index(request):
 def login(request):
     return render(request, 'login.html')
 
+@login_required
 def profile(request):
 	return render(request, "profile.html")
 
+# @login_required(login_url='login.html')
 def signup(request):
 	shifts = mealShifts.objects.all()
+	username = None
+	if request.user.is_authenticated():
+		username = request.user.get_username()
 	# context = RequestContext(request)
 	if request.method == 'POST':
 		form = MealForm(request.POST)
@@ -32,7 +37,7 @@ def signup(request):
 	else:
 		form = MealForm()
 			
-	return render_to_response('signup.html', RequestContext(request, {'form':form,'shifts':shifts},))
+	return render_to_response('signup.html', RequestContext(request, {'form':form,'shifts':shifts, 'username':username},))
 
 # def register(request):
 #     if request.method == 'POST':

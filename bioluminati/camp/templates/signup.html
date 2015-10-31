@@ -5,8 +5,9 @@
 	<h2>Shifts</h2>
 	<div id="datatable">
 		<ul>
+			<!-- {{ username }} -->
 			{% for shift in shifts %}
-			<li>{{shift.day}} {{ shift.meal }} {{ shift.camper }}</li>
+			<li>{{shift.day}} {{ shift.meal }} </li>
 			{% endfor %}
 		</ul>
 	</div>
