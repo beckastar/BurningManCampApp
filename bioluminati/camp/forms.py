@@ -8,12 +8,7 @@ from .models import mealShifts, UserProfile
 class MealForm(ModelForm):
 	class Meta:
 		model = mealShifts
-		fields = '__all__'
-	def clean(self):		
-	    data = self.cleaned_data
-	    #check whether data is present as your wish 
-	    #if exists raise Validation error.
-	    return super(MealForm, self).clean()
+		fields = ('assigned', 'day', 'meal', 'shift')
 
 class UserForm(ModelForm):
     class Meta:
@@ -26,3 +21,10 @@ class UserProfileForm(ModelForm):
         fields = ('website', 'picture')
         exclude = ['user']
 
+class ChefForm(forms.Form):
+	need_courier = form.BooleanField()
+	number_of_sous = form.IntegerField(default=0)
+	number_of_kp = form.IntegerField(default=0)
+
+	def save(self, *args, **kwargs):
+		... 

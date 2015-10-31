@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from models import mealShifts
 from django.shortcuts import render_to_response, get_object_or_404
@@ -24,20 +24,25 @@ def profile(request):
 def signup(request):
 	shifts = mealShifts.objects.all()
 	username = None
-	if request.user.is_authenticated():
-		username = request.user.get_username()
+	# remove this when @login_required is added.
+	if not request.user.is_authenticated():
+		return #login_required would redirect anyway..
+
 	# context = RequestContext(request)
 	if request.method == 'POST':
 		form = MealForm(request.POST)
 		if form.is_valid():
-			form.save()
-			return index(request)
+			shift = form.save(commit=False)
+			shift.camper = request.user
+			shift.save()
+			return redirect('signup')
 		# else:
 		# 	print form.errors 
 	else:
 		form = MealForm()
 			
-	return render_to_response('signup.html', RequestContext(request, {'form':form,'shifts':shifts, 'username':username},))
+	return render_to_response('signup.html', 
+		RequestContext(request, {'form':form,'shifts':shifts, 'username':username},))
 
 # def register(request):
 #     if request.method == 'POST':
