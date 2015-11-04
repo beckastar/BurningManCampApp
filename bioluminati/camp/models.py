@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
-class mealShifts(models.Model):
+class MealShift(models.Model):
     Sunday = "Sunday"
     Monday = "Monday"
     Tuesday = "Tuesday"

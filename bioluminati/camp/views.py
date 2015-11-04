@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from models import mealShifts
+from models import MealShift
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import MealForm
 from django.core.context_processors import csrf
@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
 def index(request):
-    shifts = mealShifts.objects.all()
+    shifts = MealShift.objects.all()
     return render(request, "index.html", {'shifts':shifts})
 
 def login(request):
@@ -22,7 +22,7 @@ def profile(request):
 
 # @login_required(login_url='login.html')
 def signup(request):
-    shifts = mealShifts.objects.all()
+    shifts = MealShift.objects.all()
     username = None
     # remove this when @login_required is added.
     if not request.user.is_authenticated():

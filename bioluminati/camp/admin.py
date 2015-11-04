@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import mealShifts
+from .models import MealShift
 
-admin.site.register(mealShifts)
+admin.site.register(MealShift)
