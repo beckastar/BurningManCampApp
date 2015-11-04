@@ -26,5 +26,5 @@ class ChefForm(forms.Form):
     number_of_sous = form.IntegerField(default=0)
     number_of_kp = form.IntegerField(default=0)
 
-	def save(self, *args, **kwargs):
-		... 
+    def save(self, *args, **kwargs):
+        pass
