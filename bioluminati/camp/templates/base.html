@@ -6,8 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shifts</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Warnes' rel='stylesheet' type='text/css'>
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- <link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css"> -->
     <script src="{% static 'javascript/parallax/parallax.min.js' %}"></script>
     <script src="{% static 'javascript/scripts/base.js' %}"></script>
@@ -15,11 +16,17 @@
  <body>
     <header>
         <div class="headercontainer">
+            <div id="headertext">
+              <span class="neon word1">to</span> <span class="neon word2">boldly </span><span class="neon word3">glow </span><span class="neon word4">where</span> <span class="neon word5">nobody </span> <span class="neon word6">has</span><span class="neon word7"> glowed </span><span class="neon word8">before</span>
+            </div>
             <div id="container">
               <div class="dot"></div>
               <div class="pulse"></div>
+              <img id="biotire" src="{% static 'images/biotire.gif' %}">
             </div>
-          </div>
+            <div id="hands">
+            </div>
+        </div>
           <ul id="nav">
             <li><a href="#">Contact</a></li>
             <li><a href="#">Campers</a></li>

@@ -18,13 +18,13 @@ class UserForm(ModelForm):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('website', 'picture')
+        fields = ('website', 'picture', 'city', 'number_of_burns', 'years_with_bio')
         exclude = ['user']
 
-class ChefForm(forms.Form):
-	need_courier = form.BooleanField()
-	number_of_sous = form.IntegerField(default=0)
-	number_of_kp = form.IntegerField(default=0)
+# class ChefForm(forms.Form):
+# 	need_courier = form.BooleanField()
+# 	number_of_sous = form.IntegerField(default=0)
+# 	number_of_kp = form.IntegerField(default=0)
 
-	def save(self, *args, **kwargs):
-		... 
+	# def save(self, *args, **kwargs):
+	# 	... 

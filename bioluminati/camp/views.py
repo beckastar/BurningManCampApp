@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from models import mealShifts
+from models import mealShifts, UserProfile
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import MealForm
+from forms import MealForm, UserProfileForm
 from django.core.context_processors import csrf 
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic.detail import SingleObjectMixin
 
 def index(request):
 	shifts = mealShifts.objects.all()
@@ -18,7 +20,22 @@ def login(request):
 
 @login_required
 def profile(request):
-	return render(request, "profile.html")
+	profile = UserProfile.objects.all()
+	username = None
+	form = UserProfileForm(request.POST)
+	if request.method == 'POST':
+		if form.is_valid():
+			# save the form 
+			profile = form.save(commit = False)
+			profile.user = request.user
+			profile.save()
+			return redirect('profile')
+		else:
+			form = UserProfileForm()
+	return render(request, "profile.html", {'form':form, 'profile': profile, })
+		# return render_to_response('profile.html', 
+		# RequestContext(request, {'form':form,'profile':profile, 'username':username},))
+
 
 # @login_required(login_url='login.html')
 def signup(request):
@@ -40,7 +57,6 @@ def signup(request):
 		# 	print form.errors 
 	else:
 		form = MealForm()
-			
 	return render_to_response('signup.html', 
 		RequestContext(request, {'form':form,'shifts':shifts, 'username':username},))
 

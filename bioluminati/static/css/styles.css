@@ -22,13 +22,14 @@ ul {
     list-style-type: none;
 }
 .headercontainer {
-    background: #E2E5F5;
+    background: black;
     margin-right: auto;
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;
-    height: 80px;
+    height: 200px;
 }
+
 a:link {
     color:black;
     text-decoration: none;
@@ -95,10 +96,7 @@ a:link {
 }
 
 #zeroninebio {
-    float: left;
-    position: relative;
-    width: 10px;
-    left: 50%;
+    font-size: 35px;
 }
 
 #profile {
@@ -107,10 +105,10 @@ a:link {
 }
 
 #container {
-  margin-top: 20px;
-  margin-left: 30px;
-  position: relative;
-  background: #45453f;
+    margin-top: 20px;
+    margin-left: 20px;
+    position: relative;
+    left: 44%;
 }
 
 #biotire {
@@ -120,6 +118,11 @@ a:link {
     left: 0px;
     top: 0px;
     z-index: 5;
+}
+
+#hands {
+    
+/* sounce: http://wandering-through-time-and-place.me/tag/penny-the-goose-at-burning-man-2013/*/
 }
 
 .pulse {
@@ -210,3 +213,85 @@ a:link {
     opacity: 0.0;
  }
 }
+
+#headertext {
+    font-family: Warnes, cursive;
+    font-size: 45px;
+    color: rgba(255,255,255,1);
+    text-shadow: 0 0 10px rgba(255,255,255,1) , 0 0 20px rgba(255,255,255,1) , 0 0 30px rgba(255,255,255,1) , 0 0 40px #ff00de , 0 0 70px #ff00de , 0 0 80px #ff00de , 0 0 100px #ff00de ;
+    -webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    -moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    -o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+    transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+@-webkit-keyframes neon { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes neon { from { opacity:0; } to { opacity:1; } }
+@keyframes neon { from { opacity:0; } to { opacity:1; } }
+
+.neon {
+    opacity:0;  /* make things invisible upon start */
+    -webkit-animation:neon ease-in 1;  /* call our keyframe named neon, use animattion ease-in and repeat it only 1 time */
+    -moz-animation:neon ease-in 1;
+    animation:neon ease-in 1;
+ 
+    -webkit-animation-fill-mode:forwards;  /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+ 
+    -webkit-animation-duration:1s;
+    -moz-animation-duration:1s;
+    animation-duration:1s;
+}
+
+
+.word1 {
+    -webkit-animation-delay: 0.4s;
+    -moz-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
+
+.word2 {
+    -webkit-animation-delay: 0.8s;
+    -moz-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+}
+
+.word3 {
+    -webkit-animation-delay: 1.2s;
+    -moz-animation-delay: 1.2s;
+    animation-delay: 1.2s;
+}
+
+.word4 {
+    -webkit-animation-delay: 1.6s;
+    -moz-animation-delay: 1.6s;
+    animation-delay: 1.6s;
+}
+
+.word5 {
+    -webkit-animation-delay: 2s;
+    -moz-animation-delay: 2s;
+    animation-delay: 2s;
+}
+
+.word6 {
+    -webkit-animation-delay: 2.4s;
+    -moz-animation-delay: 2.4s;
+    animation-delay: 2.4s;
+}
+
+.word7 {
+    -webkit-animation-delay: 2.8s;
+    -moz-animation-delay: 2.8s;
+    animation-delay: 2.8s;
+}
+
+.word8 {
+    -webkit-animation-delay: 3.2s;
+    -moz-animation-delay: 3.2s;
+    animation-delay: 3.2s;
+}
+
+
+

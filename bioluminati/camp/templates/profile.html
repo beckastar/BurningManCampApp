@@ -6,4 +6,23 @@
 <h1>hello</h1>
 </div>
 
+<div>
+	<h2>Fill out your profile </h2>
+		{% csrf_token %}
+	<!-- <table> -->
+	    <!-- show user's name here -->
+	    {{UserProfileForm}}
+	<!-- </table> -->
+
+	    <ul>
+		    <li>{{form.city}}</li>
+		    <li>{{form.number_of_burns}}</li>
+		    <li>{{form.years_with_bio}}</li>
+		    <li>{{form.picture}}</li>
+	    </ul>
+	    <input type="submit" value="submit">
+	</form>
+</div>
+
+
 {% endblock %}
