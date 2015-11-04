@@ -20,13 +20,10 @@ def login(request):
 def profile(request):
     return render(request, "profile.html")
 
-# @login_required(login_url='login.html')
+@login_required
 def signup(request):
     shifts = MealShift.objects.all()
     username = None
-    # remove this when @login_required is added.
-    if not request.user.is_authenticated():
-        return #login_required would redirect anyway..
 
     # context = RequestContext(request)
     if request.method == 'POST':
