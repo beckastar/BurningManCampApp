@@ -6,14 +6,14 @@ from .models import mealShifts, UserProfile
 
 
 class MealForm(ModelForm):
-	class Meta:
-		model = mealShifts
-		fields = ('assigned', 'day', 'meal', 'shift')
+    class Meta:
+        model = mealShifts
+        fields = ('assigned', 'day', 'meal', 'shift')
 
 class UserForm(ModelForm):
     class Meta:
-        model = User 
-        fields = ('username', 'email', 'password') 
+        model = User
+        fields = ('username', 'email', 'password')
 
 class UserProfileForm(ModelForm):
     class Meta:
@@ -22,9 +22,9 @@ class UserProfileForm(ModelForm):
         exclude = ['user']
 
 class ChefForm(forms.Form):
-	need_courier = form.BooleanField()
-	number_of_sous = form.IntegerField(default=0)
-	number_of_kp = form.IntegerField(default=0)
+    need_courier = form.BooleanField()
+    number_of_sous = form.IntegerField(default=0)
+    number_of_kp = form.IntegerField(default=0)
 
 	def save(self, *args, **kwargs):
 		... 
