@@ -35,8 +35,7 @@ class mealShifts(models.Model):
 	day = models.CharField(max_length = 10, choices=Days, default=Sunday)
 	meal = models.CharField(max_length = 10, choices=Meals, default=Dinner)
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
-	camper = models.ForeignKey(User, unique=False)
-	# change above to models.OneToOneField(User)
+	camper = models.OneToOneField(User)
 
 	class Meta:
 		unique_together = ("day", "meal", "shift")
@@ -47,7 +46,6 @@ class mealShifts(models.Model):
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User)
-
     # The additional attributes we wish to include.
     playa_name = models.CharField(max_length=20)
     website = models.URLField(blank=True)
@@ -59,11 +57,23 @@ class UserProfile(models.Model):
     needs_camp_bike = models.BooleanField(default=False)
     twitter_handle = models.CharField(max_length=30)
     facebook_name = models.CharField(max_length=30)
+    favorite_nonfiction = models.CharField(max_length=50)
+    favorite_fiction = models.CharField(max_length=50)
+    favorite_movie = models.CharField(max_length=50)
+    playa_hope = models.CharField(max_length=25)
+    playa_fear = models.CharField(max_length=25)
 
-    # Override the __unicode__() method to return out something meaningful!
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s %s %s'%(self.website, self.picture, self.shift, self.camper)
 
+class Bikes(models.Model):
+	bike_name = models.CharField(max_length=30)
+	# bike_owner = models.OneToOneField(User)
+	# user_on_playa = models.OneToOneField(User)
+	needs_repairs = models.BooleanField(default=False) 
+
+	def __str__(self):
+		return '%s %s %s %s'%(self.bike_name, self.bike_owner, self.user_on_playa, self.needs_repairs)
 
 
 

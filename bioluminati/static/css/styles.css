@@ -38,23 +38,77 @@ footer {
     opacity: 0.7;
 }
 
-ul {
+/*ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
+}*/
+
+
+#wrap   {
+    width: 100%; /* Spans the width of the page */
+    height: 50px; 
+    margin: 0; /* Ensures there is no space between sides of the screen and the menu */
+    z-index: 99; /* Makes sure that your menu remains on top of other page elements */
+    position: relative; 
+    background-color: black;
+    }
+
+#nav {
+    height: 50px;
+    padding: 0;
+    margin: 0;
+    position: absolute; /* Ensures that the menu doesn’t affect other elements */
+    border-right: 1px solid #54879d; 
 }
 
-li {
+/*#nav a {
+    padding: 18px 0;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    text-decoration: none; 
+    display: block;
+}*/
+
+#nav li {
+    height: auto;
+    width: 100px;
     float: left;
+    text-align: center;
+    list-style: none;
+    font: normal bold 12px/1.2em Arial, Verdana, Helvetica;  ;
+    padding: 0;
+    margin: 0;
+    background-color: black;
 }
 
-a:link, a:visited {
+
+#nav li ul {
+    display: none;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+#nav li:hover ul {
+    display: block;
+}
+
+#nav a {
+    padding: 18px 0;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    text-decoration: none;
+    display: block;
+}
+
+/*a:link, a:visited {
     display: block;
     width: 120px;
     font-weight: bold;
-    color: #FFFFFF;
-    background-color: #98bf21;
+    color:#E01DB6;
+    background-color: black;
     text-align: center;
     padding: 4px;
     text-decoration: none;
@@ -62,12 +116,13 @@ a:link, a:visited {
 }
 
 a:hover, a:active {
-    background-color: #7A991A;
+    background-color: black;
+    color:#0022BD;
 }
 
 a:link {
     color:black;
-    text-decoration: none;
+   */ text-decoration: none;
 }
 .divider{
     width:10px;
@@ -127,11 +182,6 @@ a:link {
     left: 0px;
     top: 0px;
     z-index: 5;
-}
-
-#hands {
-    
-/* sounce: http://wandering-through-time-and-place.me/tag/penny-the-goose-at-burning-man-2013/*/
 }
 
 .pulse {
@@ -310,6 +360,5 @@ a:link {
     animation-delay: 1.4s;
 }
 
-#navbar 
 
 

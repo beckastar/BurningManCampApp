@@ -28,19 +28,48 @@
             <div id="hands">
             </div>
         </div>
-          <ul id="nav">
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Edit Profile</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Campers</a></li>
-            <li><a href="#">Burn Prep</a></li>
-            <li><a href="#">Kitchen</a></li>
-            <li><a href="#">Bikes</a></li>
-            <li><a href="#">PYB</a></li>
-            <li><a href="#">Resources</a></li>
-            <li><a href="#">About Bio</a></li>
-            <li><a href="#">Join us</a></li>
-          </ul>
+          <div id="wrap">
+            <ul id="nav">
+              {% if user.is_authenticated %}
+              <li><a href="#">Logout</a></li>
+              <li><a href="#">Edit Profile</a></li>
+              <li><a href="#">Campers</a></li>
+              <li><a href="#">Kitchen</a>
+                <ul>
+                  <li><a href="#">Sign up for shifts</a></li>
+                  <li><a href="#">Input data as a chef</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Bikes</a></li>
+              <li><a href="#">PYB</a>
+                <ul>
+                  <li><a href="#">Sign up for shifts</a></li>
+                  <li><a href="#">Input materials</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Setup</a>
+                <ul>
+                  <li><a href="#">Sign up for shifts</a></li>
+                  <li><a href="#">Instructions and plans for setup</a></li>
+                </ul>   
+              </li>
+              <li><a href="#">Exedus</a>
+                <ul>
+                  <li><a href="#">Sign up for shifts</a></li>
+                  <li><a href="#">Plans for exedus</a></li>
+                </ul>
+              </li>
+               
+              {%else %}
+              <li><a href="#">Login</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Join us</a></li>
+              {% endif %}
+              <li><a href="#">Burn Prep</a></li>
+              <li><a href="#">Resources</a></li>
+              <li><a href="#">About Bio</a></li>
+            </ul>
+          </div>
         </div>
       </header>
       <!-- <div id="main"> -->
