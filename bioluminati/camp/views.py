@@ -32,7 +32,7 @@ def profile(request):
 			return redirect('profile')
 		else:
 			form = UserProfileForm()
-	return render(request, "profile.html", {'form':form, 'profile': profile, })
+	return render(request, "profile.html", RequestContext(request, {'form':form, 'profile': profile,},))
 		# return render_to_response('profile.html', 
 		# RequestContext(request, {'form':form,'profile':profile, 'username':username},))
 

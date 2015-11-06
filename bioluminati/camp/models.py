@@ -49,18 +49,16 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
 
     # The additional attributes we wish to include.
+    playa_name = models.CharField(max_length=20)
     website = models.URLField(blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
-    city = models.CharField(max_length = 10)
+    city = models.CharField(max_length = 20)
     number_of_burns = models.IntegerField()
     years_with_bio = models.IntegerField(default=0)
     petronus = models.CharField(max_length=20, blank=True)
-    type_of_project = models.CharField
     needs_camp_bike = models.BooleanField(default=False)
     twitter_handle = models.CharField(max_length=30)
     facebook_name = models.CharField(max_length=30)
-    
-
 
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):

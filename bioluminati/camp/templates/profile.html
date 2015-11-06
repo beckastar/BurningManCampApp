@@ -8,16 +8,21 @@
 
 <div>
 	<h2>Fill out your profile </h2>
-		{% csrf_token %}
 	<!-- <table> -->
+	<form action="." method="post">
+		{% csrf_token %}
+
 	    <!-- show user's name here -->
 	    {{UserProfileForm}}
 	<!-- </table> -->
 
 	    <ul>
-		    <li>{{form.city}}</li>
+		    <li>City you live in: {{form.city}}</li>
 		    <li>{{form.number_of_burns}}</li>
 		    <li>{{form.years_with_bio}}</li>
+		    <li>{{form.twitter_handle}}</li>
+		    <li>{{form.petronus}}</li>
+		    <li>{{form.needs_camp_bike}}</li>
 		    <li>{{form.picture}}</li>
 	    </ul>
 	    <input type="submit" value="submit">

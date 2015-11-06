@@ -18,7 +18,7 @@ class UserForm(ModelForm):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('website', 'picture', 'city', 'number_of_burns', 'years_with_bio')
+        fields = ('website', 'picture', 'city', 'number_of_burns', 'years_with_bio', 'petronus', 'needs_camp_bike', 'twitter_handle')
         exclude = ['user']
 
 # class ChefForm(forms.Form):
