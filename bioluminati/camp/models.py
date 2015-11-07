@@ -10,12 +10,13 @@ class mealShifts(models.Model):
 	Thursday = "Thursday"
 	Friday = "Friday"
 	Days = (
-		(Sunday, "Sunday"),
-		(Monday, "Monday"),
-		(Tuesday, "Tuesday"),
-		(Wednesday, "Wednesday"),
-		(Thursday, "Thursday"),
-		(Friday, "Friday"),
+		(0, "Sunday"),
+		(1, "Monday"),
+		(2, "Tuesday"),
+		(3, "Wednesday"),
+		(4, "Thursday"),
+		(5, "Friday"),
+		(6, "Saturday")
 		)
 	Breakfast = "Breakfast"
 	Dinner = "Dinner"
@@ -32,7 +33,7 @@ class mealShifts(models.Model):
 		(KP, "KP"),
 		)
 	assigned = models.BooleanField(default=False)
-	day = models.CharField(max_length = 10, choices=Days, default=Sunday)
+	day = models.CharField(max_length = 1, choices=Days)
 	meal = models.CharField(max_length = 10, choices=Meals, default=Dinner)
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
 	camper = models.OneToOneField(User)
