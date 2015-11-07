@@ -61,23 +61,42 @@ footer {
     margin: 0;
     position: absolute; /* Ensures that the menu doesn’t affect other elements */
     border-right: 1px solid #54879d; 
+    color: black;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-/*#nav a {
-    padding: 18px 0;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
-    text-decoration: none; 
-    display: block;
-}*/
+#nav li {
+    background: #000000;
+    background: -moz-linear-gradient(top, #000000 10%, #310831 15%, #8a178a 24%, #611961 48%, #1c1c1c 88%);
+    background: -webkit-gradient(left top, left bottom, color-stop(10%, #000000), color-stop(15%, #310831), color-stop(24%, #8a178a), color-stop(48%, #611961), color-stop(88%, #1c1c1c));
+    background: -webkit-linear-gradient(top, #000000 10%, #310831 15%, #8a178a 24%, #611961 48%, #1c1c1c 88%);
+    background: -o-linear-gradient(top, #000000 10%, #310831 15%, #8a178a 24%, #611961 48%, #1c1c1c 88%);
+    background: -ms-linear-gradient(top, #000000 10%, #310831 15%, #8a178a 24%, #611961 48%, #1c1c1c 88%);
+    background: linear-gradient(to bottom, #000000 10%, #310831 15%, #8a178a 24%, #611961 48%, #1c1c1c 88%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#1c1c1c', GradientType=0 );
+}
+
+#nav li:hover a{
+    background-image: none;
+    background-color: black;
+    color: purple;
+}
+
+#nav li:hover ul li {
+    background-image: none;
+    background-color: black;
+    color: purple;
+}
 
 #nav li {
     height: auto;
-    width: 100px;
+    width: 110px;
     float: left;
     text-align: center;
     list-style: none;
-    font: normal bold 12px/1.2em Arial, Verdana, Helvetica;  ;
+    font: normal bold 12px/1.2em Arial, Verdana, Helvetica;  
     padding: 0;
     margin: 0;
     background-color: black;
@@ -89,18 +108,23 @@ footer {
     height: auto;
     margin: 0;
     padding: 0;
+    background-image: none;
+    background-color: black;
+    color: purple;
 }
 
 #nav li:hover ul {
     display: block;
+    color: purple;
+    background-image: none;
 }
 
 #nav a {
     padding: 18px 0;
-    border-left: 1px solid gray;
-    border-right: 1px solid gray;
+    background-image: none;
     text-decoration: none;
     display: block;
+    color: black;
 }
 
 /*a:link, a:visited {
@@ -122,7 +146,7 @@ a:hover, a:active {
 
 a:link {
     color:black;
-   */ text-decoration: none;
+   */
 }
 .divider{
     width:10px;
