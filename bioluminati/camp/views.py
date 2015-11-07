@@ -37,15 +37,10 @@ def profile(request):
 		# RequestContext(request, {'form':form,'profile':profile, 'username':username},))
 
 
-# @login_required(login_url='login.html')
+@login_required(login_url='login.html')
 def signup(request):
-	shifts = mealShifts.objects.all()
+	shifts = mealShifts.objects.all().order_by('day')
 	username = None
-	# remove this when @login_required is added.
-	if not request.user.is_authenticated():
-		return #login_required would redirect anyway..
-
-	# context = RequestContext(request)
 	if request.method == 'POST':
 		form = MealForm(request.POST)
 		if form.is_valid():
