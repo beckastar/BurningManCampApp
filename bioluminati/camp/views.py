@@ -40,16 +40,37 @@ def profile(request):
 
 @login_required(login_url='login.html')
 def signup(request):
-	# shifts = mealShifts.objects.all().order_by('day')
+	shifts = mealShifts.objects.all().order_by('day')
 	day_choices = range(0, 6)
 	meal_choices = ['Breakfast', 'Dinner']
 	shift_choices = ['Chef', 'Sous_Chef', 'KP']
-	shift_options = itertools.product(day_choices, meal_choices, shift_choices)
-	available_shift_choices = filter(lambda option: not mealShifts.objects.filter(day=option[0], meal=option[1], shift=option[2]), shift_options)
+	# shift_options = itertools.product(day_choices, meal_choices, shift_choices)
+	# available_shift_choices = filter(lambda option: not mealShifts.objects.filter(day=option[0], meal=option[1], shift=option[2]), shift_options)
+	# for template tables
 	sundayShiftsAvail = mealShifts.objects.filter(day=0, assigned=False)
-	mondayShiftsAvail = mealShifts.objects.filter(day=1, assigned=False)
 	sundayShiftsTaken = mealShifts.objects.filter(day=0, assigned=True)
+
+	mondayShiftsAvail = mealShifts.objects.filter(day=1, assigned=False)
 	mondayShiftsTaken = mealShifts.objects.filter(day=1, assigned=True)
+
+	tuesdayShiftsAvail = mealShifts.objects.filter(day=2, assigned=True)
+	tuesdayShiftsTaken = mealShifts.objects.filter(day=2, assigned=True)
+
+	wednesdayShiftsAvail = mealShifts.objects.filter(day=3, assigned=False)
+	wednesdayShiftsTaken = mealShifts.objects.filter(day=3, assigned=True)
+
+	thursdayShiftsAvail = mealShifts.objects.filter(day=4, assigned=False)
+	thursdayShiftsTaken = mealShifts.objects.filter(day=4, assigned=True)
+
+	fridayShiftsAvail = mealShifts.objects.filter(day=5, assigned=False)
+	fridayShiftsTaken = mealShifts.objects.filter(day=5, assigned=True)
+
+	saturdayShiftsAvail = mealShifts.objects.filter(day=6, assigned=False)
+	saturdayShiftsTaken = mealShifts.objects.filter(day=6, assigned=True)
+
+	saturdayShiftsAvail = mealShifts.objects.filter(day=7, assigned=False)
+	saturdayShiftsTaken = mealShifts.objects.filter(day=7, assigned=True)
+
 	username = None
 	context = RequestContext(request)
 	if request.method == 'POST':
@@ -65,7 +86,17 @@ def signup(request):
 	else:
 		form = MealForm()
 	return render_to_response('signup.html', 
-		RequestContext(request, {'form':form,'username':username, 'sundayShiftsTaken':sundayShiftsTaken, 'mondayShiftsTaken':mondayShiftsTaken,'sundayShiftsAvail':sundayShiftsAvail, 'mondayShiftsAvail':mondayShiftsAvail, "available_shift_choices":available_shift_choices},))
+		RequestContext(request, {
+				'form':form,'username':username, 'shifts':shifts,
+				'sundayShiftsAvail':sundayShiftsAvail, 'sundayShiftsTaken':sundayShiftsTaken,  
+				'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,  
+				'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,  
+				'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail, 
+				'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,  
+				'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
+				'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
+				# "available_shift_choices":available_shift_choices
+				},))
 
 # def register(request):
 #     if request.method == 'POST':
