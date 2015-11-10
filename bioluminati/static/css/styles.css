@@ -403,6 +403,11 @@ table {
     width: 25%;
 }
 
+.datatable th {
+    width: 24%;
+    text-align: left;
+}
+
 .datatable td {
     width: 30%;
     text-align: center;
@@ -410,10 +415,12 @@ table {
 
 .showTable {
     display: block;
+    visibility: visible;
 }
 
 .hideTable {
     display:none;
+    visibility: hidden;
 }
 
 #allShifts {

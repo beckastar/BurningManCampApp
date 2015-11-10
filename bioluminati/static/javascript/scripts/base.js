@@ -10,7 +10,7 @@ $(document).ready(function () {
 	// }, 5000);
 
 	$('.availShifts').click(function(){
-		$(".datatables").toggle();
+		$(".datarow").toggleClass("showTable hideTable");
 	});
 
 });
