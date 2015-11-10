@@ -6,9 +6,19 @@ from .models import mealShifts, UserProfile
 
 
 class MealForm(ModelForm):
-	class Meta:
-		model = mealShifts
-		fields = ('assigned', 'day', 'meal', 'shift')
+    def __init__(self, *args, **kwargs):
+        super(MealForm, self).__init__(*args, **kwargs)
+        
+    class Meta:
+        model = mealShifts
+        fields = ('assigned', 'day', 'meal', 'shift')
+
+#don't change signature of save function 
+    # def save(commit):
+    #     form = super(MealForm, self).save(commit=False)
+    #     fields['assigned'] = True
+    #     return form 
+
 
 class UserForm(ModelForm):
     class Meta:

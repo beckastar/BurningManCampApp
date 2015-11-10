@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
+import itertools
 
 def index(request):
 	shifts = mealShifts.objects.all()
@@ -39,21 +40,32 @@ def profile(request):
 
 @login_required(login_url='login.html')
 def signup(request):
-	shifts = mealShifts.objects.all().order_by('day')
+	# shifts = mealShifts.objects.all().order_by('day')
+	day_choices = range(0, 6)
+	meal_choices = ['Breakfast', 'Dinner']
+	shift_choices = ['Chef', 'Sous_Chef', 'KP']
+	shift_options = itertools.product(day_choices, meal_choices, shift_choices)
+	available_shift_choices = filter(lambda option: not mealShifts.objects.filter(day=option[0], meal=option[1], shift=option[2]), shift_options)
+	sundayShiftsAvail = mealShifts.objects.filter(day=0, assigned=False)
+	mondayShiftsAvail = mealShifts.objects.filter(day=1, assigned=False)
+	sundayShiftsTaken = mealShifts.objects.filter(day=0, assigned=True)
+	mondayShiftsTaken = mealShifts.objects.filter(day=1, assigned=True)
 	username = None
+	context = RequestContext(request)
 	if request.method == 'POST':
 		form = MealForm(request.POST)
 		if form.is_valid():
 			shift = form.save(commit=False)
 			shift.camper = request.user
+			form.fields['assigned'] = True
 			shift.save()
 			return redirect('signup')
-		# else:
-		# 	print form.errors 
+		else:
+			print form.errors 
 	else:
 		form = MealForm()
 	return render_to_response('signup.html', 
-		RequestContext(request, {'form':form,'shifts':shifts, 'username':username},))
+		RequestContext(request, {'form':form,'username':username, 'sundayShiftsTaken':sundayShiftsTaken, 'mondayShiftsTaken':mondayShiftsTaken,'sundayShiftsAvail':sundayShiftsAvail, 'mondayShiftsAvail':mondayShiftsAvail, "available_shift_choices":available_shift_choices},))
 
 # def register(request):
 #     if request.method == 'POST':
