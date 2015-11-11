@@ -376,19 +376,18 @@ a:link {
     width: 35%;
     position: relative;
     left: 8%;
+    z-index: 2;
 }
-
-.formfloatright {
     
+.formfloatright {
     height: 400px;
     width: 35%;
     position: relative;
-    right: 8%
+    right: -59%;
+    top: -156%;
+    z-index: 1;
 }
 ​
-]
-
-
 table.gradienttable {
     font-family: verdana,arial,sans-serif;
     font-size:15px;
