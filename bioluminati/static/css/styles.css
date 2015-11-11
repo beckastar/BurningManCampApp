@@ -161,23 +161,6 @@ a:link {
     height: 20%;
     width: 20%;
 }
-#datatable {
-    height: 300px;
-    overflow-y: scroll;
-}
-
-.formfloatleft {
-    float:left; 
-    width: 50%;
-    height: 400px;
-}
-
-.formfloatright {
-    float: right;
-    height: 400px;
-    width: 50%;
-}
-​
 
 #zeroninebio {
     font-size: 35px;
@@ -383,19 +366,95 @@ a:link {
 
 /*tables for both bikes and meal signups */
 
-table {
-    border-spacing: .5rem;
+
+#datatable {
+    height: 300px;
+    overflow-y: scroll;
 }
 
-.datatable {
+.formfloatleft {
+    width: 35%;
+    position: relative;
+    left: 8%;
+}
+
+.formfloatright {
+    
+    height: 400px;
+    width: 35%;
+    position: relative;
+    right: 8%
+}
+​
+]
+
+
+table.gradienttable {
+    font-family: verdana,arial,sans-serif;
+    font-size:15px;
+    color:#333333;
+    border-width: 1px;
+    border-color: purple;
+    border-collapse: collapse;
+}
+table.gradienttable th {
+    padding: 2px;
+    background: #d5e3e4;
+    background: rgba(255,175,75,1);
+    /* Old Browsers */background: -moz-linear-gradient(left, rgba(255,175,75,1) 59%, rgba(255,175,75,1) 60%, rgba(255,10,255,1) 100%);
+     /* FF3.6+ */background: -webkit-gradient(left top, right top, color-stop(59%, rgba(255,175,75,1)), color-stop(60%, rgba(255,175,75,1)), color-stop(100%, rgba(255,10,255,1)));
+    /* Chrome, Safari4+ */background: -webkit-linear-gradient(left, rgba(255,175,75,1) 59%, rgba(255,175,75,1) 60%, rgba(255,10,255,1) 100%);
+     /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(left, rgba(255,175,75,1) 59%, rgba(255,175,75,1) 60%, rgba(255,10,255,1) 100%);
+     /* Opera 11.10+ */background: -ms-linear-gradient(left, rgba(255,175,75,1) 59%, rgba(255,175,75,1) 60%, rgba(255,10,255,1) 100%);
+     /* IE 10+ */background: linear-gradient(to right, rgba(255,175,75,1) 59%, rgba(255,175,75,1) 60%, rgba(255,10,255,1) 100%);
+    /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffaf4b', endColorstr='#ff0aff', GradientType=1 );
+    /* IE6-9 */
+    border: 1px solid purple;
+
+}
+table.gradienttable td {
+    text-align: center;
+    padding-left: 2em;
+    padding-right: 2em;
+    background: #ebecda;
+    background: rgba(74,88,102,1);
+    background: -moz-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(74,88,102,1)), color-stop(28%, rgba(74,88,102,1)), color-stop(100%, rgba(32,124,229,1)));
+    background: -webkit-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
+    background: -o-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
+    background: -ms-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
+    background: linear-gradient(135deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4a5866', endColorstr='#207ce5', GradientType=1 );
+    border: 1px solid purple;
+}
+table.gradienttable th p{
+    margin:0px;
+    padding:8px;
+    border-top: 1px solid #eefafc;
+    border-bottom:0px;
+    border-left: 1px solid #eefafc;
+    border-right:0px;
+}
+table.gradienttable td p{
+    margin:0px;
+    padding:8px;
+    border-top: 1px solid #fcfdec;
+    border-bottom:0px;
+    border-left: 1px solid #fcfdec;;
+    border-right:0px;
+}
+</style>
+
+
+/*.datatable {
     position: relative;
     width: 90%;
     height: 60%;
     border: 10px solid purple;
     overflow: scroll;
 }
-
-.datatable thead {
+*/
+/*.datatable thead {
     position: relative;
     text-align: center;
     border-box: 3px solid purple;
@@ -405,13 +464,13 @@ table {
 
 .datatable th {
     width: 24%;
-    text-align: left;
-}
-
-.datatable td {
-    width: 30%;
     text-align: center;
 }
+
+.datarow td {
+    width: 24%;
+    text-align: center;
+}*/
 
 .showTable {
     display: block;

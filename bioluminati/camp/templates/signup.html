@@ -4,56 +4,54 @@
 
 <div class="formfloatleft">
 	<h2>Shifts</h2>
-	<div class="datatable">
-		<table>	
+	<div class="tablewrap">
+		<table class="gradienttable">	
 			<thead>
 				<tr>
-					<th>Day</th>
-					<th>Meal</th>
-					<th>Shift</th>
-					<th>Camper</th>
+					<th><p>Day</p></th>
+					<th><p>Meal</p></th>
+					<th><p>Shift</p></th>
+					<th><p>Camper</p></th>
 				</tr>
 			</thead>
-				<div class="hideTable datatables" id="shiftsTaken">
-					taken
+				<div class="datatables" id="shiftsTaken">
 					{% for shift in sundayShiftsTaken %}
-						<tr><td>Sunday</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
+						<tr class="datarow hideTable"><td>Sunday</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in mondayShiftsTaken %}
-						<tr><td>Monday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow hideTable"><td>Monday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in tuesdayShiftsTaken %}
-						<tr><td>Tuesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow hideTable"><td>Tuesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in wednesdayShiftsTaken %}
-						<tr><td>Wednesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow hideTable"><td>Wednesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in thursdayShiftsTaken %}
-						<tr><td>Thursday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow hideTable"><td>Thursday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 				</div>
 
 				<div class="showTable datatables" id="shiftsAvailable">
-					avail
 					{% for shift in sundayShiftsAvail %}
-						<tr><td>Sunday</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
+						<tr class="datarow showTable"><td>Sunday</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in mondayShiftsAvail %}
-						<tr><td>Monday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow showTable"><td>Monday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in tuesdayShiftsAvail %}
-						<tr><td>Tuesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow showTable"><td>Tuesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 					{% for shifts in wednesdayShiftsAvail %}
-						<tr><td>Wednesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
+						<tr class="datarow showTable"><td>Wednesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
 					{% endfor %}
 				</div>
 
-				<div id="allShifts">
+<!-- 				<div id="allShifts">
 					{% for shift in shifts %}
-						<tr class="hideTable"><td>{{shift.day}}</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
+						<tr class="datarow hideTable"><td>{{shift.day}}</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
 					{% endfor %}
-				</div>
+				</div> -->
 		</table>
 	</div>
 				<span>
