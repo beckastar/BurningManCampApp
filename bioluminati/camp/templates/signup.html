@@ -1,78 +1,240 @@
 {% extends "base.html" %}
 {% block content %}
+
+
 <!-- {% load render_table from django_tables2 %} -->
+<div id="signupformwrap">
+	<div class="formfloatleft">
+		<h2>Shifts</h2>
+		<div class="tablewrap">
+			<table class="gradienttable">	
+				<thead>
+					<tr>
+						<th><p>Day</p></th>
+						<th><p>Meal</p></th>
+						<th><p>Shift</p></th>
+						<th><p>Camper</p></th>
+						<th><p>Camper</p></th>
+					</tr>
+				</thead>
 
-<div class="formfloatleft">
-	<h2>Shifts</h2>
-	<div class="tablewrap">
-		<table class="gradienttable">	
-			<thead>
-				<tr>
-					<th><p>Day</p></th>
-					<th><p>Meal</p></th>
-					<th><p>Shift</p></th>
-					<th><p>Camper</p></th>
-				</tr>
-			</thead>
-				<div class="datatables" id="shiftsTaken">
-					{% for shift in sundayShiftsTaken %}
-						<tr class="datarow hideTable"><td>Sunday</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in mondayShiftsTaken %}
-						<tr class="datarow hideTable"><td>Monday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in tuesdayShiftsTaken %}
-						<tr class="datarow hideTable"><td>Tuesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in wednesdayShiftsTaken %}
-						<tr class="datarow hideTable"><td>Wednesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in thursdayShiftsTaken %}
-						<tr class="datarow hideTable"><td>Thursday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-				</div>
+					<div class="datatables" id="shiftsTaken">
+						{% for shift in sundayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Sunday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in mondayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Monday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in tuesdayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Tuesday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in wednesdayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Wednesday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in thursdayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Thursday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+							</tr>
+						{% endfor %}
+					</div>
 
-				<div class="showTable datatables" id="shiftsAvailable">
-					{% for shift in sundayShiftsAvail %}
-						<tr class="datarow showTable"><td>Sunday</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in mondayShiftsAvail %}
-						<tr class="datarow showTable"><td>Monday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in tuesdayShiftsAvail %}
-						<tr class="datarow showTable"><td>Tuesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-					{% for shifts in wednesdayShiftsAvail %}
-						<tr class="datarow showTable"><td>Wednesday</td><td>{{shifts.meal}}</td><td>{{shifts.shift}}</td><td>{{shifts.camper}}</td></tr>
-					{% endfor %}
-				</div>
+					<div class="showTable datatables" id="shiftsAvailable">
+						{% for shift in sundayShiftsAvail %}
+							<tr class="datarow showTable">
+								<td>Sunday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+									<form method="post">		    
+										{% csrf_token %}
+										<div class="hiddentext">
+											{{shift.meal}}
+											{{shift.meal}}
+											{{shift.camper}}
+										</div>
+										<input type="submit" value="sign up">
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in mondayShiftsAvail %}
+							<tr class="datarow showTable">
+								<td>Monday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+								<td>
+									<form method="post">		    
+									{% csrf_token %}
+										<div class="hiddentext">
+											{{shift.meal}}
+											{{shift.meal}}
+											{{shift.camper}}
+										</div>
+										<input type="submit" value="sign up">
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in tuesdayShiftsAvail %}
+							<tr class="datarow showTable">
+								<td>Tuesday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+								<td>
+									<form method="post">		    
+									{% csrf_token %}
+											<div class="hiddentext">
+												{{shift.meal}}
+												{{shift.meal}}
+												{{shift.camper}}
+											</div>
+										<input type="submit" value="sign up">
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in wednesdayShiftsAvail %}
+							<tr class="datarow showTable">
+							<td>Wednesday</td>
+							<td>{{shifts.meal}}</td>
+							<td>{{shifts.shift}}</td>
+							<td>{{shifts.camper}}</td>
+							<td>
+								<form method="post">		    
+								{% csrf_token %}
+										<div class="hiddentext">
+											{{shift.meal}}
+											{{shift.meal}}
+											{{shift.camper}}
+										</div>
+									<input type="submit" value="sign up">
+								</form>
+							</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in thursdayShiftsAvail %}
+							<tr class="datarow showTable">
+							<td>Wednesday</td>
+							<td>{{shifts.meal}}</td>
+							<td>{{shifts.shift}}</td>
+							<td>{{shifts.camper}}</td>
+							<td>
+								<form method="post">		    
+								{% csrf_token %}
+										<div class="hiddentext">
+											{{shift.meal}}
+											{{shift.meal}}
+											{{shift.camper}}
+										</div>
+									<input type="submit" value="sign up">
+								</form>
+							</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in fridayShiftsAvail %}
+							<tr class="datarow showTable">
+							<td>Wednesday</td>
+							<td>{{shifts.meal}}</td>
+							<td>{{shifts.shift}}</td>
+							<td>{{shifts.camper}}</td>
+							<td>
+								<form method="post">		    
+								{% csrf_token %}
+										<div class="hiddentext">
+											{{shift.meal}}
+											{{shift.meal}}
+											{{shift.camper}}
+										</div>
+									<input type="submit" value="sign up">
+								</form>
+							</td>
+							</tr>
+						{% endfor %}
+						{% for shifts in saturdayShiftsAvail %}
+							<tr class="datarow showTable">
+							<td>Wednesday</td>
+							<td>{{shifts.meal}}</td>
+							<td>{{shifts.shift}}</td>
+							<td>{{shifts.camper}}</td>
+							<td>
+								<form method="post">		    
+								{% csrf_token %}
+										<div class="hiddentext">
+											{{shift.meal}}
+											{{shift.meal}}
+											{{shift.camper}}
+										</div>
+									<input type="submit" value="sign up">
+								</form>
+							</td>
+							</tr>
+						{% endfor %}
+					</div>
 
-<!-- 				<div id="allShifts">
-					{% for shift in shifts %}
-						<tr class="datarow hideTable"><td>{{shift.day}}</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
-					{% endfor %}
-				</div> -->
-		</table>
+	<!-- 				<div id="allShifts">
+						{% for shift in shifts %}
+							<tr class="datarow hideTable"><td>{{shift.day}}</td><td>{{shift.meal}}</td><td>{{shift.shift}}</td><td>{{shift.camper}}</td></tr>
+						{% endfor %}
+					</div> -->
+			</table>
+		</div>
+					<span>
+						<button class="availShifts">show available</button>
+						<button class="allShifts">show all</button>
+					</span>
 	</div>
-				<span>
-					<button class="availShifts">show available</button>
-					<button class="allShifts">show all</button>
-				</span>
-</div>
 
-<div class="formfloatright">
-	<h2>Sign up for a shift</h2>
-	<form method="post" action="">
-		{% csrf_token %}
-	    <!-- {{ form }} -->
-	   <ul> 
-		    <li>{{form.day}}</li>
-		    <li>{{form.shift}}</li>
-		    <li>{{form.meal}}</li>
-		    <li>{{form.camper}}</li>
-	    </ul>
-	    <input type="submit" value="sign me up!">
-	</form>
+<!-- {% if form.errors %}
+<div id="form-error">
+	<p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+	<ul>
+	{% for field in form %}
+	<li>{{ field.errors|striptags }}</li>
+	{% endfor %}
+	</ul>
+</div>
+{% endif %} -->
+
+	<div class="formfloatright">
+		<h2>Sign up for a shift</h2>
+		<form method="post" action="">
+			{% csrf_token %}
+		    <!-- {{ form }} -->
+		   <ul> 
+			    <li>{{form.day}}</li>
+			    <li>{{form.shift}}</li>
+			    <li>{{form.meal}}</li>
+			    <li>{{form.camper}}</li>
+		    </ul>
+		    <input type="submit" value="sign me up!">
+		</form>
+	</div>
 </div>
 
 {% endblock %}
