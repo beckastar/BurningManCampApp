@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from models import mealShifts, UserProfile
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import MealForm, UserProfileForm, UserForm
+from forms import UserProfileForm, UserForm, BikeForm
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -44,10 +44,16 @@ def signup_for_shift(shift_id, camper):
     shift = mealShifts.objects.get(pk=shift_id)
     if shift.camper is not None:
         raise ValueError
-
     shift.camper = camper
+    shift.assigned = True
     shift.save()
 
+def remove_self_from_shift(shift_id, camper):
+    shift = mealShifts.objects.get(pk=shift_id)
+    if shift.camper == user.username:
+        import pdb; pdb.set_trace()
+        shift.camper = None
+        shift.save()
 
 
 @login_required(login_url='login.html')
@@ -59,7 +65,7 @@ def signup(request):
     meal_choices = ['Breakfast', 'Dinner']
     shift_choices = ['Chef', 'Sous_Chef', 'KP']
     username = None
-    
+    shift = mealShifts.objects.all()
 
     sundayShiftsAvail = mealShifts.objects.filter(day=0, assigned=False)
     sundayShiftsTaken = mealShifts.objects.filter(day=0, assigned=True)
@@ -88,7 +94,9 @@ def signup(request):
     if request.method == 'POST':
         shift_id = request.POST.get('shift_id')
         signup_for_shift(shift_id, request.user)
-        return redirect('signup')
+    else:
+        pass
+    return redirect('signup')
 
     context = RequestContext(request)
     return render_to_response('signup.html', 
@@ -102,6 +110,7 @@ def signup(request):
                 'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 },))
+
 
 def register(request):
     context = RequestContext(request)
@@ -130,5 +139,18 @@ def register(request):
         user_form = UserForm()
         profile_form = UserProfileForm()
     return render_to_response('register.html',{'user_form': user_form, 'profile_form': profile_form, 'registered': registered}, context)
+
+def bike_form(request):
+    form = BikeForm(data = request.POST)
+    if request.method == "POST":
+
+        if form.is_valid():
+
+            form.save(commit=False)
+            return redirect('index')
+    else:
+        form = BikeForm()
+
+    return render(request, 'bikes.html', {'form':form})
 
 

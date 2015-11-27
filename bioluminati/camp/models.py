@@ -2,6 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
+
 class mealShifts(models.Model):
 	Sunday = "Sunday"
 	Monday = "Monday"
@@ -16,7 +17,7 @@ class mealShifts(models.Model):
 		(3, "Wednesday"),
 		(4, "Thursday"),
 		(5, "Friday"),
-		(6, "Saturday")
+		(6, "Saturday"),
 		)
 	Breakfast = "Breakfast"
 	Dinner = "Dinner"
@@ -33,48 +34,51 @@ class mealShifts(models.Model):
 		(KP, "KP"),
 		)
 	assigned = models.BooleanField(default=False)
-	day = models.CharField(max_length = 1, choices=Days)
-	meal = models.CharField(max_length = 10, choices=Meals, default=Dinner)
+	day = models.IntegerField(choices=Days)
+	meal = models.CharField(max_length = 10, choices=Meals)
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
-	camper = models.OneToOneField(User)
+	camper = models.ForeignKey(User, null=True, blank=True, default=None)
 
 	class Meta:
 		unique_together = ("day", "meal", "shift")
 
 	def __str__(self):
-		return '%s %s %s %s'%(self.day, self.meal, self.shift, self.camper)
+		return '%s %s %s %s %s %s'%(self.id, self.assigned, self.day, self.meal, self.shift, self.camper)
 
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User)
     # The additional attributes we wish to include.
     playa_name = models.CharField(max_length=20)
-    website = models.URLField(blank=True)
+    website = models.CharField(max_length=20, blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
     city = models.CharField(max_length = 20)
     number_of_burns = models.IntegerField()
-    years_with_bio = models.IntegerField(default=0)
+    years_with_bio = models.IntegerField()
     petronus = models.CharField(max_length=20, blank=True)
     needs_camp_bike = models.BooleanField(default=False)
-    twitter_handle = models.CharField(max_length=30)
+    twitter_handle = models.CharField(max_length=30, blank=True)
     facebook_name = models.CharField(max_length=30)
     favorite_nonfiction = models.CharField(max_length=50)
-    favorite_fiction = models.CharField(max_length=50)
-    favorite_movie = models.CharField(max_length=50)
-    playa_hope = models.CharField(max_length=25)
-    playa_fear = models.CharField(max_length=25)
+    favorite_fiction = models.CharField(max_length=50, blank=True)
+    favorite_movie = models.CharField(max_length=50, blank=True)
+    playa_hope = models.CharField(max_length=25, blank=True)
+    playa_fear = models.CharField(max_length=25, blank=True)
 
     def __str__(self):
         return '%s %s %s %s'%(self.website, self.picture, self.shift, self.camper)
 
 class Bikes(models.Model):
+	bike_photo = models.ImageField(upload_to="bike_images", blank=True)
 	bike_name = models.CharField(max_length=30)
-	# bike_owner = models.OneToOneField(User)
-	# user_on_playa = models.OneToOneField(User)
+	bike_size_inches = models.IntegerField()
+	bike_owner = models.ForeignKey(User)
+	owners_last_year_on_playa = models.IntegerField()
 	needs_repairs = models.BooleanField(default=False) 
+	in_bike_pool_this_year = models.BooleanField(default=False)
 
 	def __str__(self):
-		return '%s %s %s %s'%(self.bike_name, self.bike_owner, self.user_on_playa, self.needs_repairs)
+		return '%s %s %s %s'%(self.bike_name, self.bike_owner, self.user_on_playa)
 
 
 

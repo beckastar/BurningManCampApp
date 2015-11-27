@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>JOIN BIO</h3>
+{% if registered %}
+<h1>THANKS</h1>
+{% else %}
+<h1> register here!</h1>
+
+{% load url from future %}
+<form id="user_form" method="post"  enctype="multipart/form-data">
+	{% csrf_token %}
+
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+
+    <!-- Provide a button to click to submit the form. -->
+    <input type="submit" name="submit" value="Register" />
+
+</form>
+{% endif %}
+{% endblock%}
