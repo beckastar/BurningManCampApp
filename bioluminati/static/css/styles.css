@@ -30,7 +30,7 @@ footer {
     padding-left: 15px;
     padding-right: 15px;
     height: 200px;
-    background-image: url(../images/bluebanner.JPG)
+    /*background-image: url(../images/bluebanner.JPG)*/
 }
 
 #headerbg {
@@ -75,8 +75,22 @@ footer {
 
 #nav li:hover a{
     background-image: none;
-    background-color: #201F1F;
     color: purple;
+    border-left: white;
+    margin: 1px 4px 0px 0px;
+    border-right: 6px solid pink;
+    border-left: 6px solid pink;
+    background-color: black;
+}
+
+#nav li:hover a < li a {
+    background-image: none;
+    color: purple;
+    border-left: white;
+    margin: 1px 4px 0px 0px;
+    border-right: 6px solid pink;
+    border-left: 6px solid pink;
+    background-color: black;
 }
 
 
@@ -84,11 +98,19 @@ footer {
     background-image: none;
     background-color: #201F1F;
     color: purple;
+    width: 100%
 }
+
+/*the items in the header need to be at 10 of total width %*/
+#nav li {
+    width: 10%;
+}
+
+/**/
 
 #nav li {
     height: auto;
-    width: 10%;
+    /*width: 10%;*/
     float: left;
     text-align: center;
     list-style: none;
@@ -117,7 +139,6 @@ footer {
 
 #nav a {
     padding: 18px 0;
-    background-image: none;
     text-decoration: none;
     display: block;
     color: #201F1F;

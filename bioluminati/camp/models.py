@@ -81,6 +81,20 @@ class Bikes(models.Model):
 		return '%s %s %s %s'%(self.bike_name, self.bike_owner, self.user_on_playa)
 
 
+class Tickets(models.Model):
+	camper = models.ForeignKey(User)
+	has_ticket = models.BooleanField(default=False)
+	has_extra_ticket = models.BooleanField(default=False)
+	number_of_extra_tickets = models.IntegerField(default=0)
+	needs_ticket_for_self = models.BooleanField(default=False)
+	needs_ticket_for_friends = models.BooleanField(default=False)
+	number_of_extra_tickets_needed = models.IntegerField(default=0)
+
+	def __str__(self):
+		return '%s %s %s %s'%(self.camper, self.has_ticket, self.has_extra_ticket, 
+			self.number_of_extra_tickets, self.needs_ticket_for_self, self.needs_ticket_for_friends, self.number_of_extra_tickets_needed)
+
+
 
 
 		 

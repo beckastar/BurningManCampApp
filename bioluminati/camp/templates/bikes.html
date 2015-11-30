@@ -3,7 +3,7 @@
 
 <form action="{{ action }}" method="POST">
   {% csrf_token %}
-	    {{ form.as_p }}
+	    {{ form.as_ph }}
   </ul>
   <input type="submit" value="Save" />
 </form>
