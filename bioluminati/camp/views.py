@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import mealShifts, UserProfile
+from models import mealShifts, UserProfile, Bikes, Tickets, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import UserProfileForm, UserForm, BikeForm
 from django.core.context_processors import csrf
@@ -142,6 +142,8 @@ def register(request):
 
 def bike_form(request):
     form = BikeForm(data = request.POST)
+    model = Bikes
+    bikes = Bikes.objects.all()
     if request.method == "POST":
 
         if form.is_valid():
@@ -151,6 +153,6 @@ def bike_form(request):
     else:
         form = BikeForm()
 
-    return render(request, 'bikes.html', {'form':form})
+    return render(request, 'bikes.html', {'form':form, 'bikes':bikes})
 
 

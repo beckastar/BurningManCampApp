@@ -38,6 +38,7 @@ class mealShifts(models.Model):
 	meal = models.CharField(max_length = 10, choices=Meals)
 	shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
 	camper = models.ForeignKey(User, null=True, blank=True, default=None)
+	date = models.DateTimeField(auto_now_add=True, blank=True)
 
 	class Meta:
 		unique_together = ("day", "meal", "shift")
@@ -64,18 +65,20 @@ class UserProfile(models.Model):
     favorite_movie = models.CharField(max_length=50, blank=True)
     playa_hope = models.CharField(max_length=25, blank=True)
     playa_fear = models.CharField(max_length=25, blank=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
         return '%s %s %s %s'%(self.website, self.picture, self.shift, self.camper)
 
 class Bikes(models.Model):
-	bike_photo = models.ImageField(upload_to="bike_images", blank=True)
+	bike_photo = models.ImageField(upload_to="bike_images", blank=True, null=True)
 	bike_name = models.CharField(max_length=30)
 	bike_size_inches = models.IntegerField()
-	bike_owner = models.ForeignKey(User)
+	bike_owner = models.ForeignKey(User, blank=True)
 	owners_last_year_on_playa = models.IntegerField()
 	needs_repairs = models.BooleanField(default=False) 
 	in_bike_pool_this_year = models.BooleanField(default=False)
+	date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 	def __str__(self):
 		return '%s %s %s %s'%(self.bike_name, self.bike_owner, self.user_on_playa)
@@ -89,12 +92,19 @@ class Tickets(models.Model):
 	needs_ticket_for_self = models.BooleanField(default=False)
 	needs_ticket_for_friends = models.BooleanField(default=False)
 	number_of_extra_tickets_needed = models.IntegerField(default=0)
+	date = models.DateTimeField(auto_now_add=True, blank=True)
 
 	def __str__(self):
 		return '%s %s %s %s'%(self.camper, self.has_ticket, self.has_extra_ticket, 
 			self.number_of_extra_tickets, self.needs_ticket_for_self, self.needs_ticket_for_friends, self.number_of_extra_tickets_needed)
 
 
+class Inventory(models.Model):
+	item = models.CharField(max_length=20, blank=True)
+	needs_repairs = models.BooleanField(default=True)
+	date = models.DateTimeField(auto_now_add=True, blank=True)
 
+	def __str__(self):
+		return '%s %s'%(self.item, self.needs_repairs)
 
 		 

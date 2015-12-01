@@ -1,11 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
 
-<form action="{{ action }}" method="POST">
-  {% csrf_token %}
-	    {{ form.as_ph }}
-  </ul>
-  <input type="submit" value="Save" />
-</form>
 
+<div>
+	<div class="formfloatleft">
+		<h2>Bike Inventory </h2>
+		<div class="tablewrap">
+			<table class="gradienttable">	
+				<thead>
+					<tr>
+						<th><p>Bike Name</p></th>
+						<th><p>Size (inches)</p></th>
+						<th><p>Owner</p></th>
+						<th><p>Owner's last burn year</p></th>
+						<th><p>Needs repairs?</p></th>
+						<th><p>In bike pool?</p></th>
+					</tr>
+				</thead>
+				<div class="datatables" id="shiftsTaken">
+						{% for bike in Bikes %}
+							<tr class="datarow hideTable">
+								<td>{{bike.bike_photo}}</td>
+								<td>{{bike.bike_size_inches}}</td>
+								<td>{{bike.bike_owner}}</td>
+								<td>{{bike.owners_last_year_on_playa}}</td>
+								<td>{{bike.needs_repairs}}</td>
+								<td>{{bikein_bike_pool_this_year}}</td>
+							</tr>
+						{% endfor %}
+				</div>
+			</table>
+		</div>
+	</div>
+
+<div class='formfloatright' >
+	<h2>Add a bike</h2>
+	<form action="" method="post">
+	  {% csrf_token %}
+	  	<ul>
+		    {{ form.as_ul}}
+		</ul>
+	  </ul>
+	  <input type="submit" value="Save" />
+	</form>
+</div>
 {% endblock %}

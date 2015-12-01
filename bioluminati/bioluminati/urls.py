@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^$', index, name='index'),
     url(r'^signup/', signup, name='signup'),
     url(r'^accounts/profile/$', profile, name='profile'),
+    # url(r'^accounts/campers/$', campers, name='campers'), make profile display page
     url(r'^login/', 'django.contrib.auth.views.login', name='foo',kwargs={'template_name': 'login.html'}),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
     url(r'^register/$', register, name='register'),
