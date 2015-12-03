@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div>
 	<div class="formfloatleft">
-		<h2>Bike Inventory </h2>
+
+		<h2>Bike Invenhjkgtory </h2>
 		<div class="tablewrap">
 			<table class="gradienttable">	
 				<thead>
@@ -12,18 +12,16 @@
 						<th><p>Bike Name</p></th>
 						<th><p>Size (inches)</p></th>
 						<th><p>Owner</p></th>
-						<th><p>Owner's last burn year</p></th>
 						<th><p>Needs repairs?</p></th>
 						<th><p>In bike pool?</p></th>
 					</tr>
 				</thead>
-				<div class="datatables" id="shiftsTaken">
-						{% for bike in Bikes %}
-							<tr class="datarow hideTable">
-								<td>{{bike.bike_photo}}</td>
+				<div class="datatables">
+						{% for bike in bicycles %}
+							<tr class="datarow">
+								<td>{{bike.bike_name}}</td>
 								<td>{{bike.bike_size_inches}}</td>
 								<td>{{bike.bike_owner}}</td>
-								<td>{{bike.owners_last_year_on_playa}}</td>
 								<td>{{bike.needs_repairs}}</td>
 								<td>{{bike.in_bike_pool_this_year}}</td>
 							</tr>
@@ -31,9 +29,11 @@
 				</div>
 			</table>
 		</div>
-	</div>
+	</div>.
 
 <div class='formfloatright' >
+
+<div>
 	<h2>Add a bike</h2>
 	<form action="" method="post">
 	  {% csrf_token %}

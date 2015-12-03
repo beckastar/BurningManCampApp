@@ -48,6 +48,7 @@ def signup_for_shift(shift_id, camper):
     shift.assigned = True
     shift.save()
 
+# this needs to work 
 def remove_self_from_shift(shift_id, camper):
     shift = mealShifts.objects.get(pk=shift_id)
     if shift.camper == user.username:
@@ -69,25 +70,18 @@ def signup(request):
 
     sundayShiftsAvail = mealShifts.objects.filter(day=0, assigned=False)
     sundayShiftsTaken = mealShifts.objects.filter(day=0, assigned=True)
-
     mondayShiftsAvail = mealShifts.objects.filter(day=1, assigned=False)
     mondayShiftsTaken = mealShifts.objects.filter(day=1, assigned=True)
-
     tuesdayShiftsAvail = mealShifts.objects.filter(day=2, assigned=True)
     tuesdayShiftsTaken = mealShifts.objects.filter(day=2, assigned=True)
-
     wednesdayShiftsAvail = mealShifts.objects.filter(day=3, assigned=False)
     wednesdayShiftsTaken = mealShifts.objects.filter(day=3, assigned=True)
-
     thursdayShiftsAvail = mealShifts.objects.filter(day=4, assigned=False)
     thursdayShiftsTaken = mealShifts.objects.filter(day=4, assigned=True)
-
     fridayShiftsAvail = mealShifts.objects.filter(day=5, assigned=False)
     fridayShiftsTaken = mealShifts.objects.filter(day=5, assigned=True)
-
     saturdayShiftsAvail = mealShifts.objects.filter(day=6, assigned=False)
     saturdayShiftsTaken = mealShifts.objects.filter(day=6, assigned=True)
-
     saturdayShiftsAvail = mealShifts.objects.filter(day=7, assigned=False)
     saturdayShiftsTaken = mealShifts.objects.filter(day=7, assigned=True)
     
@@ -110,6 +104,24 @@ def signup(request):
                 'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 },))
+
+@login_required(login_url='login.html')
+def bike_form(request):
+    model = Bikes
+    bicycles = Bikes.objects.all()[:5]
+    form = BikeForm(data = request.POST)
+    if request.method == "POST":
+
+        if form.is_valid():
+            form.save(commit=False)
+            # return redirect('index')
+    else:
+        form = BikeForm()
+    # import pdb; pdb.set_trace()
+    context = RequestContext(request)
+    return render_to_response('bikes.html', {
+            'form':form, 'bicycles':bicycles
+            }, RequestContext(request))
 
 
 def register(request):
@@ -135,24 +147,15 @@ def register(request):
 
             profile.save()
             registered = True
+        return redirect('index')
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
-    return render_to_response('register.html',{'user_form': user_form, 'profile_form': profile_form, 'registered': registered}, context)
+    return render_to_response('register.html', 
+        RequestContext(request, {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},))
 
-def bike_form(request):
-    form = BikeForm(data = request.POST)
-    model = Bikes
-    bikes = Bikes.objects.all()
-    if request.method == "POST":
 
-        if form.is_valid():
-
-            form.save(commit=False)
-            return redirect('index')
-    else:
-        form = BikeForm()
-
-    return render(request, 'bikes.html', {'form':form, 'bikes':bikes})
+def profile_view(request, id):
+    u = UserProfile.objects.get(pk=id)
 
 

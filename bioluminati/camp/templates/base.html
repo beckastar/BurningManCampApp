@@ -31,16 +31,16 @@
           <div id="wrap">
             <ul id="nav">
               {% if user.is_authenticated %}
-              <li><a href="#">Logout</a></li>
-              <li><a href="#">Edit Profile</a></li>
+              <li><a href="logout">Logout</a></li>
+              <li><a href="profile">Edit Profile</a></li>
               <li><a href="#">Campers</a></li>
-              <li><a href="#">Kitchen</a>
+              <li><a href="signup">Meals</a>
                 <ul>
                   <li><a href="#">Sign up for shifts</a></li>
                   <li><a href="#">Input data as a chef</a></li>
                 </ul>
               </li>
-              <li><a href="#">Bikes</a></li>
+              <li><a href="bikes">Bikes</a></li>
               <li><a href="#">PYB</a>
                 <ul>
                   <li><a href="#">Sign up for shifts</a></li>
@@ -53,7 +53,7 @@
                   <li><a href="#">Instructions and plans for setup</a></li>
                 </ul>   
               </li>
-              <li><a href="#">Exedus</a>
+              <li><a href="#">Exodus</a>
                 <ul>
                   <li><a href="#">Sign up for shifts</a></li>
                   <li><a href="#">Plans for exedus</a></li>
@@ -61,7 +61,7 @@
               </li>
                
               {%else %}
-              <li><a href="#">Login</a></li>
+              <li><a href="login">Login</a></li>
               <li><a href="#">Contact</a></li>
               <li><a href="#">Join us</a></li>
               {% endif %}

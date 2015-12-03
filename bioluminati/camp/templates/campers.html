@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div>
+	<div class="formfloatleft">
+		<h2>Bioluminaries</h2>
+		<div class="tablewrap">
+			<table class="gradienttable">	
+				<thead>
+					<tr>
+						<th><p>Photo</p></th>
+						<th><p>Camper Name</p></th>
+						<th><p>Playa Name</p></th>
+						<th><p>Link to profile</p></th>
+					</tr>
+				</thead>
+				<div class="datatables" id="shiftsTaken">
+						{% for camper in Campers %}
+							<tr class="datarow hideTable">
+								<td>{{camper.picture}}</td>
+								<td>{{camper.user}}</td>
+								<td>{{camper.link}}</td>
+							</tr>
+						{% endfor %}
+				</div>
+			</table>
+		</div>
+	</div>.
+</div>
+
+
+{% endblock %}

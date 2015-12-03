@@ -2,7 +2,6 @@
 {% block content %}
 
 
-<!-- {% load render_table from django_tables2 %} -->
 <div id="signupformwrap">
 	<div class="formfloatleft">
 		<h2>Shifts</h2>
@@ -234,7 +233,6 @@
 		<h2>Sign up for a shift</h2>
 		<form method="post" action="">
 			{% csrf_token %}
-		    <!-- {{ form }} -->
 		   <ul> 
 			    <li>{{form.day}}</li>
 			    <li>{{form.shift}}</li>

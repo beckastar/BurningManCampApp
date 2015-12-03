@@ -2,30 +2,28 @@
 
 {% block content %}
 
-<div id="profile">
+<div id="profile" class="formfloatleft">
+
+
 </div>
-
-<div>
-	<h2>Fill out your profile </h2>
-	<!-- <table> -->
-	<form action="." method="post">
-		{% csrf_token %}
-
-	    <!-- show user's name here -->
-	    {{UserProfileForm}}
-	<!-- </table> -->
-
-	    <ul>
-		    <li>City you live in: {{form.city}}</li>
-		    <li>{{form.number_of_burns}}</li>
-		    <li>{{form.years_with_bio}}</li>
-		    <li>{{form.twitter_handle}}</li>
-		    <li>{{form.petronus}}</li>
-		    <li>{{form.needs_camp_bike}}</li>
-		    <li>{{form.picture}}</li>
-	    </ul>
-	    <input type="submit" value="submit">
-	</form>
+<div class="formfloatright">
+	<div>
+		<h2>Fill out your profile </h2>
+		<form action="." method="post">
+			{% csrf_token %}
+		    {{UserProfileForm}}
+		    <ul>
+			    <li>City you live in: {{form.city}}</li>
+			    <li>Number of burns you've been to: {{form.number_of_burns}}</li>
+			    <li>Years with Bioluminati: {{form.years_with_bio}}</li>
+			    <li>Twitter handle: {{form.twitter_handle}}</li>
+			    <li>Petronus {{form.petronus}}</li>
+			    <li>Do you need a bike? {{form.needs_camp_bike}}</li>
+			    <li>Upload a profile pic. {{form.picture}}</li>
+		    </ul>
+		    <input type="submit" value="submit">
+		</form>
+	</div>
 </div>
 
 

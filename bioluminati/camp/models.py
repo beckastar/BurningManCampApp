@@ -81,7 +81,7 @@ class Bikes(models.Model):
 	date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 	def __str__(self):
-		return '%s %s %s %s'%(self.bike_name, self.bike_owner, self.user_on_playa)
+		return '%s %s %s %s %s'%(self.bike_name, self.bike_owner, self.bike_size_inches, self.needs_repairs, self.in_bike_pool_this_year)
 
 
 class Tickets(models.Model):
