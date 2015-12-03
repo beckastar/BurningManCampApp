@@ -150,12 +150,16 @@ def delete_item(item_id):
 def inventory(request):
     model = Inventory
     stuff = Inventory.objects.all()
-    form = InventoryForm(data = request.POST, instance = thing)
+    # thing = Inventory.objects.get(pk=id) 
+    form = InventoryForm(data = request.POST) 
     if request.method == "POST":
 
-        if form.is_valid(): 
+        if form.is_valid():
+            # if Inventory.filter(item='item').exists()
             obj = form.save(commit=False)
-            obj.save() 
+            obj.save()
+            # if 
+            # return redirect('index')
 
     else:
         form = InventoryForm()
@@ -194,6 +198,9 @@ def register(request):
         profile_form = UserProfileForm()
     return render_to_response('register.html', 
         RequestContext(request, {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},))
+
+def about(request):
+     return render_to_response('about.html', RequestContext(request))
 
 
 def profile_view(request, id):

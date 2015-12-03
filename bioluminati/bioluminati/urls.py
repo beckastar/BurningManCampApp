@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, signup, profile, register, bike_form, bikemutation, inventory
+from camp.views import index, signup, profile, register, bike_form, bikemutation, inventory, about
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
@@ -26,11 +26,13 @@ urlpatterns = [
     url(r'^accounts/profile/$', profile, name='profile'),
     # url(r'^accounts/campers/$', campers, name='campers'), make profile display page
     url(r'^login/', 'django.contrib.auth.views.login', name='foo',kwargs={'template_name': 'login.html'}),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
+    url(r'^/logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
     url(r'^register/$', register, name='register'),
     url(r'^confirm/$', register, name='confirm'),  
     url(r'^bikes/$', bike_form, name='bikes'),  
     url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
     url(r'^inventory/$', inventory, name='inventory'), 
+    url(r'^about/$', about, name='about'), 
+     # url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about')
     # url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

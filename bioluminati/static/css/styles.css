@@ -509,4 +509,9 @@ table.gradienttable td p{
     visibility: hidden;
 }
 
+.textbody {
+    margin-left: 10%;
+    margin-right: 8%;
+    font-size: 23px;
+}
 
