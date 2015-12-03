@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, signup, profile, register, bike_form
+from camp.views import index, signup, profile, register, bike_form, bikemutation, inventory
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
@@ -30,5 +30,7 @@ urlpatterns = [
     url(r'^register/$', register, name='register'),
     url(r'^confirm/$', register, name='confirm'),  
     url(r'^bikes/$', bike_form, name='bikes'),  
+    url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
+    url(r'^inventory/$', inventory, name='inventory'), 
     # url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

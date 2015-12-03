@@ -1,38 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 
+
 <div>
 	<div class="formfloatleft">
 
-		<h2>Bike Inventory </h2>
+		<h2>Truck Inventory </h2>
 		<div class="tablewrap">
 			<table class="gradienttable">	
 				<thead>
 					<tr>
-						<th><p>Bike Name</p></th>
-						<th><p>Size (inches)</p></th>
-						<th><p>Owner</p></th>
-						<th><p>Needs repairs?</p></th>
-						<th><p>In bike pool?</p></th>
+						<th><p>Whatcha got?</p></th>
+						<th><p>Needs Repairs</p></th>
+						<th><p>Change</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
-						{% for bike in bicycles %}
+						{% for things in stuff %}
 							<tr class="datarow">
-								<td>{{bike.bike_name}}</td>
-								<td>{{bike.bike_size_inches}}</td>
-								<td>{{bike.bike_owner}}</td>
-								<td>{{bike.needs_repairs}}</td>
-								<td>{{bike.in_bike_pool_this_year}}</td>
+								<td>{{things.item}}</td>
+								<td>{{things.needs_repairs}}</td>
+							<td>
+								<form method="post">
+						            {% csrf_token %}
+						            <input type="submit" value="edit or remove me">
+						        </form>
+						    </td>
 							</tr>
 						{% endfor %}
 				</div>
 			</table>
 		</div>
-	</div>.
+	</div>
+
 
 	<div class='formfloatright' >
-		<h2>Add a bike</h2>
+		<h2>Add stuff</h2>
 		<form action="" method="post">
 		  {% csrf_token %}
 		  	<ul>
@@ -42,5 +45,8 @@
 		  <input type="submit" value="Save" />
 		</form>
 	</div>
+
 </div>
+
+
 {% endblock %}

@@ -2,28 +2,8 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from .models import mealShifts, UserProfile, Bikes
+from .models import mealShifts, UserProfile, Bikes, BicycleMutationInventory, Inventory
  
-
-
-# class MealForm(ModelForm):
-#     def __init__(self, *args, **kwargs): 
-#         super(MealForm, self).__init__(*args, **kwargs)
-#         self.fields['camper'].required = False
-#         self.fields['assigned'].required = False
-#         self.fields['day'].required = True
-#         import pdb; pdb.set_trace()
-        
-#     class Meta:
-#         model = mealShifts
-#         fields = ('assigned', 'day', 'meal', 'shift', 'camper')
-
-
-#don't change signature of save function 
-    # def save(commit):
-    #     form = super(MealForm, self).save(commit=False)
-    #     fields['assigned'] = True
-    #     return form 
 
 class UserForm(ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())
@@ -42,4 +22,14 @@ class UserProfileForm(ModelForm):
 class BikeForm(ModelForm):
     class Meta:
         model = Bikes
+        fields = '__all__'
+
+class BikeMaterialForm(ModelForm):
+    class Meta:
+        model = BicycleMutationInventory
+        fields = '__all__'
+
+class InventoryForm(ModelForm):
+    class Meta:
+        model = Inventory
         fields = '__all__'

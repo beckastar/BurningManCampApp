@@ -98,6 +98,15 @@ class Tickets(models.Model):
 		return '%s %s %s %s'%(self.camper, self.has_ticket, self.has_extra_ticket, 
 			self.number_of_extra_tickets, self.needs_ticket_for_self, self.needs_ticket_for_friends, self.number_of_extra_tickets_needed)
 
+class BicycleMutationInventory(models.Model):
+	material = models.CharField(max_length=30)
+	quantity = models.IntegerField(default=0)
+	units = models.CharField(max_length=30)
+	date = models.DateTimeField(auto_now_add=True, blank=True)
+
+	def __str__(self):
+		return '%s %s %s'%(self.material, self.quantity, self.units)
+
 
 class Inventory(models.Model):
 	item = models.CharField(max_length=20, blank=True)

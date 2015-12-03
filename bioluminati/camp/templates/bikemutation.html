@@ -1,38 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 
+
 <div>
 	<div class="formfloatleft">
 
-		<h2>Bike Inventory </h2>
+		<h2>Material Inventory </h2>
 		<div class="tablewrap">
 			<table class="gradienttable">	
 				<thead>
 					<tr>
-						<th><p>Bike Name</p></th>
-						<th><p>Size (inches)</p></th>
-						<th><p>Owner</p></th>
-						<th><p>Needs repairs?</p></th>
-						<th><p>In bike pool?</p></th>
+						<th><p>Whatcha got?</p></th>
+						<th><p>Quantity</p></th>
+						<th><p>Units</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
-						{% for bike in bicycles %}
+						{% for material in materials %}
 							<tr class="datarow">
-								<td>{{bike.bike_name}}</td>
-								<td>{{bike.bike_size_inches}}</td>
-								<td>{{bike.bike_owner}}</td>
-								<td>{{bike.needs_repairs}}</td>
-								<td>{{bike.in_bike_pool_this_year}}</td>
+								<td>{{material.material}}</td>
+								<td>{{material.quantity}}</td>
+								<td>{{material.units}}</td>
 							</tr>
 						{% endfor %}
 				</div>
 			</table>
 		</div>
-	</div>.
+	</div>
+
 
 	<div class='formfloatright' >
-		<h2>Add a bike</h2>
+		<h2>Add material</h2>
 		<form action="" method="post">
 		  {% csrf_token %}
 		  	<ul>
@@ -42,5 +40,8 @@
 		  <input type="submit" value="Save" />
 		</form>
 	</div>
+
 </div>
+
+
 {% endblock %}

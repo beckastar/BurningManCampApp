@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import mealShifts, UserProfile, Bikes, Tickets, Inventory
+from models import mealShifts, UserProfile, Bikes, Tickets, Inventory, BicycleMutationInventory, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import UserProfileForm, UserForm, BikeForm
+from forms import UserProfileForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -55,6 +55,8 @@ def remove_self_from_shift(shift_id, camper):
         import pdb; pdb.set_trace()
         shift.camper = None
         shift.save()
+
+    
 
 
 @login_required(login_url='login.html')
@@ -108,7 +110,7 @@ def signup(request):
 @login_required(login_url='login.html')
 def bike_form(request):
     model = Bikes
-    bicycles = Bikes.objects.all()[:5]
+    bicycles = Bikes.objects.all()
     form = BikeForm(data = request.POST)
     if request.method == "POST":
 
@@ -117,10 +119,49 @@ def bike_form(request):
             # return redirect('index')
     else:
         form = BikeForm()
-    # import pdb; pdb.set_trace()
     context = RequestContext(request)
     return render_to_response('bikes.html', {
             'form':form, 'bicycles':bicycles
+            }, RequestContext(request))
+
+
+def bikemutation(request):
+    model = BicycleMutationInventory
+    materials = BicycleMutationInventory.objects.all()
+    form = BikeMaterialForm(data = request.POST)
+    if request.method == "POST":
+
+        if form.is_valid():
+            form.save(commit=False)
+            # return redirect('index')
+    else:
+        form = BikeMaterialForm()
+    context = RequestContext(request)
+    return render_to_response('bikemutation.html', {
+            'form':form, 'materials':materials
+            }, RequestContext(request))
+
+
+def delete_item(item_id):
+    thing = Inventory.objects.get(pk=id)
+    thing.item = ''
+    thing.save()
+
+def inventory(request):
+    model = Inventory
+    stuff = Inventory.objects.all()
+    form = InventoryForm(data = request.POST, instance = thing)
+    if request.method == "POST":
+
+        if form.is_valid(): 
+            obj = form.save(commit=False)
+            obj.save() 
+
+    else:
+        form = InventoryForm()
+    context = RequestContext(request)
+    return render_to_response('inventory.html', {
+            'form':form, 'stuff':stuff
             }, RequestContext(request))
 
 
