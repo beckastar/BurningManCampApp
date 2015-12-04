@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import mealShifts, UserProfile, Bikes, Tickets, Inventory, BicycleMutationInventory, Inventory
+from models import MealShifts, UserProfile, Bikes, Tickets, Inventory, BicycleMutationInventory, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import UserProfileForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
 from django.core.context_processors import csrf
@@ -16,7 +16,7 @@ import itertools
 
 
 def index(request):
-    shifts = mealShifts.objects.all()
+    shifts = MealShifts.objects.all()
     return render(request, "index.html", {'shifts': shifts})
 
 
@@ -41,7 +41,7 @@ def profile(request):
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile, },))
 
 def signup_for_shift(shift_id, camper):
-    shift = mealShifts.objects.get(pk=shift_id)
+    shift = MealShifts.objects.get(pk=shift_id)
     if shift.camper is not None:
         raise ValueError
     shift.camper = camper
@@ -50,7 +50,7 @@ def signup_for_shift(shift_id, camper):
 
 # this needs to work 
 def remove_self_from_shift(shift_id, camper):
-    shift = mealShifts.objects.get(pk=shift_id)
+    shift = MealShifts.objects.get(pk=shift_id)
     if shift.camper == user.username:
         import pdb; pdb.set_trace()
         shift.camper = None
@@ -61,31 +61,31 @@ def remove_self_from_shift(shift_id, camper):
 
 @login_required(login_url='login.html')
 def signup(request):
-    model = mealShifts
+    model = MealShifts
     user = request.user
-    poss_shifts = mealShifts.objects.all().order_by('day')
+    poss_shifts = MealShifts.objects.all().order_by('day')
     day_choices = range(0, 6)
     meal_choices = ['Breakfast', 'Dinner']
     shift_choices = ['Chef', 'Sous_Chef', 'KP']
     username = None
-    shift = mealShifts.objects.all()
+    shift = MealShifts.objects.all()
 
-    sundayShiftsAvail = mealShifts.objects.filter(day=0, assigned=False)
-    sundayShiftsTaken = mealShifts.objects.filter(day=0, assigned=True)
-    mondayShiftsAvail = mealShifts.objects.filter(day=1, assigned=False)
-    mondayShiftsTaken = mealShifts.objects.filter(day=1, assigned=True)
-    tuesdayShiftsAvail = mealShifts.objects.filter(day=2, assigned=True)
-    tuesdayShiftsTaken = mealShifts.objects.filter(day=2, assigned=True)
-    wednesdayShiftsAvail = mealShifts.objects.filter(day=3, assigned=False)
-    wednesdayShiftsTaken = mealShifts.objects.filter(day=3, assigned=True)
-    thursdayShiftsAvail = mealShifts.objects.filter(day=4, assigned=False)
-    thursdayShiftsTaken = mealShifts.objects.filter(day=4, assigned=True)
-    fridayShiftsAvail = mealShifts.objects.filter(day=5, assigned=False)
-    fridayShiftsTaken = mealShifts.objects.filter(day=5, assigned=True)
-    saturdayShiftsAvail = mealShifts.objects.filter(day=6, assigned=False)
-    saturdayShiftsTaken = mealShifts.objects.filter(day=6, assigned=True)
-    saturdayShiftsAvail = mealShifts.objects.filter(day=7, assigned=False)
-    saturdayShiftsTaken = mealShifts.objects.filter(day=7, assigned=True)
+    sundayShiftsAvail = MealShifts.objects.filter(day=0, assigned=False)
+    sundayShiftsTaken = MealShifts.objects.filter(day=0, assigned=True)
+    mondayShiftsAvail = MealShifts.objects.filter(day=1, assigned=False)
+    mondayShiftsTaken = MealShifts.objects.filter(day=1, assigned=True)
+    tuesdayShiftsAvail = MealShifts.objects.filter(day=2, assigned=True)
+    tuesdayShiftsTaken = MealShifts.objects.filter(day=2, assigned=True)
+    wednesdayShiftsAvail = MealShifts.objects.filter(day=3, assigned=False)
+    wednesdayShiftsTaken = MealShifts.objects.filter(day=3, assigned=True)
+    thursdayShiftsAvail = MealShifts.objects.filter(day=4, assigned=False)
+    thursdayShiftsTaken = MealShifts.objects.filter(day=4, assigned=True)
+    fridayShiftsAvail = MealShifts.objects.filter(day=5, assigned=False)
+    fridayShiftsTaken = MealShifts.objects.filter(day=5, assigned=True)
+    saturdayShiftsAvail = MealShifts.objects.filter(day=6, assigned=False)
+    saturdayShiftsTaken = MealShifts.objects.filter(day=6, assigned=True)
+    saturdayShiftsAvail = MealShifts.objects.filter(day=7, assigned=False)
+    saturdayShiftsTaken = MealShifts.objects.filter(day=7, assigned=True)
     
     if request.method == 'POST':
         shift_id = request.POST.get('shift_id')

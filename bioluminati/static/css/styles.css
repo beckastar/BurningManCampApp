@@ -29,7 +29,7 @@ footer {
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;
-    height: 200px;
+    height: 15%;
     /*background-image: url(../images/bluebanner.JPG)*/
 }
 
@@ -511,6 +511,8 @@ table.gradienttable td p{
 
 .textbody {
     margin-left: 10%;
+    margin-top: 2%;
+    margin-bottom: 2%
     margin-right: 8%;
     font-size: 23px;
 }
