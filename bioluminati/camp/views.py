@@ -145,6 +145,8 @@ def delete_item(item_id):
     thing.item = ''
     thing.save()
 
+
+# i tried to allow users to edit the inventory table 
 # def inventory(request, id):
 #     model = Inventory
 #     # thing = Inventory.objects.get(pk=id) 
