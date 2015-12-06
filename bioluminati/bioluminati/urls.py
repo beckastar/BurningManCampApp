@@ -31,7 +31,9 @@ urlpatterns = [
     url(r'^confirm/$', register, name='confirm'),  
     url(r'^bikes/$', bike_form, name='bikes'),  
     url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
-    url(r'^inventory/$', inventory, name='inventory'), 
+    # url(r'^inventory/$', inventory, name='inventory'), 
+    # url(r'^inventory/(?P<pk>.*)/$', inventory, name ='inventory'),
+    # url(r'^inventory/(?P<id>\d+)/$', inventory, name='inventory'),
     url(r'^about/$', about, name='about'), 
      # url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about')
     # url(r'^accounts/', include('django.contrib.auth.urls')),

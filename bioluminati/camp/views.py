@@ -59,7 +59,6 @@ def remove_self_from_shift(shift_id, camper):
     
 
 
-@login_required(login_url='login.html')
 def signup(request):
     model = MealShifts
     user = request.user
@@ -116,12 +115,13 @@ def bike_form(request):
 
         if form.is_valid():
             form.save(commit=False)
-            # return redirect('index')
+            import pdb; pdb.set_trace()
+
     else:
         form = BikeForm()
     context = RequestContext(request)
     return render_to_response('bikes.html', {
-            'form':form, 'bicycles':bicycles
+            'form':form, 'bicycles':bicycles, 
             }, RequestContext(request))
 
 
@@ -133,13 +133,11 @@ def bikemutation(request):
 
         if form.is_valid():
             form.save(commit=False)
-            # return redirect('index')
+
     else:
         form = BikeMaterialForm()
-    context = RequestContext(request)
-    return render_to_response('bikemutation.html', {
-            'form':form, 'materials':materials
-            }, RequestContext(request))
+    context_dict = {'form':form, 'materials':materials}
+    return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
 
 def delete_item(item_id):
@@ -147,26 +145,39 @@ def delete_item(item_id):
     thing.item = ''
     thing.save()
 
-def inventory(request):
-    model = Inventory
-    stuff = Inventory.objects.all()
-    # thing = Inventory.objects.get(pk=id) 
-    form = InventoryForm(data = request.POST) 
+# def inventory(request, id):
+#     model = Inventory
+#     # thing = Inventory.objects.get(pk=id) 
+#     if request.method == "POST":
+#         stuff = Inventory.objects.get(id=id)
+#         form = InventoryForm(data = request.POST, instance=stuff) 
+#         if form.is_valid():
+#             # if Inventory.filter(item='item').exists()
+#             # obj = form.save(commit=False)
+#             form.save()
+
+#     else:
+#         stuff = Inventory.objects.get(id=id)
+#         form = InventoryForm(instance=stuff)
+#     context = RequestContext(request)
+#     return render_to_response('inventory.html', {
+#             'form':form, 'stuff':stuff
+#             }, RequestContext(request))
+
+
+
+def inventory(request, id):
+    if request.method == "GET":
+        stuff = Inventory.objects.get(id=id)
+        form = InventoryForm(instance=stuff)
+
     if request.method == "POST":
-
+        stuff = Inventory.objects.get(id=id)
+        form = InventoryForm(data=request.POST, instance=stuff) 
         if form.is_valid():
-            # if Inventory.filter(item='item').exists()
-            obj = form.save(commit=False)
-            obj.save()
-            # if 
-            # return redirect('index')
+            form.save()
 
-    else:
-        form = InventoryForm()
-    context = RequestContext(request)
-    return render_to_response('inventory.html', {
-            'form':form, 'stuff':stuff
-            }, RequestContext(request))
+    return render(request, 'inventory.html', {'form': form, 'stuff': stuff})
 
 
 def register(request):
