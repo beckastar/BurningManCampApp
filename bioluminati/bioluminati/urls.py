@@ -15,26 +15,22 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, signup, profile, register, bike_form, bikemutation, inventory, about
+from camp.views import index, signup_for_shift, remove_self_from_shift, profile, register, bike_form, bikemutation, inventory, about
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', index, name='index'),
-    url(r'^signup/', signup, name='signup'),
+    url(r'^signup/$', signup_for_shift, name='signup'),
+    url(r'^remove-self-from-shift/$', remove_self_from_shift, name="remove_self_from_shift"),
     url(r'^accounts/profile/$', profile, name='profile'),
-    # url(r'^accounts/campers/$', campers, name='campers'), make profile display page
     url(r'^login/', 'django.contrib.auth.views.login', name='foo',kwargs={'template_name': 'login.html'}),
     url(r'^/logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
-    url(r'^register/$', register, name='register'),
-    url(r'^confirm/$', register, name='confirm'),  
-    url(r'^bikes/$', bike_form, name='bikes'),  
+    url(r'^register/', register, name='register'),
+    url(r'^confirm/', register, name='confirm'),  
+    url(r'^bikes/', bike_form, name='bikes'),
     url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
-    # url(r'^inventory/$', inventory, name='inventory'), 
-    # url(r'^inventory/(?P<pk>.*)/$', inventory, name ='inventory'),
-    # url(r'^inventory/(?P<id>\d+)/$', inventory, name='inventory'),
-    url(r'^about/$', about, name='about'), 
-     # url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about')
+    url(r'^about/', about, name='about'), 
     # url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

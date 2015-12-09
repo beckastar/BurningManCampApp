@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div id="signupformwrap">
 	<div class="formfloatleft">
 		<h2>Shifts</h2>
@@ -22,12 +21,13 @@
 							<tr class="datarow hideTable">
 								<td>Sunday</td>
 								<td>{{shift.meal}}</td>
-								<td>{{shift.shift}}adfas</td>
-								<td>{{shift.camper}}{{user.username}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
 								<td>
 							 {% if user.username == shift.camper|stringformat:"s" %}
-						        <form method="post">
+						        <form action="/remove-self-from-shift/" method="post">
 						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
 						            <input type="submit" value="remove me">
 						        </form>
 						    {% endif %}
@@ -41,11 +41,11 @@
 								<td>{{shifts.shift}}</td>
 								<td>{{shifts.camper}}</td>
 							</tr>
-							 {% if shift.camper == user %}
-						        <form method="post">
+							{% if user.username == shift.camper|stringformat:"s" %}
+						        <form action="/remove-self-from-shift/" method="post">
 						            {% csrf_token %}
-						            <input type="hidden" name="shift_id" value="{{shift.id}}">
-						            <input type="submit" value="sign up">
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me">
 						        </form>
 						    {% endif %}
 						{% endfor %}
@@ -56,13 +56,13 @@
 								<td>{{shifts.shift}}</td>
 								<td>{{shifts.camper}}</td>
 							</tr>
-						 {% if shift.camper == user %}
-					        <form method="post">
-					            {% csrf_token %}
-					            <input type="hidden" name="shift_id" value="{{shift.id}}">
-					            <input type="submit" value="sign up">
-					        </form>
-					    {% endif %}
+							{% if user.username == shift.camper|stringformat:"s" %}
+						        <form action="/remove-self-from-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me">
+						        </form>
+						    {% endif %}
 						{% endfor %}
 						{% for shifts in wednesdayShiftsTaken %}
 							<tr class="datarow hideTable">
@@ -71,6 +71,13 @@
 								<td>{{shifts.shift}}</td>
 								<td>{{shifts.camper}}</td>
 							</tr>
+							{% if user.username == shift.camper|stringformat:"s" %}
+						        <form action="/remove-self-from-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me">
+						        </form>
+						    {% endif %}
 						{% endfor %}
 						{% for shifts in thursdayShiftsTaken %}
 							<tr class="datarow hideTable">
@@ -79,136 +86,172 @@
 								<td>{{shifts.shift}}</td>
 								<td>{{shifts.camper}}</td>
 							</tr>
+							{% if user.username == shift.camper|stringformat:"s" %}
+						        <form action="/remove-self-from-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me">
+						        </form>
+						    {% endif %}
 						{% endfor %}
+						{% for shifts in fridayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Friday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+							</tr>
+							{% if user.username == shift.camper|stringformat:"s" %}
+						        <form action="/remove-self-from-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me">
+						        </form>
+						    {% endif %}
+						{% endfor %}	
+						{% for shifts in saturdayShiftsTaken %}
+							<tr class="datarow hideTable">
+								<td>Thursday</td>
+								<td>{{shifts.meal}}</td>
+								<td>{{shifts.shift}}</td>
+								<td>{{shifts.camper}}</td>
+							</tr>
+							{% if user.username == shift.camper|stringformat:"s" %}
+						        <form action="/remove-self-from-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me">
+						        </form>
+						    {% endif %}
+						{% endfor %}				
 					</div>
 
 					<div class="showTable datatables" id="shiftsAvailable">
 						{% for shift in sundayShiftsAvail %}
 							<tr class="datarow showTable">
-								<td>Sundaydasf</td>
+								<td>Sunday</td>
 								<td>{{shift.meal}}</td>
 								<td>{{shift.shift}}</td>
-								<td>{{shift.camper}}{{user.username}}</td>
+								<td>{{shift.camper}}</td>
 								<td>
 							   		{% if not shift.camper %}
-								        <form method="post">
+								        <form method="post" action="/signup/">
 								            {% csrf_token %}
 								            <input type="hidden" name="shift_id" value="{{shift.id}}">
 								            <input type="submit" value="sign up">
 								        </form>
 								    {% endif %}
-								    {% if user.username == shift.camper %}
-								        <form method="post">
-								            {% csrf_token %}
-								            <input name="shift_id" value="{{shift.id}}">
-								            <input type="submit" value="sign up">
-								        </form>
-						    		{% endif %}
-								    </td>
-								    </tr>
-								{% endfor %}
-								{% for shifts in mondayShiftsAvail %}
-							<tr class="datarow showTable">
-								<td>Monday</td>
-								<td>{{shifts.meal}}</td>
-								<td>{{shifts.shift}}</td>
-								<td>{{shifts.camper}}</td>
-								<td>
-								{% if not shift.camper %}
-								        <form method="post">
-								            {% csrf_token %}
-								            <input type="hidden" name="shift_id" value="{{shift.id}}">
-								            <input type="submit" value="sign up">
-								        </form>
-								    {% endif %}
-								    </td>
-								    </tr>
-								{% endfor %}
-						{% for shifts in tuesdayShiftsAvail %}
-							<tr class="datarow showTable">
-								<td>Tuesday</td>
-								<td>{{shifts.meal}}</td>
-								<td>{{shifts.shift}}</td>
-								<td>{{shifts.camper}}</td>
-								<td>
-						{% if not shift.camper %}
-					        <form method="post">
-					            {% csrf_token %}
-					            <input type="hidden" name="shift_id" value="{{shift.id}}">
-					            <input type="submit" value="sign up">
-					        </form>
-					    {% endif %}
-								</td>
+								 </td>
 							</tr>
 						{% endfor %}
-						{% for shifts in wednesdayShiftsAvail %}
+						{% for shift in mondayShiftsAvail %}
 							<tr class="datarow showTable">
-							<td>Wednesday</td>
-							<td>{{shifts.meal}}</td>
-							<td>{{shifts.shift}}</td>
-							<td>{{shifts.camper}}</td>
-							<td>
-								    {% if not shift.camper %}
-						        <form method="post">
-						            {% csrf_token %}
-						            <input type="hidden" name="shift_id" value="{{shift.id}}">
-						            <input type="submit" value="sign up">
-						        </form>
-						    {% endif %}
-						    </td>
-						    </tr>
+								<td>Monday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+							   		{% if not shift.camper %}
+								        <form method="post" action="/signup/">
+								            {% csrf_token %}
+								            <input type="hidden" name="shift_id" value="{{shift.id}}">
+								            <input type="submit" value="sign up">
+								        </form>
+								    {% endif %}
+								 </td>
+							</tr>
 						{% endfor %}
-						{% for shifts in thursdayShiftsAvail %}
+
+						{% for shift in tuesdayShiftsAvail %}
 							<tr class="datarow showTable">
-							<td>Thursday</td>
-							<td>{{shifts.meal}}</td>
-							<td>{{shifts.shift}}</td>
-							<td>{{shifts.camper}}</td>
-							<td>
-						{% if not shift.camper %}
-						        <form method="post">
-						            {% csrf_token %}
-						            <input type="hidden" name="shift_id" value="{{shift.id}}">
-						            <input type="submit" value="sign up">
-						        </form>
-						    {% endif %}
-						    </td>
-						    </tr>
+								<td>Tuesday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+							   		{% if not shift.camper %}
+								        <form method="post" action="/signup/">
+								            {% csrf_token %}
+								            <input type="hidden" name="shift_id" value="{{shift.id}}">
+								            <input type="submit" value="sign up">
+								        </form>
+								    {% endif %}
+								 </td>
+							</tr>
 						{% endfor %}
-						{% for shifts in fridayShiftsAvail %}
+
+						{% for shift in wednesdayShiftsAvail %}
 							<tr class="datarow showTable">
-							<td>Friday</td>
-							<td>{{shifts.meal}}</td>
-							<td>{{shifts.shift}}</td>
-							<td>{{shifts.camper}}</td>
-							<td>
-							 {% if not shift.camper %}
-						        <form method="post">
-						            {% csrf_token %}
-						            <input type="hidden" name="shift_id" value="{{shift.id}}">
-						            <input type="submit" value="sign up">
-						        </form>
-						    {% endif %}
-						    </td>
-						    </tr>
+								<td>Wednesday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+							   		{% if not shift.camper %}
+								        <form method="post" action="/signup/">
+								            {% csrf_token %}
+								            <input type="hidden" name="shift_id" value="{{shift.id}}">
+								            <input type="submit" value="sign up">
+								        </form>
+								    {% endif %}
+								 </td>
+							</tr>
 						{% endfor %}
-						{% for shifts in saturdayShiftsAvail %}
+
+						{% for shift in thursdayShiftsAvail %}
 							<tr class="datarow showTable">
-							<td>Saturday</td>
-							<td>{{shifts.meal}}</td>
-							<td>{{shifts.shift}}</td>
-							<td>{{shifts.camper}}</td>
-							<td>
-						{% if not shift.camper %}
-					        <form method="post">
-					            {% csrf_token %}
-					            <input type="hidden" name="shift_id" value="{{shift.id}}">
-					            <input type="submit" value="sign up">
-					        </form>
-					    {% endif %}
-						    </td>
-						    </tr>
+								<td>Thursday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+							   		{% if not shift.camper %}
+								        <form method="post" action="/signup/">
+								            {% csrf_token %}
+								            <input type="hidden" name="shift_id" value="{{shift.id}}">
+								            <input type="submit" value="sign up">
+								        </form>
+								    {% endif %}
+								 </td>
+							</tr>
 						{% endfor %}
+
+						{% for shift in fridayShiftsAvail %}
+							<tr class="datarow showTable">
+								<td>Friday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+							   		{% if not shift.camper %}
+								        <form method="post" action="/signup/">
+								            {% csrf_token %}
+								            <input type="hidden" name="shift_id" value="{{shift.id}}">
+								            <input type="submit" value="sign up">
+								        </form>
+								    {% endif %}
+								 </td>
+							</tr>
+						{% endfor %}
+					
+						{% for shift in saturdayShiftsAvail %}
+							<tr class="datarow showTable">
+								<td>Saturday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td>
+							   		{% if not shift.camper %}
+								        <form method="post" action="/signup/">
+								            {% csrf_token %}
+								            <input type="hidden" name="shift_id" value="{{shift.id}}">
+								            <input type="submit" value="sign up">
+								        </form>
+								    {% endif %}
+								 </td>
+							</tr>
+						{% endfor %}
+
 					</div>
 			</table>
 		</div>
@@ -229,19 +272,6 @@
 	</div>
 	{% endif %}
 
-	<div class="formfloatright">
-		<h2>Sign up for a shift</h2>
-		<form method="post" action="">
-			{% csrf_token %}
-		   <ul> 
-			    <li>{{form.day}}</li>
-			    <li>{{form.shift}}</li>
-			    <li>{{form.meal}}</li>
-			    <li>{{form.camper}}</li>
-		    </ul>
-		    <input type="submit" value="sign me up!">
-		</form>
-	</div>
 </div>
 
 {% endblock %}

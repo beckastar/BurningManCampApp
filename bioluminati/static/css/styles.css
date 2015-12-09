@@ -471,7 +471,6 @@ table.gradienttable td p{
 }
 
 .showTable {
-    display: block;
     visibility: visible;
 }
 

@@ -40,26 +40,39 @@ def profile(request):
             form = UserProfileForm()
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile, },))
 
-def signup_for_shift(shift_id, camper):
-    shift = MealShifts.objects.get(pk=shift_id)
-    if shift.camper is not None:
-        raise ValueError
-    shift.camper = camper
-    shift.assigned = True
-    shift.save()
+def signup_for_shift(request):
+    if request.method == 'POST':
+        shift_id = int(request.POST.get('shift_id'))
 
-# this needs to work 
-def remove_self_from_shift(shift_id, camper):
-    shift = MealShifts.objects.get(pk=shift_id)
-    if shift.camper == user.username:
-        import pdb; pdb.set_trace()
-        shift.camper = None
+        shift = MealShifts.objects.get(id=shift_id)
+        if shift.camper is not None:
+            raise ValueError
+        shift.camper = request.user
+        print "shift camper %s" %shift.camper
+        shift.assigned = True
         shift.save()
 
+    return show_signup_table(request)
+
+# this needs to work 
+def remove_self_from_shift(request):
+    print "REMOVE CALLED!"
+    if request.method == 'POST':
+        shift_id = int(request.POST.get('shift_id'))
+        print "CALLED WITH SHIFT ID=%s" % shift_id
+
+        shift = MealShifts.objects.get(id=shift_id)
+        # print "Shift to remove: %s" % shift
+        # print "shift.camper = %s" % shift.camper
+        # print "request.user = %s" % request.user
+        if shift.camper == request.user:
+            shift.camper = None
+            shift.assigned = False
+            shift.save()
+
+    return show_signup_table(request)
     
-
-
-def signup(request):
+def show_signup_table(request):
     model = MealShifts
     user = request.user
     poss_shifts = MealShifts.objects.all().order_by('day')
@@ -83,15 +96,6 @@ def signup(request):
     fridayShiftsTaken = MealShifts.objects.filter(day=5, assigned=True)
     saturdayShiftsAvail = MealShifts.objects.filter(day=6, assigned=False)
     saturdayShiftsTaken = MealShifts.objects.filter(day=6, assigned=True)
-    saturdayShiftsAvail = MealShifts.objects.filter(day=7, assigned=False)
-    saturdayShiftsTaken = MealShifts.objects.filter(day=7, assigned=True)
-    
-    if request.method == 'POST':
-        shift_id = request.POST.get('shift_id')
-        signup_for_shift(shift_id, request.user)
-    else:
-        pass
-    return redirect('signup')
 
     context = RequestContext(request)
     return render_to_response('signup.html', 
@@ -106,7 +110,7 @@ def signup(request):
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 },))
 
-@login_required(login_url='login.html')
+ 
 def bike_form(request):
     model = Bikes
     bicycles = Bikes.objects.all()
@@ -132,7 +136,9 @@ def bikemutation(request):
     if request.method == "POST":
 
         if form.is_valid():
-            form.save(commit=False)
+            form.save()
+        else:
+            print "FORM WASNT VALID!!! OH NO!!!!"
 
     else:
         form = BikeMaterialForm()
