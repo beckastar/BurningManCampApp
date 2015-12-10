@@ -19,11 +19,40 @@
 				<div class="datatables">
 						{% for bike in bicycles %}
 							<tr class="datarow">
-								<td>{{bike.bike_name}}</td>
-								<td>{{bike.bike_size_inches}}</td>
-								<td>{{bike.bike_owner}}</td>
-								<td>{{bike.needs_repairs}}</td>
-								<td>{{bike.in_bike_pool_this_year}}</td>
+								{% if bike_id %}
+									<td><input type="text" name="bike_name" value="{{bike.bike_name}}" /></td>
+									<td>{{bike.bike_size_inches}}</td>
+									<td>{{bike.bike_owner}}</td>
+									<td>{{bike.needs_repairs}}</td>
+									<td>{{bike.in_bike_pool_this_year}}</td>
+								    <td>
+								        <form action="/edit_bike/" method="post">
+								            {% csrf_token %}
+								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								            <input type="submit" value="save edits">
+								        </form>
+								    </td>
+								{% else %}
+									<td>{{bike.bike_name}}</td>
+									<td>{{bike.bike_size_inches}}</td>
+									<td>{{bike.bike_owner}}</td>
+									<td>{{bike.needs_repairs}}</td>
+									<td>{{bike.in_bike_pool_this_year}}</td>
+									<td>
+								        <form action="/remove-bike-from-db/" method="post">
+								            {% csrf_token %}
+								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								            <input type="submit" value="delete bike">
+								        </form>
+								    </td>
+								    <td>
+								        <form action="/edit_bike/" method="post">
+								            {% csrf_token %}
+								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								            <input type="submit" value="edit bike">
+								        </form>
+								    </td>
+								{% endif %}
 							</tr>
 						{% endfor %}
 				</div>
@@ -32,8 +61,8 @@
 	</div>.
 
 	<div class='formfloatright' >
-		<h2>Add a bikejjjj</h2>
-		<form action="" method="post">
+		<h2>Add a bike</h2>
+		<form action="show_bike_form" method="post">
 		  {% csrf_token %}
 		  	<ul>
 			    {{ form.as_ul}}
@@ -41,5 +70,5 @@
 		  <input type="submit" value="Save"/>
 		</form>
 	</div>
-</div>
+</div
 {% endblock %}

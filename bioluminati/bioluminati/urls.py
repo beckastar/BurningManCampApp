@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, signup_for_shift, remove_self_from_shift, profile, register, bike_form, bikemutation, inventory, about
+from camp.views import index, signup_for_shift, remove_self_from_shift, profile, register, show_bike_form, remove_bike, edit_bike, bikemutation, inventory, about
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
@@ -29,7 +29,9 @@ urlpatterns = [
     url(r'^/logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
     url(r'^register/', register, name='register'),
     url(r'^confirm/', register, name='confirm'),  
-    url(r'^bikes/', bike_form, name='bikes'),
+    url(r'^bikes/', show_bike_form, name='bikes'),
+    url(r'^remove-bike-from-db/', remove_bike, name='remove_bike'),
+    url(r'^edit_bike/', edit_bike, name='edit_bike'),
     url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
     url(r'^about/', about, name='about'), 
     # url(r'^accounts/', include('django.contrib.auth.urls')),

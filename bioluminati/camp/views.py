@@ -54,17 +54,10 @@ def signup_for_shift(request):
 
     return show_signup_table(request)
 
-# this needs to work 
 def remove_self_from_shift(request):
-    print "REMOVE CALLED!"
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
-        print "CALLED WITH SHIFT ID=%s" % shift_id
-
         shift = MealShifts.objects.get(id=shift_id)
-        # print "Shift to remove: %s" % shift
-        # print "shift.camper = %s" % shift.camper
-        # print "request.user = %s" % request.user
         if shift.camper == request.user:
             shift.camper = None
             shift.assigned = False
@@ -110,16 +103,50 @@ def show_signup_table(request):
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 },))
 
- 
-def bike_form(request):
+
+def remove_bike(request):
+    if request.method == 'POST':
+        form = BikeForm()
+        bicycles = Bikes.objects.all()
+        bike_id = int(request.POST.get('bike_id')) 
+        bike = Bikes.objects.get(id=bike_id)
+        bike.delete()
+        return render_to_response('bikes.html', {
+            'form':form, 'bicycles':bicycles, 
+            }, RequestContext(request))
+
+def edit_bike(request):
+    if request.method == 'POST':
+        form = BikeForm()
+        bicycles = Bikes.objects.all()
+        bike_id = int(request.POST.get('bike_id')) 
+        bike = Bikes.objects.get(id=bike_id)
+        context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
+        if form.is_valid():
+            form.save()
+        return render_to_response('bikes.html', context_dict, RequestContext(request))
+
+def save_bike(request):
+    if request.method == 'POST':
+        form = BikeForm()
+        bicycles = Bikes.objects.all()
+        bike_id = int(request.POST.get('bike_id')) 
+        bike = Bikes.objects.get(id=bike_id)
+        context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
+        if form.is_valid():
+            form.save()
+        return render_to_response('bikes.html', context_dict, RequestContext(request))
+      
+
+
+def show_bike_form(request):
     model = Bikes
     bicycles = Bikes.objects.all()
     form = BikeForm(data = request.POST)
     if request.method == "POST":
 
         if form.is_valid():
-            form.save(commit=False)
-            import pdb; pdb.set_trace()
+            form.save()
 
     else:
         form = BikeForm()
@@ -150,28 +177,6 @@ def delete_item(item_id):
     thing = Inventory.objects.get(pk=id)
     thing.item = ''
     thing.save()
-
-
-# i tried to allow users to edit the inventory table 
-# def inventory(request, id):
-#     model = Inventory
-#     # thing = Inventory.objects.get(pk=id) 
-#     if request.method == "POST":
-#         stuff = Inventory.objects.get(id=id)
-#         form = InventoryForm(data = request.POST, instance=stuff) 
-#         if form.is_valid():
-#             # if Inventory.filter(item='item').exists()
-#             # obj = form.save(commit=False)
-#             form.save()
-
-#     else:
-#         stuff = Inventory.objects.get(id=id)
-#         form = InventoryForm(instance=stuff)
-#     context = RequestContext(request)
-#     return render_to_response('inventory.html', {
-#             'form':form, 'stuff':stuff
-#             }, RequestContext(request))
-
 
 
 def inventory(request, id):
