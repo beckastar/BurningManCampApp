@@ -126,16 +126,16 @@ def edit_bike(request):
             form.save()
         return render_to_response('bikes.html', context_dict, RequestContext(request))
 
-def save_bike(request):
-    if request.method == 'POST':
-        form = BikeForm()
-        bicycles = Bikes.objects.all()
-        bike_id = int(request.POST.get('bike_id')) 
-        bike = Bikes.objects.get(id=bike_id)
-        context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
-        if form.is_valid():
-            form.save()
-        return render_to_response('bikes.html', context_dict, RequestContext(request))
+# def save_bike(request):
+#     if request.method == 'POST':
+#         form = BikeForm()
+#         bicycles = Bikes.objects.all()
+#         bike_id = int(request.POST.get('bike_id')) 
+#         bike = Bikes.objects.get(id=bike_id)
+#         context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
+#         if form.is_valid():
+#             form.save()
+#         return render_to_response('bikes.html', context_dict, RequestContext(request))
       
 
 

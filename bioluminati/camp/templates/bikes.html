@@ -62,7 +62,7 @@
 
 	<div class='formfloatright' >
 		<h2>Add a bike</h2>
-		<form action="show_bike_form" method="post">
+		<form action="/bikes/" method="post">
 		  {% csrf_token %}
 		  	<ul>
 			    {{ form.as_ul}}
