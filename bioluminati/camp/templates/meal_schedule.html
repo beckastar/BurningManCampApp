@@ -1,0 +1,19 @@
+hi im a view 
+
+{{ shifts_by_meal }}
+
+<hr>
+
+{% for meal in shifts_by_meal %}
+  {{ meal.serving}}
+  {% for position in meal.positions.items %}
+     <tr>
+     position: {{ position.0 }} - 
+       {% for shift_worker in position.1 %}
+          <div>shift_worker: {{ shift_worker.camper }}</div>
+       {% endfor %}
+     </tr>
+  {% endfor %}
+  num served {{ meal.num_served }}
+  restriction {{ meal.restrictions }}
+{% endfor %}

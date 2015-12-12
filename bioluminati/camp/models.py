@@ -2,23 +2,23 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
+Sunday = "Sunday"
+Monday = "Monday"
+Tuesday = "Tuesday"
+Wednesday = "Wednesday"
+Thursday = "Thursday"
+Friday = "Friday"
+Days = (
+	(0, "Sunday"),
+	(1, "Monday"),
+	(2, "Tuesday"),
+	(3, "Wednesday"),
+	(4, "Thursday"),
+	(5, "Friday"),
+	(6, "Saturday"),
+	)
 
 class MealShifts(models.Model):
-	Sunday = "Sunday"
-	Monday = "Monday"
-	Tuesday = "Tuesday"
-	Wednesday = "Wednesday"
-	Thursday = "Thursday"
-	Friday = "Friday"
-	Days = (
-		(0, "Sunday"),
-		(1, "Monday"),
-		(2, "Tuesday"),
-		(3, "Wednesday"),
-		(4, "Thursday"),
-		(5, "Friday"),
-		(6, "Saturday"),
-		)
 	Breakfast = "Breakfast"
 	Dinner = "Dinner"
 	Meals = (
@@ -47,6 +47,7 @@ class MealShifts(models.Model):
 		return '%s %s %s %s %s %s'%(self.id, self.assigned, self.day, self.meal, self.shift, self.camper)
 
 class UserProfile(models.Model):
+
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User)
     # The additional attributes we wish to include.
@@ -65,10 +66,13 @@ class UserProfile(models.Model):
     favorite_movie = models.CharField(max_length=50, blank=True)
     playa_hope = models.CharField(max_length=25, blank=True)
     playa_fear = models.CharField(max_length=25, blank=True)
+    meal_restrictions = models.CharField(max_length=100, blank= True)
+    arrival_day =  models.IntegerField(choices=Days)
+    departure_day = models.IntegerField(choices=Days)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
-        return '%s %s %s %s'%(self.website, self.picture, self.shift, self.camper)
+        return '%s %s %s' % (self.website, self.picture, self.user)
 
 class Bikes(models.Model):
 	bike_photo = models.ImageField(upload_to="bike_images", blank=True, null=True)

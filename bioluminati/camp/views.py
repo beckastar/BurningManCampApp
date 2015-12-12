@@ -38,7 +38,7 @@ def profile(request):
             return redirect('profile')
         else:
             form = UserProfileForm()
-    return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile, },))
+    return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 def signup_for_shift(request):
     if request.method == 'POST':
@@ -53,6 +53,57 @@ def signup_for_shift(request):
         shift.save()
 
     return show_signup_table(request)
+
+
+def _initial_meal():
+    return {
+        'serving': 'bacon', # fix with chef stuff.
+        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': []}, 
+        'restrictions': [],
+        'num_served': 0
+    } 
+
+def _meal_time(shift):
+    return (shift.day, shift.meal)
+
+def _finalize_meal(meal, shift):
+    people_that_day = UserProfile.objects.filter(arrival_day__lt=shift.day,  departure_day__gt=shift.day)
+    restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
+    meal['day'] = shift.day
+    meal['meal'] = shift.meal
+    meal['restrictions'] = restrictions
+    meal['num_served'] = people_that_day.count()
+
+def meal_schedule(request):
+    shifts = MealShifts.objects.order_by('day', 'meal')
+    shifts_by_meal = [] 
+    # meal = {'serving': 'bacon', 'day': day, 'meal': 'breakfast'
+    #   'positions': ['chef': "a", 'KP': [workers],...],
+    #   'restrictions': ['avacado'] 
+    #   'num_served': 25
+    # }
+    if shifts:
+        first_shift = shifts[0]
+        previous_meal = _meal_time(first_shift)
+        meal = _initial_meal()
+        meal_dirty = False
+        for shift in shifts:
+            meal_time = _meal_time(shift)
+            if previous_meal != meal_time:
+                _finalize_meal(meal, shift)
+                shifts_by_meal.append(meal)
+                meal = _initial_meal()
+                meal_dirty = False
+
+            meal_dirty = True
+            meal['positions'][shift.shift].append(shift)
+
+        if meal_dirty:
+            _finalize_meal(meal, shift)
+            shifts_by_meal.append(meal)        
+
+    context_dict = {'shifts_by_meal': shifts_by_meal}
+    return render(request, "meal_schedule.html", RequestContext(request, context_dict))
 
 def remove_self_from_shift(request):
     if request.method == 'POST':
@@ -105,7 +156,6 @@ def show_signup_table(request):
 
 
 def remove_bike(request):
-    import pdb;pdb.set_trace()
     if request.method == 'POST':
         form = BikeForm()
         bicycles = Bikes.objects.all()
