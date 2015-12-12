@@ -14,30 +14,31 @@
 						<th><p>Owner</p></th>
 						<th><p>Needs repairs?</p></th>
 						<th><p>In bike pool?</p></th>
+						<th><p>Owner's last year on playa</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
 						{% for bike in bicycles %}
 							<tr class="datarow">
-								{% if bike_id %}
-									<td><input type="text" name="bike_name" value="{{bike.bike_name}}" /></td>
-									<td>{{bike.bike_size_inches}}</td>
-									<td>{{bike.bike_owner}}</td>
-									<td>{{bike.needs_repairs}}</td>
-									<td>{{bike.in_bike_pool_this_year}}</td>
-								    <td>
-								        <form action="/edit_bike/" method="post">
-								            {% csrf_token %}
-								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
-								            <input type="submit" value="save edits">
-								        </form>
-								    </td>
+								{% if bike_id == bike.id %}
+								    <form action="/edit_bike/" method="post">
+								    <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								    {% csrf_token %}
+									<td>{{ form.bike_name }}</td>
+									<td>{{form.bike_size_inches}}</td>
+									<td>{{form.bike_owner}}</td>
+									<td>{{form.needs_repairs}}</td>
+									<td>{{form.in_bike_pool_this_year}}</td>
+									<td>{{form.owners_last_year_on_playa}}</td>
+								    <td><input type="submit" value="save edits"></td>
+								    </form>
 								{% else %}
 									<td>{{bike.bike_name}}</td>
 									<td>{{bike.bike_size_inches}}</td>
 									<td>{{bike.bike_owner}}</td>
 									<td>{{bike.needs_repairs}}</td>
 									<td>{{bike.in_bike_pool_this_year}}</td>
+									<td>{{bike.owners_last_year_on_playa}}</td>
 									<td>
 								        <form action="/remove-bike-from-db/" method="post">
 								            {% csrf_token %}
@@ -46,7 +47,7 @@
 								        </form>
 								    </td>
 								    <td>
-								        <form action="/edit_bike/" method="post">
+								        <form action="/edit_bike/" method="get">
 								            {% csrf_token %}
 								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
 								            <input type="submit" value="edit bike">

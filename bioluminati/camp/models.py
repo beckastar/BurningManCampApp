@@ -74,9 +74,9 @@ class Bikes(models.Model):
 	bike_photo = models.ImageField(upload_to="bike_images", blank=True, null=True)
 	bike_name = models.CharField(max_length=30)
 	bike_size_inches = models.IntegerField()
-	bike_owner = models.ForeignKey(User, blank=True)
+	bike_owner = models.ForeignKey(User, null=True, blank=True)
 	owners_last_year_on_playa = models.IntegerField()
-	needs_repairs = models.BooleanField(default=False) 
+	needs_repairs = models.BooleanField(default=False)
 	in_bike_pool_this_year = models.BooleanField(default=False)
 	date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 

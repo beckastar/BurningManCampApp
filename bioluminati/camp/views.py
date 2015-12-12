@@ -105,6 +105,7 @@ def show_signup_table(request):
 
 
 def remove_bike(request):
+    import pdb;pdb.set_trace()
     if request.method == 'POST':
         form = BikeForm()
         bicycles = Bikes.objects.all()
@@ -116,15 +117,26 @@ def remove_bike(request):
             }, RequestContext(request))
 
 def edit_bike(request):
+    bicycles = Bikes.objects.all()
+
+    bike_id = int(
+        request.POST.get('bike_id',
+            request.GET.get('bike_id')))
+
+    bike = Bikes.objects.get(id=bike_id)
+    
+    form = BikeForm(instance=bike)
+
     if request.method == 'POST':
-        form = BikeForm()
-        bicycles = Bikes.objects.all()
-        bike_id = int(request.POST.get('bike_id')) 
-        bike = Bikes.objects.get(id=bike_id)
-        context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
+        form = BikeForm(data=request.POST, instance=bike)
+
         if form.is_valid():
             form.save()
-        return render_to_response('bikes.html', context_dict, RequestContext(request))
+            return redirect('bikes')
+
+    context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
+    
+    return render_to_response('bikes.html', context_dict, RequestContext(request))
 
 # def save_bike(request):
 #     if request.method == 'POST':
@@ -142,9 +154,9 @@ def edit_bike(request):
 def show_bike_form(request):
     model = Bikes
     bicycles = Bikes.objects.all()
-    form = BikeForm(data = request.POST)
+    
     if request.method == "POST":
-
+        form = BikeForm(data = request.POST)
         if form.is_valid():
             form.save()
 
