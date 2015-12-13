@@ -55,7 +55,7 @@
               </li>
               <li><a href="#">Operations</a>
                 <ul>
-                <!-- Inventory link goes here, it's in process. url needs fixing. --> 
+                  <li><a href="#">Inventory</a></li>
                   <li><a href="#">Budget </a></li>
                 </ul>
               </li>
@@ -81,14 +81,10 @@
           </div>
         </div>
       </header>
-      <!-- <div id="main"> -->
         <div id="main" class ="parallax-window" data-parallax='scroll'  data-image-src="{% static 'images/' %}">
           {% block content %}
           {% endblock %}
         </div>
-<!--       <footer>content
-      <img id="logo" src="{% static 'images/manlogo.png' %}">
-      </footer> -->
    </div>
   </body>
 </html>

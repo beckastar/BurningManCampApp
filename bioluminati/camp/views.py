@@ -9,20 +9,21 @@ from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
 import itertools
 
-
 def index(request):
     shifts = MealShifts.objects.all()
     return render(request, "index.html", {'shifts': shifts})
 
-
 def login(request):
     return render(request, 'login.html')
 
+def about(request):
+     return render_to_response('about.html', RequestContext(request))
 
 @login_required
 def profile(request):
@@ -188,19 +189,6 @@ def edit_bike(request):
     
     return render_to_response('bikes.html', context_dict, RequestContext(request))
 
-# def save_bike(request):
-#     if request.method == 'POST':
-#         form = BikeForm()
-#         bicycles = Bikes.objects.all()
-#         bike_id = int(request.POST.get('bike_id')) 
-#         bike = Bikes.objects.get(id=bike_id)
-#         context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
-#         if form.is_valid():
-#             form.save()
-#         return render_to_response('bikes.html', context_dict, RequestContext(request))
-      
-
-
 def show_bike_form(request):
     model = Bikes
     bicycles = Bikes.objects.all()
@@ -234,25 +222,73 @@ def bikemutation(request):
     context_dict = {'form':form, 'materials':materials}
     return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
+#edited
+def remove_items_from_truck(request):
+    if request.method == 'POST':
+        form = InventoryForm()
+        truck_stuff = Inventory.objects.all()
+        item_id = int(request.POST.get('item_id')) 
+        item = Inventory.objects.get(id=item_id)
+        item.delete()
+        return render_to_response('inventory.html', {
+            'form':form, 'truck_stuff':truck_stuff, 
+            }, RequestContext(request))
 
-def delete_item(item_id):
-    thing = Inventory.objects.get(pk=id)
-    thing.item = ''
-    thing.save()
+#needs to be edited
+def edit_truck_inventory(request):
+    truck_stuff = Inventory.objects.all()
 
+    item_id = int(
+        request.POST.get('item_id',
+            request.GET.get('item_id')))
 
-def inventory(request, id):
-    if request.method == "GET":
-        stuff = Inventory.objects.get(id=id)
-        form = InventoryForm(instance=stuff)
+    item = int(request.POST.get('item_id')) 
+    
+    form = BikeForm(instance=bike)
 
+    if request.method == 'POST':
+        form = InventoryForm(data=request.POST, instance=item)
+
+        if form.is_valid():
+            form.save()
+            return redirect('inventory')
+
+    context_dict = {"bike_id": bike_id, 'form':form, "truck_stuff":truck_stuff}
+   
+    return render_to_response('bikes.html', context_dict, RequestContext(request))
+
+def show_inventory_form(request):
+    model = Inventory
+    truck_inventory = Inventory.objects.all()
+    
     if request.method == "POST":
-        stuff = Inventory.objects.get(id=id)
-        form = InventoryForm(data=request.POST, instance=stuff) 
+        form = BikeForm(data = request.POST)
         if form.is_valid():
             form.save()
 
-    return render(request, 'inventory.html', {'form': form, 'stuff': stuff})
+    else:
+        form = InventoryForm()
+    context = RequestContext(request)
+    return render_to_response('bikes.html', {
+            'form':form, 'truck_inventory':truck_inventory, 
+            }, RequestContext(request))
+
+
+def truck_inventory(request):
+    model = BicycleMutationInventory
+    materials = BicycleMutationInventory.objects.all()
+    form = BikeMaterialForm(data = request.POST)
+    if request.method == "POST":
+
+        if form.is_valid():
+            form.save()
+        else:
+            print "FORM WASNT VALID!!! OH NO!!!!"
+
+    else:
+        form = BikeMaterialForm()
+    context_dict = {'form':form, 'materials':materials}
+    return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
 
 def register(request):
@@ -285,8 +321,14 @@ def register(request):
     return render_to_response('register.html', 
         RequestContext(request, {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},))
 
-def about(request):
-     return render_to_response('about.html', RequestContext(request))
+
+@staff_member_required
+def operations(request, id):\
+    
+    context_dict = {}
+    return render_to_response('operations.html', 
+        RequestContext(request, context_dict))
+
 
 
 def profile_view(request, id):

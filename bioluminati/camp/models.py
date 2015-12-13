@@ -120,4 +120,5 @@ class Inventory(models.Model):
 	def __str__(self):
 		return '%s %s'%(self.item, self.needs_repairs)
 
+
 		 
