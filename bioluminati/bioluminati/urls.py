@@ -36,6 +36,9 @@ urlpatterns = [
     url(r'^about/', about, name='about'), 
     url(r'^meal_schedule/', meal_schedule, name="meal_schedule"),
     url(r'^inventory/', show_inventory_form, name="inventory"),
+    url(r'^show_inventory_form/', show_inventory_form, name="inventory"),
+    url(r'^remove_items_from_truck/', remove_items_from_truck, name="inventory"),
+    url(r'^edit_inventory_item/', edit_truck_inventory, name="edit_inventory"),    
     # url(r'^operations/', operations, name="operations")
     # url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

@@ -78,11 +78,6 @@ def _finalize_meal(meal, shift):
 def meal_schedule(request):
     shifts = MealShifts.objects.order_by('day', 'meal')
     shifts_by_meal = [] 
-    # meal = {'serving': 'bacon', 'day': day, 'meal': 'breakfast'
-    #   'positions': ['chef': "a", 'KP': [workers],...],
-    #   'restrictions': ['avacado'] 
-    #   'num_served': 25
-    # }
     if shifts:
         first_shift = shifts[0]
         previous_meal = _meal_time(first_shift)
@@ -155,7 +150,7 @@ def show_signup_table(request):
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 },))
 
-
+@staff_member_required
 def remove_bike(request):
     if request.method == 'POST':
         form = BikeForm()
@@ -167,6 +162,7 @@ def remove_bike(request):
             'form':form, 'bicycles':bicycles, 
             }, RequestContext(request))
 
+@staff_member_required
 def edit_bike(request):
     bicycles = Bikes.objects.all()
 
@@ -222,21 +218,21 @@ def bikemutation(request):
     context_dict = {'form':form, 'materials':materials}
     return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
-#edited
+@staff_member_required
 def remove_items_from_truck(request):
     if request.method == 'POST':
         form = InventoryForm()
-        truck_stuff = Inventory.objects.all()
+        truck_inventory = Inventory.objects.all()
         item_id = int(request.POST.get('item_id')) 
         item = Inventory.objects.get(id=item_id)
         item.delete()
         return render_to_response('inventory.html', {
-            'form':form, 'truck_stuff':truck_stuff, 
+            'form':form, 'truck_inventory':truck_stuff, 
             }, RequestContext(request))
 
-#needs to be edited
+@staff_member_required
 def edit_truck_inventory(request):
-    truck_stuff = Inventory.objects.all()
+    truck_inventory = Inventory.objects.all()
 
     item_id = int(
         request.POST.get('item_id',
@@ -244,7 +240,7 @@ def edit_truck_inventory(request):
 
     item = int(request.POST.get('item_id')) 
     
-    form = BikeForm(instance=bike)
+    form = InventoryForm(instance=item)
 
     if request.method == 'POST':
         form = InventoryForm(data=request.POST, instance=item)
@@ -253,31 +249,31 @@ def edit_truck_inventory(request):
             form.save()
             return redirect('inventory')
 
-    context_dict = {"bike_id": bike_id, 'form':form, "truck_stuff":truck_stuff}
+    context_dict = {"item_id": item_id, 'form':form, "truck_inventory":truck_inventory}
    
-    return render_to_response('bikes.html', context_dict, RequestContext(request))
+    return render_to_response('inventory.html', context_dict, RequestContext(request))
 
 def show_inventory_form(request):
     model = Inventory
     truck_inventory = Inventory.objects.all()
     
     if request.method == "POST":
-        form = BikeForm(data = request.POST)
+        form = InventoryForm(data = request.POST)
         if form.is_valid():
             form.save()
 
     else:
         form = InventoryForm()
     context = RequestContext(request)
-    return render_to_response('bikes.html', {
+    return render_to_response('inventory.html', {
             'form':form, 'truck_inventory':truck_inventory, 
             }, RequestContext(request))
 
-
+@staff_member_required
 def truck_inventory(request):
-    model = BicycleMutationInventory
-    materials = BicycleMutationInventory.objects.all()
-    form = BikeMaterialForm(data = request.POST)
+    model = Inventory
+    truck_inventory = Inventory.objects.all()
+    form = InventoryForm(data = request.POST)
     if request.method == "POST":
 
         if form.is_valid():
@@ -286,9 +282,9 @@ def truck_inventory(request):
             print "FORM WASNT VALID!!! OH NO!!!!"
 
     else:
-        form = BikeMaterialForm()
+        form = InventoryForm()
     context_dict = {'form':form, 'materials':materials}
-    return render_to_response('bikemutation.html', context_dict, RequestContext(request))
+    return render_to_response('inventory.html', context_dict, RequestContext(request))
 
 
 def register(request):
@@ -323,7 +319,7 @@ def register(request):
 
 
 @staff_member_required
-def operations(request, id):\
+def operations(request, id):
     
     context_dict = {}
     return render_to_response('operations.html', 

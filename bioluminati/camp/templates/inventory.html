@@ -16,15 +16,19 @@
 					</tr>
 				</thead>
 				<div class="datatables">
-						{% for things in stuff %}
+						{% for things in truck_inventory %}
 							<tr class="datarow">
 								<td>{{things.item}}</td>
 								<td>{{things.needs_repairs}}</td>
 							<td>
-								<form method="post">
+							<td>
+						        <form action="/remove_items_from_truck/" method="post">
 						            {% csrf_token %}
-						            <input type="submit" value="edit or remove me">
+						            <input type="hidden" name="item_id" value="{{item.id}}" />
+						            <input type="submit" value="delete item">
 						        </form>
+						    </td>
+
 						    </td>
 							</tr>
 						{% endfor %}
