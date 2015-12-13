@@ -218,19 +218,17 @@ def bikemutation(request):
     context_dict = {'form':form, 'materials':materials}
     return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
-@staff_member_required
 def remove_items_from_truck(request):
     if request.method == 'POST':
         form = InventoryForm()
         truck_inventory = Inventory.objects.all()
-        item_id = int(request.POST.get('item_id')) 
-        item = Inventory.objects.get(id=item_id)
+        item_id = int(request.POST.get('item_id'))  #this line is the problem 
+        item = Inventory.objects.get(id=item_id)       
         item.delete()
         return render_to_response('inventory.html', {
-            'form':form, 'truck_inventory':truck_stuff, 
+            'form':form, 'truck_inventory':truck_inventory, 
             }, RequestContext(request))
 
-@staff_member_required
 def edit_truck_inventory(request):
     truck_inventory = Inventory.objects.all()
 
@@ -256,7 +254,6 @@ def edit_truck_inventory(request):
 def show_inventory_form(request):
     model = Inventory
     truck_inventory = Inventory.objects.all()
-    
     if request.method == "POST":
         form = InventoryForm(data = request.POST)
         if form.is_valid():
@@ -269,22 +266,22 @@ def show_inventory_form(request):
             'form':form, 'truck_inventory':truck_inventory, 
             }, RequestContext(request))
 
-@staff_member_required
-def truck_inventory(request):
-    model = Inventory
-    truck_inventory = Inventory.objects.all()
-    form = InventoryForm(data = request.POST)
-    if request.method == "POST":
+# @staff_member_required
+# def truck_inventory(request):
+#     model = Inventory
+#     truck_inventory = Inventory.objects.all()
+#     form = InventoryForm(data = request.POST)
+#     if request.method == "POST":
 
-        if form.is_valid():
-            form.save()
-        else:
-            print "FORM WASNT VALID!!! OH NO!!!!"
+#         if form.is_valid():
+#             form.save()
+#         else:
+#             print "FORM WASNT VALID!!! OH NO!!!!"
 
-    else:
-        form = InventoryForm()
-    context_dict = {'form':form, 'materials':materials}
-    return render_to_response('inventory.html', context_dict, RequestContext(request))
+#     else:
+#         form = InventoryForm()
+#     context_dict = {'form':form, 'materials':materials}
+#     return render_to_response('inventory.html', context_dict, RequestContext(request))
 
 
 def register(request):
