@@ -1,19 +1,45 @@
-hi im a view 
+{% extends "base.html" %}
+{% block content %}
 
-{{ shifts_by_meal }}
 
-<hr>
+<div>
+	<div class="formfloatleft">
+		<h2>Meal Schedule </h2>
 
-{% for meal in shifts_by_meal %}
-  {{ meal.serving}}
-  {% for position in meal.positions.items %}
-     <tr>
-     position: {{ position.0 }} - 
-       {% for shift_worker in position.1 %}
-          <div>shift_worker: {{ shift_worker.camper }}</div>
-       {% endfor %}
-     </tr>
-  {% endfor %}
-  num served {{ meal.num_served }}
-  restriction {{ meal.restrictions }}
-{% endfor %}
+		<div class="tablewrap">
+			<table class="gradienttable">	
+				<thead>
+					<tr>
+						<th><p>Day</p></th>
+						<th><p>Kitchen Magician</p></th>
+						<th><p>Magician's Assistant</p></th>
+						<th><p>Dietary Restrictions</p></th>
+						<th><p>Serving</p></th>
+						<th><p>Number of diners</p></th>
+						<th><p>Meal Restrictions</p></th>
+					</tr>
+				</thead>
+				<div class="datatables">
+					{% for meal in shifts_by_meal %}
+							<tr class="datarow">
+									<td>{{ meal.day }}</td>
+									{% for position in meal.positions.items %}
+									 <td>
+									 position: {{ position.0 }} - 
+									   {% for shift_worker in position.1 %}
+									      <div>shift_worker: {{ shift_worker.camper }}</div>
+									   {% endfor %}
+									 </td>
+									{% endfor %}
+									<td>{{ meal.serving}}</td>
+									<td>num served {{ meal.num_served }}</td>
+									<td>restriction {{ meal.restrictions }}</td>
+							</tr>
+						{% endfor %}
+				</div>
+			</table>
+		</div>
+	</div>.
+</div> 
+
+{% endblock %}
