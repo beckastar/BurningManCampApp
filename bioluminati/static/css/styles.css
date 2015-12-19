@@ -6,7 +6,7 @@ html, body, .container {
 }
 
 body {
-    background-color: #235B8C;
+    background-color: frgba(122, 199, 230, 0.35);
 }
 header {
     /*height:10%;*/
@@ -380,6 +380,15 @@ footer {
     overflow-y: scroll;
 }
 
+.table_button {
+    width: 8em;
+    border-radius: 5px;
+    margin: 4px;
+    border: 5px solid black;
+    background-color: #450E45;
+    color: #B1E6E9;
+}
+
 .formfloatleft {
     width: 35%;
     position: relative;
@@ -396,58 +405,47 @@ footer {
     z-index: 1;
 }
 ​
-table.gradienttable {
+table {
+    border-spacing: 0px;
+}
+
+thead th:first-child {
+    border-radius: 10px 0px 0px 0px;
+}
+
+thead th:last-child {
+    border-radius: 0px 10px 0px 0px;
+}
+
+table {
     font-family: verdana,arial,sans-serif;
     font-size:15px;
     color:#333333;
-    border-width: 1px;
-    border-color: purple;
     border-collapse: collapse;
 }
-table.gradienttable th {
+table th {
     padding: 2px;
-    background: #d5e3e4;
-    background: rgba(130,130,130,1);
-    background: -moz-linear-gradient(top, rgba(130,130,130,1) 0%, rgba(173,173,173,0.98) 25%, rgba(74,74,74,0.94) 60%, rgba(122,122,122,0.92) 78%, rgba(153,153,153,0.92) 82%, rgba(0,0,0,0.92) 83%, rgba(255,255,255,0.92) 84%, rgba(31,31,31,0.91) 89%, rgba(31,31,31,0.9) 100%);
-    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(130,130,130,1)), color-stop(25%, rgba(173,173,173,0.98)), color-stop(60%, rgba(74,74,74,0.94)), color-stop(78%, rgba(122,122,122,0.92)), color-stop(82%, rgba(153,153,153,0.92)), color-stop(83%, rgba(0,0,0,0.92)), color-stop(84%, rgba(255,255,255,0.92)), color-stop(89%, rgba(31,31,31,0.91)), color-stop(100%, rgba(31,31,31,0.9)));
-    background: -webkit-linear-gradient(top, rgba(130,130,130,1) 0%, rgba(173,173,173,0.98) 25%, rgba(74,74,74,0.94) 60%, rgba(122,122,122,0.92) 78%, rgba(153,153,153,0.92) 82%, rgba(0,0,0,0.92) 83%, rgba(255,255,255,0.92) 84%, rgba(31,31,31,0.91) 89%, rgba(31,31,31,0.9) 100%);
-    background: -o-linear-gradient(top, rgba(130,130,130,1) 0%, rgba(173,173,173,0.98) 25%, rgba(74,74,74,0.94) 60%, rgba(122,122,122,0.92) 78%, rgba(153,153,153,0.92) 82%, rgba(0,0,0,0.92) 83%, rgba(255,255,255,0.92) 84%, rgba(31,31,31,0.91) 89%, rgba(31,31,31,0.9) 100%);
-    background: -ms-linear-gradient(top, rgba(130,130,130,1) 0%, rgba(173,173,173,0.98) 25%, rgba(74,74,74,0.94) 60%, rgba(122,122,122,0.92) 78%, rgba(153,153,153,0.92) 82%, rgba(0,0,0,0.92) 83%, rgba(255,255,255,0.92) 84%, rgba(31,31,31,0.91) 89%, rgba(31,31,31,0.9) 100%);
-    background: linear-gradient(to bottom, rgba(130,130,130,1) 0%, rgba(173,173,173,0.98) 25%, rgba(74,74,74,0.94) 60%, rgba(122,122,122,0.92) 78%, rgba(153,153,153,0.92) 82%, rgba(0,0,0,0.92) 83%, rgba(255,255,255,0.92) 84%, rgba(31,31,31,0.91) 89%, rgba(31,31,31,0.9) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#828282', endColorstr='#1f1f1f', GradientType=0 );
-    border: 1px solid purple;
-
+    background: rgb(237, 210, 229);  /*this is the table head */
 }
-table.gradienttable td {
+table td {
     text-align: center;
     padding-left: 2em;
     padding-right: 2em;
     background: #ebecda;
-    background: rgba(74,88,102,1);
-    background: -moz-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
-    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(74,88,102,1)), color-stop(28%, rgba(74,88,102,1)), color-stop(100%, rgba(32,124,229,1)));
-    background: -webkit-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
-    background: -o-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
-    background: -ms-linear-gradient(-45deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
-    background: linear-gradient(135deg, rgba(74,88,102,1) 0%, rgba(74,88,102,1) 28%, rgba(32,124,229,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4a5866', endColorstr='#207ce5', GradientType=1 );
-    border: 1px solid purple;
+    background: #C6C9EE; /*this is the table body */
 }
 table.gradienttable th p{
     margin:0px;
-    padding:8px;
-    border-top: 1px solid #eefafc;
-    border-bottom:0px;
-    border-left: 1px solid #eefafc;
-    border-right:0px;
 }
+
+
 table.gradienttable td p{
     margin:0px;
     padding:8px;
-    border-top: 1px solid #fcfdec;
-    border-bottom:0px;
-    border-left: 1px solid #fcfdec;;
-    border-right:0px;
+}
+
+td {
+    border: none;
 }
 
 .showTable {

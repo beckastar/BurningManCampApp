@@ -14,6 +14,7 @@
 						<th><p>Needs repairs?</p></th>
 						<th><p>In bike pool?</p></th>
 						<th><p>Owner's last year on playa</p></th>
+						<th><p>Actions</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
@@ -29,7 +30,7 @@
 									<td>{{form.needs_repairs}}</td>
 									<td>{{form.in_bike_pool_this_year}}</td>
 									<td>{{form.owners_last_year_on_playa}}</td>
-								    <td><input type="submit" value="save edits"></td>
+								    <td><input class="table_button" type="submit" value="save edits"></td>
 								    </form>
 								{% else %}
 									<td>{{bike.bike_name}}</td>
@@ -42,14 +43,14 @@
 								        <form action="/remove-bike-from-db/" method="post">
 								            {% csrf_token %}
 								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
-								            <input type="submit" value="delete bike">
+								            <input class="table_button" type="submit" value="delete bike">
 								        </form>
-								    </td>
-								    <td>
+					<!-- 			    </td>
+								    <td> -->
 								        <form action="/edit_bike/" method="get">
 								            {% csrf_token %}
 								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
-								            <input type="submit" value="edit bike">
+								            <input class="table_button" type="submit" value="edit bike">
 								        </form>
 								    </td>
 								{% endif %}
