@@ -375,36 +375,15 @@ footer {
 /*tables for both bikes and meal signups */
 
 
-#datatable {
+#table_form {
+    background-color: #B1E6E9;
+}
+
+#datatables {
     height: 300px;
     overflow-y: scroll;
 }
 
-.table_button {
-    width: 8em;
-    border-radius: 5px;
-    margin: 4px;
-    border: 5px solid black;
-    background-color: #450E45;
-    color: #B1E6E9;
-}
-
-.formfloatleft {
-    width: 35%;
-    position: relative;
-    left: 8%;
-    z-index: 2;
-}
-    
-.formfloatright {
-    height: 400px;
-    width: 35%;
-    position: relative;
-    right: -59%;
-    top: -156%;
-    z-index: 1;
-}
-​
 table {
     border-spacing: 0px;
 }
@@ -434,6 +413,7 @@ table td {
     background: #ebecda;
     background: #C6C9EE; /*this is the table body */
 }
+/*rename gradienttable class */
 table.gradienttable th p{
     margin:0px;
 }
@@ -448,14 +428,14 @@ td {
     border: none;
 }
 
-.showTable {
+/*.showTable {
     visibility: visible;
 }
 
 .hideTable {
     display:none;
     visibility: hidden;
-}
+}*/
 
 #allShifts {
   display:none;  
@@ -471,5 +451,38 @@ td {
     margin-bottom: 2%
     margin-right: 8%;
     font-size: 23px;
+}
+
+td input {
+   border-radius: 7px;
+}
+
+table .table_form td {
+    height: 5em;
+    background-color: #B1E6E9;
+}
+
+.table_with_form {
+    width: 90%;
+    position: relative;
+    left: 3%;
+    z-index: 2;
+}
+
+.table_button {
+    width: 8em;
+    height: 2.5em;
+    border-radius: 5px;
+    margin: 4px;
+    border: 5px solid black;
+    background-color: #450E45;
+    color: #B1E6E9;
+}
+
+.table_submit_button {
+    width: 15em;
+    height: 2.5em;
+    background-color: #450E45;
+    color: #B1E6E9;
 }
 
