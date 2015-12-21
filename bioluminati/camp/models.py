@@ -18,6 +18,51 @@ Days = (
 	(6, "Saturday"),
 	)
 
+Fish = "Fish"
+Mammal = "Mammal"
+Vegetarian = "Vegetarian"
+Omnivore = "Omnivore"
+Onions = "Onions"
+Cucumber = "Cucumber"
+Peppers = "Peppers"
+Gluten_free = "Gluten_free"
+Vegan = "Vegan"
+Shellfish = "Shellfish"
+Olives = "Olives"
+Pork = "Pork"
+Soy = "Soy"
+Dairy = "Dairy"
+Cilantro = "Cilantro"
+Quinoa = "Quinoa"
+Nightshades = "Nightshades"
+Nuts = "Nuts"
+Pescaterian = "Pescaterian"
+
+What_are_you = (
+	(Vegetarian, "Vegetarian"),
+	(Vegan, "Vegan"),
+	(Omnivore, "Omnivore"),
+	(Pescaterian, "Pescaterian"),
+	(Gluten_free, "Gluten_free")
+)
+
+Restrictions = (
+	(Mammal, "Mammal"),
+	(Onions, "Onions"),
+	(Cilantro, "Cilantro"),
+	(Soy, "Soy"),
+	(Dairy, "Dairy"),
+	(Quinoa, "Quinoa"),
+	(Pork, "Pork"),
+	(Olives, "Olives"),
+	(Dairy, "Dairy"),
+	(Peppers, "Peppers"),
+	(Cucumber, "Cucumber"),
+	(Nightshades, "Nightshades"),
+	(Nuts, "Nuts")
+)
+
+
 class MealShifts(models.Model):
 	Breakfast = "Breakfast"
 	Dinner = "Dinner"
@@ -52,7 +97,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     # The additional attributes we wish to include.
     playa_name = models.CharField(max_length=20)
-    website = models.CharField(max_length=20, blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
     city = models.CharField(max_length = 20)
     number_of_burns = models.IntegerField()
@@ -60,19 +104,26 @@ class UserProfile(models.Model):
     petronus = models.CharField(max_length=20, blank=True)
     needs_camp_bike = models.BooleanField(default=False)
     twitter_handle = models.CharField(max_length=30, blank=True)
-    facebook_name = models.CharField(max_length=30)
-    favorite_nonfiction = models.CharField(max_length=50)
-    favorite_fiction = models.CharField(max_length=50, blank=True)
-    favorite_movie = models.CharField(max_length=50, blank=True)
-    playa_hope = models.CharField(max_length=25, blank=True)
-    playa_fear = models.CharField(max_length=25, blank=True)
-    meal_restrictions = models.CharField(max_length=100, blank= True)
+    facebook_url = models.CharField(max_length=30) 
+    diet_lifestyle = models.CharField(max_length = 200, choices=What_are_you, null=True, blank=True)
+    meal_restrictions = models.CharField(max_length = 200, choices=Restrictions, blank= True)
+    other_restrictions = models.CharField(max_length=100, blank=True)
     arrival_day =  models.IntegerField(choices=Days)
     departure_day = models.IntegerField(choices=Days)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
-        return '%s %s %s' % (self.website, self.picture, self.user)
+        return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
+        	self.user, self.playa_name, 
+        	self.city, self.petronus,
+        	self.picture, self.number_of_burns, 
+        	self.twitter_handle, self.facebook_url,
+        	self.years_with_bio, self.petronus, 
+        	self.arrival_day, self.departure_day,
+        	self.diet_lifestyle, self.other_restrictions, 
+        	self.meal_restrictions, 
+        	self.picture, self.user
+        	)
 
 class Bikes(models.Model):
 	bike_photo = models.ImageField(upload_to="bike_images", blank=True, null=True)

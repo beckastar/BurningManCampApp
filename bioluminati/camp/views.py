@@ -25,7 +25,6 @@ def login(request):
 def about(request):
      return render_to_response('about.html', RequestContext(request))
 
-@login_required
 def profile(request):
     profile = UserProfile.objects.all()
     username = None
@@ -33,7 +32,7 @@ def profile(request):
     if request.method == 'POST':
         if form.is_valid():
             # save the form
-            profile = form.save(commit=False)
+            profile = form.save(commit=True)
             profile.user = request.user
             profile.save()
             return redirect('profile')
@@ -200,6 +199,8 @@ def show_bike_form(request):
     return render_to_response('bikes.html', {
             'form':form, 'bicycles':bicycles, 
             }, RequestContext(request))
+    # currently owner's last year is required. probably good to remove that field. 
+    
 
 
 def bikemutation(request):
@@ -324,7 +325,7 @@ def operations(request, id):
 
 
 
-def profile_view(request, id):
-    u = UserProfile.objects.get(pk=id)
+# def profile_view(request, id):
+#     u = UserProfile.objects.get(pk=id)
 
 

@@ -1,23 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div>
-	<div class="formfloatleft">
+ 
+	<div class="table_with_form">
 		<h2>Bike Inventory </h2>
 		<div class="tablewrap">
 			<table class="gradienttable">	
 				<thead>
 					<tr>
 						<th><p>Bike Name</p></th>
-						<th><p>Size (inches)</p></th>
+						<th><p>Bike Size (inches)</p></th>
 						<th><p>Owner</p></th>
-						<th><p>Needs repairs?</p></th>
+						<th><p>Does this bike need repairs?</p></th>
 						<th><p>In bike pool?</p></th>
 						<th><p>Owner's last year on playa</p></th>
 						<th><p>Actions</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
+					<tr id="table_form">
+						<form action="/bikes/" method="post">
+							{% csrf_token %}					
+							<td class="table_text_input">{{ form.bike_name }}</td>
+							<td class="table_text_input">{{ form.bike_size_inches }}</td>
+							<td>{{ form.bike_owner }}</td>
+							<td>Check for yes {{ form.needs_repairs }}</td>
+							<td>Check for yes {{ form.in_bike_pool_this_year }}</td>
+							<td class="table_text_input">{{ form.owners_last_year_on_playa }}</td>
+							<td>
+			  					<input class="table_submit_button" type="submit" value="Save bike"/>
+			  				</td>
+						</form>
+					</tr>
 						{% for bike in bicycles %}
 							<tr class="datarow">
 								{% if bike_id == bike.id %}
@@ -45,8 +58,6 @@
 								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
 								            <input class="table_button" type="submit" value="delete bike">
 								        </form>
-					<!-- 			    </td>
-								    <td> -->
 								        <form action="/edit_bike/" method="get">
 								            {% csrf_token %}
 								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
@@ -59,17 +70,5 @@
 				</div>
 			</table>
 		</div>
-	</div>.
 
-	<div class='formfloatright' >
-		<h2>Add a bike</h2>
-		<form action="/bikes/" method="post">
-		  {% csrf_token %}
-		  	<ul>
-			    {{ form.as_ul}}
-			</ul>
-		  <input type="submit" value="Save"/>
-		</form>
-	</div>
-</div>
 {% endblock %}

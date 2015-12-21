@@ -1,17 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-<div>
-	<div class="formfloatleft">
-		<h2>Meal Schedule </h2>
-
+	<div class="">
+		<div class="table_title">
+			<span>
+					<div ></div><div class="instruction_image" id="meal_shift_help_icon"></div>
+					<div class="help_text_wrap">
+						<div class="table_instructions hidden" id="meal_shift_help_text">
+							<p>This page shows all the chef shifts and allows the chef to customize the number of kp and sous chefs needed. <br>
+							This page does not display the overall shift schedules.
+							<br>
+							Click the question mark again to hide this help dialogue.
+							</p> 
+					</div>
+				</div>
+			</span>
+		</div>
 		<div class="tablewrap">
-			<table class="gradienttable">	
+			<table class="gradienttable table_with_form">	
 				<thead>
 					<tr>
 						<th><p>Day</p></th>
-						<th><p>Kitchen Magician</p></th>
+						<th><p>Chef, aka Kitchen Magician</p></th>
 						<th><p>Magician's Assistant</p></th>
 						<th><p>Dietary Restrictions</p></th>
 						<th><p>Serving</p></th>
@@ -20,7 +30,7 @@
 						<th><p>Actions</p></th>
 					</tr>
 				</thead>
-				<div class="datatables">
+				<div>
 					{% for meal in shifts_by_meal %}
 							<tr class="datarow">
 									<td>{{ meal.day }}</td>
@@ -40,7 +50,7 @@
 				</div>
 			</table>
 		</div>
-	</div>.
+	</div>
 </div> 
 
 {% endblock %}
