@@ -9,11 +9,9 @@ body {
     background-color: frgba(122, 199, 230, 0.35);
 }
 header {
-    /*height:10%;*/
     padding: 25px 0 35px;
     display: inline;
 }
-
 
 footer {
     height:20%;
@@ -38,6 +36,8 @@ footer {
     z-index: 4;
     opacity: 0.7;
 }
+
+/* Navbar */
 
 #wrap {
     width: 100%; /* Spans the width of the page */
@@ -107,12 +107,11 @@ footer {
     width: 100%
 }
 
-/*the items in the header need to be at 10 of total width %*/
+/*the items in the header need to be at 10 of total width for ten items %*/
 #nav li {
     width: 10%;
 }
-
-/**/
+ 
 
 #nav li {
     height: auto;
@@ -126,7 +125,6 @@ footer {
     margin: 0;
     background-color: #201F1F;
 }
-
 
 #nav li ul {
     display: none;
@@ -374,7 +372,6 @@ footer {
 
 /*tables for both bikes and meal signups */
 
-
 #table_form {
     background-color: #B1E6E9;
 }
@@ -402,10 +399,12 @@ table {
     color:#333333;
     border-collapse: collapse;
 }
+
 table th {
     padding: 2px;
-    background: rgb(237, 210, 229);  /*this is the table head */
+    background: rgb(237, 210, 229);  
 }
+
 table td {
     text-align: center;
     padding-left: 2em;
@@ -457,9 +456,9 @@ td input {
    border-radius: 7px;
 }
 
-table .table_form td {
+table td {
     height: 5em;
-    background-color: #B1E6E9;
+    border-bottom: 1px dotted purple;
 }
 
 .table_with_form {
@@ -484,5 +483,46 @@ table .table_form td {
     height: 2.5em;
     background-color: #450E45;
     color: #B1E6E9;
+}
+
+.table_title {
+    position: relative;
+    left: 3%;
+}
+
+.help_text_wrap{
+    position: relative;
+}
+
+.table_instructions {
+    position: fixed;
+    z-index: 10;
+    width: 6em;
+    left: 2%;
+    bottom: 51%;
+    font-size: 25px;
+    width: 34%;
+    border: 2px solid purple;
+    border-radius: 5px;
+    z-index: 4;
+    background-color: rgb(237, 210, 229);
+}
+
+.instruction_image {
+    width: 4em;
+    height: 4em;
+    position: relative;
+    background-position: 2px 4px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url('../images/question_mark.png');
+}
+
+.hidden {
+    display: none;
+}
+
+.shown{
+    visibility: visible;
 }
 
