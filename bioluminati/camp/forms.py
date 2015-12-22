@@ -16,8 +16,35 @@ class UserForm(ModelForm):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('website', 'picture', 'city', 'number_of_burns', 'years_with_bio', 'petronus', 'needs_camp_bike', 'twitter_handle')
+        fields = ('playa_name', 'picture', 'city', 
+                'number_of_burns', 'years_with_bio', 
+                'petronus', 'needs_camp_bike', 'twitter_handle', 
+                'facebook_url', 'diet_lifestyle',
+                'other_restrictions', 'arrival_day', 'departure_day', 'meal_restrictions')
+        Fish = "Fish"
+        Mammal = "Mammal"
+        Vegetarian = "Vegetarian"
+        Omnivore = "Omnivore"
+        Onions = "Onions"
+        Cucumber = "Cucumber"
+        Peppers = "Peppers"
+        Gluten_free = "Gluten_free"
+        Vegan = "Vegan"
+        Shellfish = "Shellfish"
+        Olives = "Olives"
+        Pork = "Pork"
+        Soy = "Soy"
+        Dairy = "Dairy"
+        Cilantro = "Cilantro"
+        Quinoa = "Quinoa"
+        Nightshades = "Nightshades"
+        Nuts = "Nuts"
+        Pescaterian = "Pescaterian"
 
+
+        widgets = {
+            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(),
+        }
 
 class BikeForm(ModelForm):
     class Meta:

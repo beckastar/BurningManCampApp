@@ -173,7 +173,6 @@ footer {
 
 #profile {
     position: relative;
-    background-color: red;
 }
 
 #container {
@@ -385,12 +384,18 @@ table {
     border-spacing: 0px;
 }
 
+/*for tables with thead*/
 thead th:first-child {
     border-radius: 10px 0px 0px 0px;
 }
 
 thead th:last-child {
     border-radius: 0px 10px 0px 0px;
+}
+
+/*for tabels without thead*/
+#profile_table tr:first-child {
+    border-radius: 10px 0px 0px 0px;
 }
 
 table {

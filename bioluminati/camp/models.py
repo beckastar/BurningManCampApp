@@ -96,6 +96,7 @@ class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User)
     # The additional attributes we wish to include.
+    # allow null = true and blank = true below 
     playa_name = models.CharField(max_length=20)
     picture = models.ImageField(upload_to='profile_images', blank=True)
     city = models.CharField(max_length = 20)
