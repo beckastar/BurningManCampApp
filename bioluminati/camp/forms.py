@@ -8,19 +8,14 @@ from .models import MealShifts, UserProfile, Bikes, BicycleMutationInventory, In
 class UserForm(ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())
 
-
     class Meta:
         model = User 
         fields = ('username', 'email', 'password') 
 
 class UserProfileForm(ModelForm):
+
+
     class Meta:
-        model = UserProfile
-        fields = ('playa_name', 'picture', 'city', 
-                'number_of_burns', 'years_with_bio', 
-                'petronus', 'needs_camp_bike', 'twitter_handle', 
-                'facebook_url', 'diet_lifestyle',
-                'other_restrictions', 'arrival_day', 'departure_day', 'meal_restrictions')
         Fish = "Fish"
         Mammal = "Mammal"
         Vegetarian = "Vegetarian"
@@ -41,9 +36,29 @@ class UserProfileForm(ModelForm):
         Nuts = "Nuts"
         Pescaterian = "Pescaterian"
 
+        Restrictions = (
+          (Mammal, "Mammal"),
+          (Onions, "Onions"),
+          (Cilantro, "Cilantro"),
+          (Soy, "Soy"),
+          (Dairy, "Dairy"),
+          (Quinoa, "Quinoa"),
+          (Pork, "Pork"),
+          (Olives, "Olives"),
+          (Dairy, "Dairy"),
+          (Peppers, "Peppers"),
+          (Cucumber, "Cucumber"),
+          (Nightshades, "Nightshades"),
+          (Nuts, "Nuts")
+        )
+        model = UserProfile
+        fields = ('user','picture', 'city', 
+                'needs_camp_bike', 'diet_lifestyle',
+                'other_restrictions', 'arrival_day', 
+                'departure_day', 'meal_restrictions')
 
         widgets = {
-            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(),
+            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(choices=Restrictions),
         }
 
 class BikeForm(ModelForm):

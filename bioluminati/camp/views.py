@@ -25,21 +25,6 @@ def login(request):
 def about(request):
      return render_to_response('about.html', RequestContext(request))
 
-def profile(request):
-    profile = UserProfile.objects.all()
-    username = None
-    form = UserProfileForm(request.POST)
-    if request.method == 'POST':
-        if form.is_valid():
-            # save the form
-            profile = form.save(commit=True)
-            profile.user = request.user
-            profile.save()
-            return redirect('profile')
-        else:
-            form = UserProfileForm()
-    return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
-
 def signup_for_shift(request):
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
@@ -112,7 +97,7 @@ def remove_self_from_shift(request):
     return show_signup_table(request)
     
 def show_signup_table(request):
-    model = MealShifts
+    # model = MealShifts
     user = request.user
     poss_shifts = MealShifts.objects.all().order_by('day')
     day_choices = range(0, 6)
@@ -148,6 +133,37 @@ def show_signup_table(request):
                 'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 },))
+
+
+# def edit_profile(request):
+#     # allow user to edit their own profile 
+#     if request.method == 'POST':
+    
+
+#     return 
+
+# form is not valid 
+def profile(request):
+    form = UserProfileForm(request.POST, instance=request.user)
+    print(request.user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST)
+        if form.is_valid():
+            # save the form
+            # UserProfile.user = request.user 
+            print("is valid")
+            # form.save(commit=False)
+            form.fields['user']=request.user
+            # user = UserProfile.objects.get(user=request.user) 
+            form.save(commit=True)
+            print("saved")
+        else:
+            print("not valid")
+            print(messages.error(request, "Error"))
+            # form = UserProfileForm()
+    return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
+
+
 
 @staff_member_required
 def remove_bike(request):

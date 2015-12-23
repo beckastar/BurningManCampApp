@@ -46,21 +46,21 @@ What_are_you = (
 	(Gluten_free, "Gluten_free")
 )
 
-Restrictions = (
-	(Mammal, "Mammal"),
-	(Onions, "Onions"),
-	(Cilantro, "Cilantro"),
-	(Soy, "Soy"),
-	(Dairy, "Dairy"),
-	(Quinoa, "Quinoa"),
-	(Pork, "Pork"),
-	(Olives, "Olives"),
-	(Dairy, "Dairy"),
-	(Peppers, "Peppers"),
-	(Cucumber, "Cucumber"),
-	(Nightshades, "Nightshades"),
-	(Nuts, "Nuts")
-)
+# Restrictions = (
+# 	(Mammal, "Mammal"),
+# 	(Onions, "Onions"),
+# 	(Cilantro, "Cilantro"),
+# 	(Soy, "Soy"),
+# 	(Dairy, "Dairy"),
+# 	(Quinoa, "Quinoa"),
+# 	(Pork, "Pork"),
+# 	(Olives, "Olives"),
+# 	(Dairy, "Dairy"),
+# 	(Peppers, "Peppers"),
+# 	(Cucumber, "Cucumber"),
+# 	(Nightshades, "Nightshades"),
+# 	(Nuts, "Nuts")
+# )
 
 
 class MealShifts(models.Model):
@@ -97,33 +97,22 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     # The additional attributes we wish to include.
     # allow null = true and blank = true below 
-    playa_name = models.CharField(max_length=20)
     picture = models.ImageField(upload_to='profile_images', blank=True)
-    city = models.CharField(max_length = 20)
-    number_of_burns = models.IntegerField()
-    years_with_bio = models.IntegerField()
-    petronus = models.CharField(max_length=20, blank=True)
-    needs_camp_bike = models.BooleanField(default=False)
-    twitter_handle = models.CharField(max_length=30, blank=True)
-    facebook_url = models.CharField(max_length=30) 
+    city = models.CharField(max_length = 20)  
+    needs_camp_bike = models.BooleanField(default=False) 
     diet_lifestyle = models.CharField(max_length = 200, choices=What_are_you, null=True, blank=True)
-    meal_restrictions = models.CharField(max_length = 200, choices=Restrictions, blank= True)
+    meal_restrictions = models.CharField(max_length = 200, blank= True)
     other_restrictions = models.CharField(max_length=100, blank=True)
     arrival_day =  models.IntegerField(choices=Days)
     departure_day = models.IntegerField(choices=Days)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
-        return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
-        	self.user, self.playa_name, 
-        	self.city, self.petronus,
-        	self.picture, self.number_of_burns, 
-        	self.twitter_handle, self.facebook_url,
-        	self.years_with_bio, self.petronus, 
-        	self.arrival_day, self.departure_day,
-        	self.diet_lifestyle, self.other_restrictions, 
-        	self.meal_restrictions, 
-        	self.picture, self.user
+        return '%s %s %s %s %s %s %s %s %s' %(
+        	self.user,  self.picture, self.city, 
+        	self.needs_camp_bike, 
+        	self.diet_lifestyle, self.meal_restrictions, self.other_restrictions, 
+        	self.arrival_day, self.departure_day
         	)
 
 class Bikes(models.Model):
