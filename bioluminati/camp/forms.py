@@ -51,8 +51,9 @@ class UserProfileForm(ModelForm):
           (Nightshades, "Nightshades"),
           (Nuts, "Nuts")
         )
+
         model = UserProfile
-        fields = ('user','picture', 'city', 
+        fields = ('picture', 'city', 
                 'needs_camp_bike', 'diet_lifestyle',
                 'other_restrictions', 'arrival_day', 
                 'departure_day', 'meal_restrictions')

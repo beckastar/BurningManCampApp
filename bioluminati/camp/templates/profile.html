@@ -7,8 +7,9 @@
 		<form action="/profile/" method="post">
 	<table id="profile_table" class="gradienttable table_with_form">	
 			{% csrf_token %}
-		    	<thead><tr id="profile_submit_row"><td></td><td></td></tr>
-		    	<tr><td>U.</td><td> {{form.user}}</td></tr>
+		    	<thead><tr id="profile_submit_row"><td></td><td><input class="table_button" type="submit" value="enter profile"></td></tr>
+		
+		    	<!-- <tr><td>U.</td><td> {{form.user}}</td></tr> -->
 			    <tr><td>Upload a profile pic.</td><td> {{form.picture}}</td></tr>
 			    <tr><td>What day will you arrive?</td><td>{{form.arrival_day}}</td></tr>
 				<tr><td>What day will you leave?</td><td>{{form.departure_day}}</td></tr>
@@ -18,7 +19,6 @@
 			    <tr><td>City you live in: </td><td>{{form.city}}</td></tr>
 			    <tr><td>Do you need a bike? </td><td>{{form.needs_camp_bike}}</td></tr>
 	</table>
-		<input class="table_button" type="submit" value="enter profile">
 			</form>
 </div> 
 

@@ -143,24 +143,16 @@ def show_signup_table(request):
 #     return 
 
 # form is not valid 
+@login_required
 def profile(request):
-    form = UserProfileForm(request.POST, instance=request.user)
-    print(request.user)
+    form = UserProfileForm(request.POST)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST)
         if form.is_valid():
-            # save the form
-            # UserProfile.user = request.user 
-            print("is valid")
-            # form.save(commit=False)
-            form.fields['user']=request.user
-            # user = UserProfile.objects.get(user=request.user) 
-            form.save(commit=True)
-            print("saved")
+            userprofile = form.save(commit=False)
+            userprofile.user = request.user
+            userprofile.save()
         else:
-            print("not valid")
             print(messages.error(request, "Error"))
-            # form = UserProfileForm()
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 

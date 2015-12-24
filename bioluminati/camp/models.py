@@ -46,23 +46,6 @@ What_are_you = (
 	(Gluten_free, "Gluten_free")
 )
 
-# Restrictions = (
-# 	(Mammal, "Mammal"),
-# 	(Onions, "Onions"),
-# 	(Cilantro, "Cilantro"),
-# 	(Soy, "Soy"),
-# 	(Dairy, "Dairy"),
-# 	(Quinoa, "Quinoa"),
-# 	(Pork, "Pork"),
-# 	(Olives, "Olives"),
-# 	(Dairy, "Dairy"),
-# 	(Peppers, "Peppers"),
-# 	(Cucumber, "Cucumber"),
-# 	(Nightshades, "Nightshades"),
-# 	(Nuts, "Nuts")
-# )
-
-
 class MealShifts(models.Model):
 	Breakfast = "Breakfast"
 	Dinner = "Dinner"
@@ -93,10 +76,7 @@ class MealShifts(models.Model):
 
 class UserProfile(models.Model):
 
-    # This line is required. Links UserProfile to a User model instance.
-    user = models.OneToOneField(User)
-    # The additional attributes we wish to include.
-    # allow null = true and blank = true below 
+    user = models.OneToOneField(User) 
     picture = models.ImageField(upload_to='profile_images', blank=True)
     city = models.CharField(max_length = 20)  
     needs_camp_bike = models.BooleanField(default=False) 
