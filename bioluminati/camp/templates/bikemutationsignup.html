@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="">
+		<div class="table_title">
+			<span>
+					<div ></div><div class="instruction_image" id="pyb_help_icon"></div>
+					<div class="help_text_wrap">
+						<div class="table_instructions hidden" id="pyb_shift_help_text">
+							<p>This page shows all pimp your bike shifts and allows you to sign up or remove yourself. We need multiple campers for each shift.  
+							You can click on the buttons to add or drop yourself from a shift. <br>
+							This page only displays basic shift information.
+							<br>
+							Click the question mark again to hide this help dialogue.
+							</p> 
+					</div>
+				</div>
+			</span>
+		</div>
+		<div class="tablewrap">
+			<table class="gradienttable table_with_form">	
+				<thead>
+					<tr>
+						<th><p>Day</p></th>
+						<th><p>Shift</p></th>
+						<th><p>Camper</p></th>
+						<th><p>Action</p></th>
+					</tr>
+				</thead>
+				<div>
+					{% for shift in saturdayShiftsTaken %}
+						<tr class="table_form">
+						 {% if user.username == shift.camper|stringformat:"s" %}
+						 	<td><b>Saturday</b></td>
+							<td><b>{{shift.meal}}</b></td>
+							<td><b>{{shift.shift}}</b></td>
+							<td><b>{{shift.camper}}</b></td>
+							<td>
+						        <form action="/remove-self-from-pyb-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me" class="table_button">
+						        </form>
+					        </td>
+					     {% else %}						     	
+							<td>Saturday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td></td>
+					    {% endif %}
+					{% endfor %}
+					<!-- add saturday shifts available  -->
+					{% for shift in sundayShiftsAvail %}
+						<tr class="shift_available">
+							<td>Sunday</td>
+							<td><p>{{shift.meal}}</p></td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/show_pybsignup/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}
+					{% for shift in sundayShiftsTaken %}
+						<tr class="table_form">
+						 {% if user.username == shift.camper|stringformat:"s" %}
+						 	<td><b>Sunday</b></td>
+							<td><b>{{shift.meal}}</b></td>
+							<td><b>{{shift.shift}}</b></td>
+							<td><b>{{shift.camper}}</b></td>
+							<td>
+						        <form action="/remove-self-from-pyb-shift/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="shift_id" value="{{shift.id}}" />
+						            <input type="submit" value="remove me" class="table_button">
+						        </form>
+					        </td>
+					     {% else %}						     	
+							<td>Sunday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td></td>
+					    {% endif %}
+					{% endfor %}
+					{% for shift in sundayShiftsAvail %}
+						<tr class="shift_available">
+							<td>Sunday</td>
+							<td><p>{{shift.meal}}</p></td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}
+
+					{% for shift in mondayShiftsTaken %}
+						<tr class="table_form">
+						 {% if user.username == shift.camper|stringformat:"s" %}
+							<td><b>Monday</b></td>
+							<td><b>{{shift.meal}}</b></td>
+							<td><b>{{shift.shift}}</b></td>
+							<td><b>{{shift.camper}}</b></td>
+							<td>
+								<form action="/remove-self-from-pyb-shift/" method="post">
+								    {% csrf_token %}
+								    <input type="hidden" name="shift_id" value="{{shift.id}}" />
+								    <input type="submit" value="remove me" class="table_button">
+								</form>
+							</td>
+					     {% else %}						     	
+							<td>Monday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td></td>
+					    {% endif %}
+						</tr>
+					{% endfor %}
+					{% for shift in mondayShiftsAvail %}
+						<tr class="">
+							<td>Monday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}
+
+					{% for shift in tuesdayShiftsTaken %}
+						<tr class="table_form">
+						 {% if user.username == shift.camper|stringformat:"s" %}
+							<td><b>Tuesday</b></td>
+							<td><b>{{shift.meal}}</b></td>
+							<td><b>{{shift.shift}}</b></td>
+							<td><b>{{shift.camper}}</b></td>
+							<td>
+								<form action="/remove-self-from-pyb-shift/" method="post">
+								    {% csrf_token %}
+								    <input type="hidden" name="shift_id" value="{{shift.id}}" />
+								    <input type="submit" value="remove me" class="table_button">
+								</form>
+							</td>
+					     {% else %}						     	
+							<td>Tuesday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td></td>
+					    {% endif %}
+						</tr>
+					{% endfor %}
+					{% for shift in tuesdayShiftsAvail %}
+						<tr class="">
+							<td>Tuesday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}
+
+					{% for shift in wednesdayShiftsTaken %}
+						<tr class="table_form">
+						 {% if user.username == shift.camper|stringformat:"s" %}
+							<td><b>Wednesday</b></td>
+							<td><b>{{shift.meal}}</b></td>
+							<td><b>{{shift.shift}}</b></td>
+							<td><b>{{shift.camper}}</b></td>
+							<td>
+								<form action="/remove-self-from-pyb-shift/" method="post">
+								    {% csrf_token %}
+								    <input type="hidden" name="shift_id" value="{{shift.id}}" />
+								    <input type="submit" value="remove me" class="table_button">
+								</form>
+							</td>
+					     {% else %}						     	
+							<td>Wednesday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td></td>
+					    {% endif %}
+						</tr>
+					{% endfor %}
+					{% for shift in wednesdayShiftsAvail %}
+						<tr class="">
+							<td>Wednesday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+
+					{% for shift in thursdayShiftsTaken %}
+						<tr class="table_form">
+							 {% if user.username == shift.camper|stringformat:"s" %}
+								<td><b>Thursday</b></td>
+								<td><b>{{shift.meal}}</b></td>
+								<td><b>{{shift.shift}}</b></td>
+								<td><b>{{shift.camper}}</b></td>
+								<td>
+									<form action="/remove-self-from-pyb-shift/" method="post">
+									    {% csrf_token %}
+									    <input type="hidden" name="shift_id" value="{{shift.id}}" />
+									    <input type="submit" value="remove me" class="table_button">
+									</form>
+								</td>
+						     {% else %}						     	
+								<td>Thursday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td></td>
+						    {% endif %}
+						</tr>
+					{% endfor %}
+					{% for shift in thursdayShiftsAvail %}
+						<tr class="">
+							<td>Thursday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}
+					{% for shift in fridayShiftsTaken %}
+						<tr class="table_form">
+							{% if user.username == shift.camper|stringformat:"s" %}
+								<td><b>Friday</b></td>
+								<td><b>{{shift.meal}}</b></td>
+								<td><b>{{shift.shift}}</b></td>
+								<td><b>{{shift.camper}}</b></td>
+								<td>
+									<form action="/remove-self-from-pyb-shift/" method="post">
+									    {% csrf_token %}
+									    <input type="hidden" name="shift_id" value="{{shift.id}}" />
+									    <input type="submit" value="remove me" class="table_button">
+									</form>
+								</td>
+						     {% else %}						     	
+								<td>Friday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td></td>
+						    {% endif %}
+						</tr>				
+					{% endfor %}
+					{% for shift in fridayShiftsAvail %}
+						<tr class="">
+							<td>Friday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}	
+
+					{% for shift in saturdayShiftsTaken %}
+						<tr class="table_form">
+							{% if user.username == shift.camper|stringformat:"s" %}
+								<td><b>Saturday</b></td>
+								<td><b>{{shift.meal}}</b></td>
+								<td><b>{{shift.shift}}</b></td>
+								<td><b>{{shift.camper}}</b></td>
+								<td>
+									<form action="/remove-self-from-pyb-shift/" method="post">
+									    {% csrf_token %}
+									    <input type="hidden" name="shift_id" value="{{shift.id}}" />
+									    <input type="submit" value="remove me" class="table_button">
+									</form>
+								</td>
+						     {% else %}						     	
+								<td>Saturday</td>
+								<td>{{shift.meal}}</td>
+								<td>{{shift.shift}}</td>
+								<td>{{shift.camper}}</td>
+								<td></td>
+						    {% endif %}
+						</tr>					
+						{% endfor %}
+					{% for shift in saturdayShiftsAvail %}
+						<tr class="">
+							<td>Saturday</td>
+							<td>{{shift.meal}}</td>
+							<td>{{shift.shift}}</td>
+							<td>{{shift.camper}}</td>
+							<td>
+						   		{% if not shift.camper %}
+							        <form method="post" action="/signup_for_pyb_shift/">
+							            {% csrf_token %}
+							            <input type="hidden" name="shift_id" value="{{shift.id}}">
+							            <input type="submit" value="sign up" class="table_button">
+							        </form>
+							    {% endif %}
+							 </td>
+						</tr>
+					{% endfor %}				
+				</div>
+			</table>
+		</div> 
+
+	{% if form.errors %}
+	<div id="form-error">
+		<p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
+		<ul>
+		{% for field in form %}
+		<li>{{ field.errors|striptags }}</li>
+		{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+
+{% endblock %}

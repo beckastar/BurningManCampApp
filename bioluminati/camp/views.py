@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import MealShifts, UserProfile, Bikes, Inventory, BicycleMutationInventory, Inventory
+from models import MealShifts, UserProfile, Bikes, Inventory, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import UserProfileForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
 from django.core.context_processors import csrf
@@ -128,9 +128,7 @@ def show_signup_table(request):
     saturdayShiftsAvail = MealShifts.objects.filter(day=6, assigned=False)
     saturdayShiftsTaken = MealShifts.objects.filter(day=6, assigned=True)
 
-    context = RequestContext(request)
-    return render_to_response('signup.html', 
-        RequestContext(request, {
+    context_dict  = {
                 'username':username, 'poss_shifts':poss_shifts,
                 'sundayShiftsAvail':sundayShiftsAvail, 'sundayShiftsTaken':sundayShiftsTaken,  
                 'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,  
@@ -139,7 +137,9 @@ def show_signup_table(request):
                 'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,  
                 'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
-                },))
+                }
+    return render_to_response('signup.html', 
+        RequestContext(request, context_dict,))
 
 
 @login_required
@@ -207,7 +207,6 @@ def show_bike_form(request):
             'form':form, 'bicycles':bicycles, 
             }, RequestContext(request))
     # currently owner's last year is required. probably good to remove that field. 
-    
 
 
 def bikemutation(request):
@@ -304,16 +303,56 @@ def register(request):
         RequestContext(request, {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},))
 
 
-@staff_member_required
-def operations(request, id):
-    
-    context_dict = {}
-    return render_to_response('operations.html', 
-        RequestContext(request, context_dict))
+def signup_for_pyb_shift(request):
+    if request.method == 'POST':
+        shift_id = int(request.POST.get('shift_id'))
+
+        shift = BikeMutationSchedule.objects.get(id=shift_id)
+        if shift.camper is not None:
+            raise ValueError
+        shift.camper = request.user
+        print "shift camper %s" %shift.camper
+        shift.assigned = True
+        shift.save()
+
+    return show_pybsignup(request)
 
 
+def remove_self_from_pyb_shift(request):
+    if request.method == 'POST':
+        shift_id = int(request.POST.get('shift_id'))
+        shift = BikeMutationSchedule.objects.get(id=shift_id)
+        if shift.camper == request.user:
+            shift.camper = None
+            shift.assigned = False
+            shift.save()
 
-# def profile_view(request, id):
-#     u = UserProfile.objects.get(pk=id)
+    return show_pybsignup(request)
+
+def show_pybsignup(request):
+    user = request.user
+    username = None
+    poss_shifts = BikeMutationSchedule.objects.all().order_by('day')
+    mondayShiftsAvail = BikeMutationSchedule.objects.filter(day=1, assigned=False)
+    mondayShiftsTaken = BikeMutationSchedule.objects.filter(day=1, assigned=True)
+    tuesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=2, assigned=True)
+    tuesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=2, assigned=True)
+    wednesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=3, assigned=False)
+    wednesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=3, assigned=True)
+    thursdayShiftsAvail = BikeMutationSchedule.objects.filter(day=4, assigned=False)
+    thursdayShiftsTaken = BikeMutationSchedule.objects.filter(day=4, assigned=True)
+    fridayShiftsAvail = BikeMutationSchedule.objects.filter(day=5, assigned=False)
+    fridayShiftsTaken = BikeMutationSchedule.objects.filter(day=5, assigned=True)
+
+    context_dict = {
+        'username':username, 'poss_shifts':poss_shifts,
+        'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,  
+        'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,  
+        'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail, 
+        'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,  
+        'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
+    }
+    return render_to_response('bikemutationsignup.html', 
+        RequestContext(request, context_dict,))
 
 

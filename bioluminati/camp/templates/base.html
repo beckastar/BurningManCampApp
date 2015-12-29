@@ -36,15 +36,15 @@
               <li><a href={% url 'campers' %}>Campers</a></li>
               <li><a href="#">Meals</a>
                 <ul>
-                  <li><a href={% url 'signup' %}>Sign up for shifts</a></li>
+                  <li><a href={% url 'signup' %}>Sign up for mutation shifts</a></li>
                   <li><a href="#">Input data as a chef</a></li>
                 </ul>
               </li>
               <li><a href={% url 'bikes' %}>Bikes</a></li>
-              <li><a href={% url 'bikemutation' %}>PYB</a>
+              <li><a href="#">PYB</a>
                 <ul>
-                  <li><a href=>Sign up for shifts</a></li>
-                  <li><a href="#">Input materials</a></li>
+                  <li><a href={% url 'show_pybsignup' %}>Sign up for shifts</a></li>
+                  <li><a href={% url 'bikemutation' %}>Input materials</a></li>
                 </ul>
               </li>
               <li><a href="#">Setup and Exedus</a>

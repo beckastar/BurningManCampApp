@@ -123,6 +123,14 @@ Days = (
 	(6, "Saturday"),
 	)
 
+PYB_days = (
+	(1, "Monday"),
+	(2, "Tuesday"),
+	(3, "Wednesday"),
+	(4, "Thursday"),
+	(5, "Friday"),
+	)
+
 Fish = "Fish"
 Mammal = "Mammal"
 Vegetarian = "Vegetarian"
@@ -151,21 +159,32 @@ What_are_you = (
 	(Gluten_free, "Gluten_free")
 )
 
+Breakfast = "Breakfast"
+Dinner = "Dinner"
+Meals = (
+	(Breakfast, "Breakfast"),
+	(Dinner, "Dinner"),
+	)
+
+Chef = "Chef"
+Sous_Chef = "Sous-Chef"
+KP ="KP"
+Shifts = (
+	(Chef, "Chef"),
+	(Sous_Chef, "Sous_Chef"),
+	(KP, "KP"),
+	)
+
+Morning = "Morning"
+Afternoon = "Afternoon"
+PYB_shifts = (
+	(Morning, "Morning"),
+	(Afternoon, "Afternoon")
+	)
+
+
+
 class MealShifts(models.Model):
-	Breakfast = "Breakfast"
-	Dinner = "Dinner"
-	Meals = (
-		(Breakfast, "Breakfast"),
-		(Dinner, "Dinner"),
-		)
-	Chef = "Chef"
-	Sous_Chef = "Sous-Chef"
-	KP ="KP"
-	Shifts = (
-		(Chef, "Chef"),
-		(Sous_Chef, "Sous_Chef"),
-		(KP, "KP"),
-		)
 	assigned = models.BooleanField(default=False)
 	day = models.IntegerField(choices=Days)
 	meal = models.CharField(max_length = 10, choices=Meals)
@@ -241,6 +260,14 @@ class BicycleMutationInventory(models.Model):
 	def __str__(self):
 		return '%s %s %s'%(self.material, self.quantity, self.units)
 
+class BikeMutationSchedule(models.Model):
+	shift = models.CharField(max_length=25, choices=PYB_shifts)
+	camper = models.ForeignKey(User, null=True, blank=True, default=None)
+	day = models.IntegerField(max_length=25, choices = PYB_days)
+	assigned = models.BooleanField(default=False)
+
+	def __str__(self):
+		return '%s %s %s %s'%(self.shift, self.camper, self.day, self.assigned)
 
 class Inventory(models.Model):
 	item = models.CharField(max_length=20, blank=True)

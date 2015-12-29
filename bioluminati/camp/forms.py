@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from .models import MealShifts, UserProfile, Bikes, BicycleMutationInventory, Inventory
+from .models import MealShifts, UserProfile, Bikes, BicycleMutationInventory, Inventory, BikeMutationSchedule
  
 
 class UserForm(ModelForm):
@@ -85,3 +85,8 @@ class InventoryForm(ModelForm):
     class Meta:
         model = Inventory
         fields = '__all__'
+
+class BikeMutationScheduleForm(ModelForm):
+    class Meta:
+      model = BikeMutationSchedule
+      fields = "__all__"
