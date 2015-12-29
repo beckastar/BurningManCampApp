@@ -531,3 +531,8 @@ table td {
     visibility: visible;
 }
 
+#truck_heading {
+    position: relative;
+    left: 10%;
+}
+

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import MealShifts, UserProfile, Bikes, Tickets, Inventory, BicycleMutationInventory, Inventory
+from models import MealShifts, UserProfile, Bikes, Inventory, BicycleMutationInventory, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import UserProfileForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
 from django.core.context_processors import csrf
@@ -24,6 +24,13 @@ def login(request):
 
 def about(request):
      return render_to_response('about.html', RequestContext(request))
+
+
+def campers(request):
+    campers = UserProfile.objects.all()
+    context_dict = {'campers':campers}
+    return render_to_response('campers.html', RequestContext(request, context_dict))
+
 
 def signup_for_shift(request):
     if request.method == 'POST':
@@ -135,14 +142,6 @@ def show_signup_table(request):
                 },))
 
 
-# def edit_profile(request):
-#     # allow user to edit their own profile 
-#     if request.method == 'POST':
-    
-
-#     return 
-
-# form is not valid 
 @login_required
 def profile(request):
     form = UserProfileForm(request.POST)
@@ -267,31 +266,12 @@ def show_inventory_form(request):
         form = InventoryForm(data = request.POST)
         if form.is_valid():
             form.save()
-
     else:
         form = InventoryForm()
     context = RequestContext(request)
     return render_to_response('inventory.html', {
             'form':form, 'truck_inventory':truck_inventory, 
             }, RequestContext(request))
-
-# @staff_member_required
-# def truck_inventory(request):
-#     model = Inventory
-#     truck_inventory = Inventory.objects.all()
-#     form = InventoryForm(data = request.POST)
-#     if request.method == "POST":
-
-#         if form.is_valid():
-#             form.save()
-#         else:
-#             print "FORM WASNT VALID!!! OH NO!!!!"
-
-#     else:
-#         form = InventoryForm()
-#     context_dict = {'form':form, 'materials':materials}
-#     return render_to_response('inventory.html', context_dict, RequestContext(request))
-
 
 def register(request):
     context = RequestContext(request)

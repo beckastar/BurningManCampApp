@@ -2,6 +2,111 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
+RV = "RV"
+sedan = "sedan"
+small_suv = "small_suv"
+large_suv = "large_suv"
+x_large_suv = "x_large_suv"
+small_pickup = "small_pickup"
+med_pickup = "med_pickup"
+large_pickup = "large_pickup"
+rocket_ship = "rocket_ship"
+
+
+Vehicle_types = (
+	(RV, 'RV'),
+	(sedan, 'sedan'),
+	(small_suv, 'small_suv'),
+	(large_suv, 'large_suv'),
+	(x_large_suv, 'x_large_suv'),
+	(small_pickup, 'small_pickup'),
+	(large_pickup, 'large_pickup'),
+	(rocket_ship, 'rocket_ship')
+	)
+
+bringing_own_tent = "bringing_own_tent"
+sharing_someone_elses_tent = "sharing someone else's tent"
+using_camp_yurt = "using camp yurt"
+sharing_rv = "sharing rv"
+other = "other"
+
+Sleeping_arrangements = (
+	(bringing_own_tent, "bringing own tent"),
+	(sharing_someone_elses_tent, "sharing someone else's tent" ),
+	(using_camp_yurt, "using_camp_yurt"),
+	(sharing_rv, "sharing_rv"),
+	(other, "other")
+	)
+
+three_feet = "three feet"
+four_feet = "four feet"
+five_feet = "five feet"
+six_feet = "six feet"
+seven_feet = "seven feet"
+eight_feet = "eight feet"
+
+one_inch = "one inch"
+two_inches = "two inches"
+three_inches = "three inches"
+four_inches = "four inches"
+five_inches = "five inches"
+six_inches = "six inches"
+seven_inches = "seven inches"
+eight_inches = "eight inches"
+nine_inches = "nine inches"
+ten_inches = "ten inches"
+eleven_inches = "eleven inches"
+
+
+
+tent_size_length_feet = (
+	(three_feet, "three feet"),
+	(four_feet, "four feet"),
+	(five_feet, "five feet"),
+	(six_feet, "six feet"),
+	(seven_feet, "seven feet"),
+	(eight_feet, "eight feet")
+	)
+
+
+tent_size_length_inches = (
+	(one_inch, "one inch"),
+	(two_inches, "two inches"),
+	(three_inches, "three inches"),
+	(four_inches, "four inches"),
+	(five_inches, "five inches"),
+	(six_inches, "six inches"),
+	(seven_inches, "seven inches"),
+	(eight_inches, "eight inches"),
+	(nine_inches, "nine inches"),
+	(ten_inches, "ten inches"),
+	(eleven_inches, "eleven inches")
+	)
+
+tent_size_width_feet = (
+	(three_feet, "three feet"),
+	(four_feet, "four feet"),
+	(five_feet, "five feet"),
+	(six_feet, "six feet"),
+	(seven_feet, "seven feet"),
+	(eight_feet, "eight feet")
+	)
+
+
+tent_size_width_inches = (
+	(one_inch, "one inch"),
+	(two_inches, "two inches"),
+	(three_inches, "three inches"),
+	(four_inches, "four inches"),
+	(five_inches, "five inches"),
+	(six_inches, "six inches"),
+	(seven_inches, "seven inches"),
+	(eight_inches, "eight inches"),
+	(nine_inches, "nine inches"),
+	(ten_inches, "ten inches"),
+	(eleven_inches, "eleven inches")
+	)
+
 Sunday = "Sunday"
 Monday = "Monday"
 Tuesday = "Tuesday"
@@ -86,14 +191,33 @@ class UserProfile(models.Model):
     arrival_day =  models.IntegerField(choices=Days)
     departure_day = models.IntegerField(choices=Days)
     date = models.DateTimeField(auto_now_add=True, blank=True)
+    primary_driver_in_your_party = models.BooleanField(default=None)
+    parking_vehicle_at_camp = models.BooleanField(default=None)
+    type_of_car = models.CharField(max_length=25, choices=Vehicle_types, blank=True, default=None)
+    model_of_car = models.CharField(max_length=25, blank=True, default=None)
+    make_of_car = models.CharField(max_length=15, blank=True, default=None)
+    sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
+    tent_width_feet = models.CharField(max_length=25, choices=tent_size_width_feet, blank=True, default=None)
+    tent_width_inches = models.CharField(max_length=25, choices=tent_size_width_inches, blank=True, default=None)
+    tent_length_feet = models.CharField(max_length=25, choices=tent_size_length_feet, blank=True, default=None)
+    tent_length_inches = models.CharField(max_length=25, choices=tent_size_length_inches, blank=True, default=None)
+    has_ticket = models.BooleanField(default = False)
+    looking_for_ticket = models.BooleanField(default = True)
+    camping_this_year = models.BooleanField()
+    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
-        return '%s %s %s %s %s %s %s %s %s' %(
+        return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
         	self.user,  self.picture, self.city, 
-        	self.needs_camp_bike, 
-        	self.diet_lifestyle, self.meal_restrictions, self.other_restrictions, 
-        	self.arrival_day, self.departure_day
+        	self.needs_camp_bike, self.diet_lifestyle, self.meal_restrictions, 
+        	self.other_restrictions, self.arrival_day, self.departure_day, 
+        	self.primary_driver_in_your_party, self.parking_vehicle_at_camp, self.type_of_car,
+        	self.model_of_car, self.make_of_car, self.sleeping_arrangement,
+        	self.tent_width_feet,  self.tent_length_inches, self.tent_length_feet,
+        	self.tent_length_inches, self.has_ticket, self.has_extra_ticket, 
+        	self.looking_for_ticket, self.camping_this_year
         	)
+
 
 class Bikes(models.Model):
 	bike_photo = models.ImageField(upload_to="bike_images", blank=True, null=True)
@@ -108,21 +232,6 @@ class Bikes(models.Model):
 	def __str__(self):
 		return '%s %s %s %s %s'%(self.bike_name, self.bike_owner, self.bike_size_inches, self.needs_repairs, self.in_bike_pool_this_year)
 
-
-class Tickets(models.Model):
-	camper = models.ForeignKey(User)
-	has_ticket = models.BooleanField(default=False)
-	has_extra_ticket = models.BooleanField(default=False)
-	number_of_extra_tickets = models.IntegerField(default=0)
-	needs_ticket_for_self = models.BooleanField(default=False)
-	needs_ticket_for_friends = models.BooleanField(default=False)
-	number_of_extra_tickets_needed = models.IntegerField(default=0)
-	date = models.DateTimeField(auto_now_add=True, blank=True)
-
-	def __str__(self):
-		return '%s %s %s %s'%(self.camper, self.has_ticket, self.has_extra_ticket, 
-			self.number_of_extra_tickets, self.needs_ticket_for_self, self.needs_ticket_for_friends, self.number_of_extra_tickets_needed)
-
 class BicycleMutationInventory(models.Model):
 	material = models.CharField(max_length=30)
 	quantity = models.IntegerField(default=0)
@@ -135,11 +244,12 @@ class BicycleMutationInventory(models.Model):
 
 class Inventory(models.Model):
 	item = models.CharField(max_length=20, blank=True)
+	quantity = models.IntegerField()
 	needs_repairs = models.BooleanField(default=True)
 	date = models.DateTimeField(auto_now_add=True, blank=True)
 
 	def __str__(self):
-		return '%s %s'%(self.item, self.needs_repairs)
+		return '%s %s'%(self.item, self.quantity, self.needs_repairs)
 
 
 		 

@@ -33,7 +33,7 @@
               {% if user.is_authenticated %}
               <li><a href={% url "logout" %}>Logout</a></li>
               <li><a href={% url 'profile' %}>Your Profile</a></li>
-              <li><a href="#">Campers</a></li>
+              <li><a href={% url 'campers' %}>Campers</a></li>
               <li><a href="#">Meals</a>
                 <ul>
                   <li><a href={% url 'signup' %}>Sign up for shifts</a></li>
@@ -49,14 +49,15 @@
               </li>
               <li><a href="#">Setup and Exedus</a>
                 <ul>
-                  <li><a href="#">Sign up for shifts</a></li>
                   <li><a href="#">Instructions and plans for setup</a></li>
+                  <li><a href="#">Signup for setup</a></li>
+                  <li><a href="#">Signup for exedus</a></li>
                 </ul>   
               </li>
               <li><a href="#">Operations</a>
                 <ul>
-                  <li><a href={% url 'inventory' %}>Inventory</a></li>
-                  <li><a href="#">Budget </a></li>
+                  <li><a href={% url 'inventory' %}>Truck Inventory</a></li>
+                  <li><a href="#"> </a></li>
                 </ul>
               </li>
                
@@ -74,7 +75,6 @@
               <li><a href={% url 'about' %}>About Bio</a>
                 <ul>
                     <li><a href="#">Photo Galleries</a></li>
-                    <li><a href="#"></a></li>
                 </ul> 
               </li>
             </ul>

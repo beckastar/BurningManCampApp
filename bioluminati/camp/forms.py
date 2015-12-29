@@ -53,10 +53,19 @@ class UserProfileForm(ModelForm):
         )
 
         model = UserProfile
-        fields = ('picture', 'city', 
-                'needs_camp_bike', 'diet_lifestyle',
-                'other_restrictions', 'arrival_day', 
-                'departure_day', 'meal_restrictions')
+        fields = ( 
+          'picture', 'city', 
+          'needs_camp_bike', 'diet_lifestyle', 'meal_restrictions', 
+          'other_restrictions',  'arrival_day', 'departure_day', 
+          'primary_driver_in_your_party', 'parking_vehicle_at_camp', 'type_of_car',
+          'model_of_car', 'make_of_car', 'sleeping_arrangement',
+          'tent_width_feet',  'tent_width_inches','tent_length_inches', 
+          'tent_length_feet',
+          'tent_length_inches', 'has_ticket', 
+          'looking_for_ticket', 'camping_this_year'
+          )
+
+
 
         widgets = {
             'meal_restrictions': forms.widgets.CheckboxSelectMultiple(choices=Restrictions),
