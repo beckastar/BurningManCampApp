@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3> </h3>
+
+<div id="vehicle_form">
+		<h2>Profile, part two: tell us about how you're getting there </h2>
+		<form action="/vehicle/" method="post" id='vehicle_form'>
+	<table id="vehicle_table" class="gradienttable table_with_form">	
+			{% csrf_token %}
+		    	<thead><tr id="profile_submit_row"><td></td><td><input id="vehiclebutton" class="table_button" type="submit" value="enter vehicle info"></td></tr>
+			    <tr><td>Are you coming in your car, of which you are the primary driver? Then check this box! </td><td>{{form.primary_driver_in_your_party}}</td></tr>
+			    <tr><td>What make of car? </td><td>{{form.make_of_car}}</td></tr>
+			    <tr><td>What model of car? </td><td>{{form.model_of_car}}</td></tr>
+	</table>
+			</form>
+</div> 
+
+<div class="message_container" id="vehicle_message">
+		<p class="confirmation_message">Almost there! Next tell us about where you'll be sleeping</p>
+</div>
+
+{% endblock %}

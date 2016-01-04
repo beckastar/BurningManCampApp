@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from .models import MealShifts, UserProfile, Bikes, BicycleMutationInventory, Inventory, BikeMutationSchedule
+from .models import MealShifts, UserProfile, Vehicle, Bikes, Shelter, BicycleMutationInventory, Inventory, BikeMutationSchedule
  
 
 class UserForm(ModelForm):
@@ -13,7 +13,6 @@ class UserForm(ModelForm):
         fields = ('username', 'email', 'password') 
 
 class UserProfileForm(ModelForm):
-
 
     class Meta:
         Fish = "Fish"
@@ -35,8 +34,17 @@ class UserProfileForm(ModelForm):
         Nightshades = "Nightshades"
         Nuts = "Nuts"
         Pescaterian = "Pescaterian"
+        All_Meat = "All_Meat"
+        Legumes = "Legumes"
+        Shellfish= "Shellfish"
+        Gluten = "Gluten"
 
         Restrictions = (
+          (Legumes, "Legumes"),
+          (Shellfish, "Shellfish"),
+          (Gluten, "Gluten"),
+          (All_Meat, "All_Meat"),
+          (Fish, "Fish"),
           (Mammal, "Mammal"),
           (Onions, "Onions"),
           (Cilantro, "Cilantro"),
@@ -54,22 +62,24 @@ class UserProfileForm(ModelForm):
 
         model = UserProfile
         fields = ( 
-          'picture', 'city', 
-          'needs_camp_bike', 'diet_lifestyle', 'meal_restrictions', 
-          'other_restrictions',  'arrival_day', 'departure_day', 
-          'primary_driver_in_your_party', 'parking_vehicle_at_camp', 'type_of_car',
-          'model_of_car', 'make_of_car', 'sleeping_arrangement',
-          'tent_width_feet',  'tent_width_inches','tent_length_inches', 
-          'tent_length_feet',
-          'tent_length_inches', 'has_ticket', 
+          'picture', 'city', 'cell_number',
+          'email_address', 'emergency_contact_name', 'meal_restrictions', 
+          'emergency_contact_phone', 'other_restrictions',  'arrival_day', 
+          'departure_day',  
+          'has_ticket', 
           'looking_for_ticket', 'camping_this_year'
           )
-
-
 
         widgets = {
             'meal_restrictions': forms.widgets.CheckboxSelectMultiple(choices=Restrictions),
         }
+
+class VehicleForm(ModelForm):
+  class Meta:
+    model = Vehicle
+    fields = '__all__'
+
+
 
 class BikeForm(ModelForm):
     class Meta:

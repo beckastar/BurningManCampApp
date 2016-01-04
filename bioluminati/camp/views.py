@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import MealShifts, UserProfile, Bikes, Inventory, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from models import MealShifts, UserProfile, Bikes, Vehicle, Inventory, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import UserProfileForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
+from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -153,6 +153,19 @@ def profile(request):
         else:
             print(messages.error(request, "Error"))
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
+
+@login_required
+def vehicle(request):
+    form = VehicleForm(request.POST)
+    if request.method == 'POST':
+        if form.is_valid():
+            vehicle = form.save(commit=False)
+            vehicle.user = request.user
+            vehicle.save()
+        else:
+            print(messages.error(request, "Error"))
+    return render(request, "vehicle.html", RequestContext(request, {'form': form, 'profile': profile,}))
+
 
 
 

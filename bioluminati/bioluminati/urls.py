@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, login, remove_items_from_truck, about, campers, signup_for_shift, meal_schedule, remove_self_from_shift, show_signup_table, profile, remove_bike, edit_bike, show_bike_form, bikemutation, edit_truck_inventory, show_inventory_form, register, remove_self_from_pyb_shift, signup_for_pyb_shift, show_pybsignup
+from camp.views import index, login, remove_items_from_truck, about, campers, signup_for_shift, meal_schedule, remove_self_from_shift, show_signup_table, profile, vehicle, remove_bike, edit_bike, show_bike_form, bikemutation, edit_truck_inventory, show_inventory_form, register, remove_self_from_pyb_shift, signup_for_pyb_shift, show_pybsignup
 
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
@@ -28,7 +28,9 @@ urlpatterns = [
     url(r'^/logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
     url(r'^confirm/', register, name='confirm'),  
     url(r'^about/', about, name='about'), 
-    url(r'^profile/', profile, name='profile'),
+    url(r'^profile/', profile, name='profile'), 
+    url(r'^vehicle/', vehicle, name='vehicle'),
+    
     url(r'^signup/$', signup_for_shift, name='signup'),
     url(r'^remove-self-from-shift/$', remove_self_from_shift, name="remove_self_from_shift"),
     url(r'^bikes/', show_bike_form, name='bikes'),
