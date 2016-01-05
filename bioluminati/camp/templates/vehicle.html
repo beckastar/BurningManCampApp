@@ -18,7 +18,8 @@
 </div> 
 
 <div class="message_container" id="vehicle_message">
-		<p class="confirmation_message">Almost there! Next tell us about where you'll be sleeping</p>
+		{% csrf_token %}
+		
 </div>
 
 {% endblock %}

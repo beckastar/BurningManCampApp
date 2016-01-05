@@ -79,7 +79,10 @@ class VehicleForm(ModelForm):
     model = Vehicle
     fields = '__all__'
 
-
+class ShelterForm(ModelForm):
+  class Meta:
+    model = Shelter
+    fields = '__all__'
 
 class BikeForm(ModelForm):
     class Meta:

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import MealShifts, UserProfile, Bikes, Vehicle, Inventory, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from models import MealShifts, UserProfile, Bikes, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
 from django.core.context_processors import csrf
@@ -162,6 +162,18 @@ def vehicle(request):
             vehicle = form.save(commit=False)
             vehicle.user = request.user
             vehicle.save()
+        else:
+            print(messages.error(request, "Error"))
+    return render(request, "vehicle.html", RequestContext(request, {'form': form, 'profile': profile,}))
+
+@login_required
+def shelter(request):
+    form = ShelterForm(request.POST)
+    if request.method == 'POST':
+        if form.is_valid():
+            shelter = form.save(commit=False)
+            shelter.user = request.user
+            shelter.save()
         else:
             print(messages.error(request, "Error"))
     return render(request, "vehicle.html", RequestContext(request, {'form': form, 'profile': profile,}))

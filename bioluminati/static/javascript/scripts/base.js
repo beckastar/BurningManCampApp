@@ -10,27 +10,78 @@ $(document).ready(function () {
 	});
 
 	// make dialog box appear 
-	$("#vehiclebutton").click(function(e){
-		e.preventDefault();
-		$('<div></div>').appendTo('#vehicle_message')
-			.html('<div><h3> Next, tell us about your sleeping arrangements. </h3></div>')
-			.dialog({
-				title: "Confirm",
-				width: 500, 
-				height: 300,
-				modal: true,
-				resizable: false,
-				show: { effect: 'drop', direction: "left" }, 
-				hide: {effect:'drop', direction:'left'},
-				buttons: {
-					Next: function() {
-						$.ajax({ 
-							window.location.href('http://127.0.0.1:8000/campers')
-							$(this).dialog("close");
-						}) 
-				}
 
-			}
-		})
-	})
+function getCookie(name) {
+var cookieValue = null;
+if (document.cookie && document.cookie != '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+        }
+    }
+}
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+console.log(csrftoken);
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+// $.ajaxSetup({
+//     beforeSend: function(xhr, settings) {
+//         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+//             xhr.setRequestHeader("X-CSRFToken", csrftoken);
+//         }
+//     }
+// });
+	$(function () {
+  $("#vehiclebutton").click(function(e){
+    e.preventDefault();
+    var obj = null;
+    $('<div></div>').appendTo('#vehicle_message')
+    .html('<div><h3> Next, tell us about your sleeping arrangements. </h3></div>')
+    .dialog({
+      title: "Confirm",
+      width: 500,
+      height: 300,
+      modal: true,
+      resizable: false,
+      show: {effect: 'drop', direction: "left"},
+      hide: {effect: 'drop', direction: 'left'},
+      buttons: [{
+        text: 'Next',
+        click: function () {
+          var data = "";
+          obj = $(this);
+          $.ajax({
+            method: "POST", 
+          	beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		        }
+		    },
+            data: data,
+            success: function(result) {
+            	// if(result === "no_errors") {
+            	// }
+            },
+            dataType: 'html',
+          }).done(function(data, textStatus, jqXHR) {
+            window.location.href = '/campers/'; 
+            obj.dialog("close");
+          }).fail(function(jqXHR, textStatus) {
+            obj.dialog("close");
+          })
+        }
+      }]
+    });
+  });
+});
 });
