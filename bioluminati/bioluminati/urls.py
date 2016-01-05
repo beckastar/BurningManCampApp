@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^about/', about, name='about'), 
     url(r'^profile/', profile, name='profile'), 
     url(r'^vehicle/', vehicle, name='vehicle'),
-
+    url(r'^shelter/', shelter, name='shelter'),
     url(r'^signup/$', signup_for_shift, name='signup'),
     url(r'^remove-self-from-shift/$', remove_self_from_shift, name="remove_self_from_shift"),
     url(r'^bikes/', show_bike_form, name='bikes'),

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from models import MealShifts, UserProfile, Bikes, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm
+from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -176,7 +176,7 @@ def shelter(request):
             shelter.save()
         else:
             print(messages.error(request, "Error"))
-    return render(request, "vehicle.html", RequestContext(request, {'form': form, 'profile': profile,}))
+    return render(request, "shelter.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 
 
