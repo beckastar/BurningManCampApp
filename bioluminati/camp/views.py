@@ -380,4 +380,42 @@ def show_pybsignup(request):
     return render_to_response('bikemutationsignup.html', 
         RequestContext(request, context_dict,))
 
+def calendarview(request):
+    # campers present and meal restrictions
+    sundayCampers = UserProfile.objects.exclude(arrival_day__gte=0).exclude(departure_day__lt=0)
+    mondayCampers = UserProfile.objects.exclude(arrival_day__gte=1).exclude(departure_day__lt=1)
+    tuesdayCampers = UserProfile.objects.exclude(arrival_day__gte=2).exclude(departure_day__lt=2)
+    wednesdayCampers = UserProfile.objects.exclude(arrival_day__gte=3).exclude(departure_day__lt=3)
+    thursdayCampers = UserProfile.objects.exclude(arrival_day__gte=4).exclude(departure_day__lt=4)
+    fridayCampers = UserProfile.objects.exclude(arrival_day__gte=5).exclude(departure_day__lt=5)
+    saturdayCampers = UserProfile.objects.exclude(arrival_day__gte=6).exclude(departure_day__lt=6)
+
+
+    # mealshifts
+    sundayShiftsTaken = MealShifts.objects.filter(day=0, assigned=True)
+    mondayShiftsTaken = MealShifts.objects.filter(day=1, assigned=True)
+    tuesdayShiftsTaken = MealShifts.objects.filter(day=2, assigned=True)
+    wednesdayShiftsTaken = MealShifts.objects.filter(day=3, assigned=True)
+    thursdayShiftsTaken = MealShifts.objects.filter(day=4, assigned=True)
+    fridayShiftsTaken = MealShifts.objects.filter(day=5, assigned=True)
+    saturdayShiftsTaken = MealShifts.objects.filter(day=6, assigned=True)
+
+    # bike shifts
+    mondayBikeShifts = BikeMutationSchedule.objects.filter(day=1)
+    tuesdayBikeShifts = BikeMutationSchedule.objects.filter(day=2)
+    wednesdayBikeShifts = BikeMutationSchedule.objects.filter(day=3)
+    thursdayBikeShifts = BikeMutationSchedule.objects.filter(day=4)
+    fridayBikeShifts = BikeMutationSchedule.objects.filter(day=5)
+
+    context_dict = {
+    'sundayCampers':sundayCampers, 'mondayCampers':mondayCampers, 
+    'tuesdayCampers':tuesdayCampers, 'wednesdayCampers':wednesdayCampers, 'thursdayCampers':thursdayCampers,
+    'fridayCampers':fridayCampers, 'saturdayCampers':saturdayCampers, 
+    'sundayShiftsTaken':sundayShiftsTaken, 'mondayShiftsTaken':mondayShiftsTaken, 'tuesdayShiftsTaken':tuesdayShiftsTaken,
+    'wednesdayShiftsTaken':wednesdayShiftsTaken,'thursdayShiftsTaken ':thursdayShiftsTaken, 'fridayShiftsTaken':fridayShiftsTaken, 
+    'saturdayShiftsTaken ':saturdayShiftsTaken, 'mondayBikeShifts':mondayBikeShifts,'tuesdayBikeShifts':tuesdayBikeShifts,
+    'wednesdayBikeShifts':wednesdayBikeShifts, 'thursdayBikeShifts':thursdayBikeShifts, 'fridayBikeShifts ':fridayBikeShifts 
+    }
+    return render_to_response('calendar.html', 
+        RequestContext(request, context_dict,))
 

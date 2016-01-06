@@ -207,11 +207,11 @@ class UserProfile(models.Model):
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
-        return '%s %s %s %s %s %s %s %s %s %s %s %s %s' %(
-            self.user,  self.picture, self.city, 
+        return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
+            self.user, self.picture, self.city, 
             self.cell_number, self.email_address, self.emergency_contact_name,
             self.emergency_contact_phone,
-            self.diet_lifestyle, self.meal_restrictions, self.other_restrictions, 
+            self.meal_restrictions, self.other_restrictions, 
             self.arrival_day, self.departure_day, self.has_ticket, 
             self.looking_for_ticket, self.camping_this_year, self.date, self.date
             )

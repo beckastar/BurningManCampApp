@@ -556,3 +556,15 @@ table td {
     font-size: 12px; 
 }
 
+.calendar_container {
+    position: relative;
+    left: 10%;
+    top: 10%;
+}
+
+#calendar_table tr td.weekdaycell {
+    border: 5px solid black;
+    width: 100px;
+    height: 100px;
+    background-color: white;
+}

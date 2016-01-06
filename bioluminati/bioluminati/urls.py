@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, login, remove_items_from_truck, about, campers, signup_for_shift, meal_schedule, remove_self_from_shift, show_signup_table, profile, vehicle, shelter, remove_bike, edit_bike, show_bike_form, bikemutation, edit_truck_inventory, show_inventory_form, register, remove_self_from_pyb_shift, signup_for_pyb_shift, show_pybsignup
+from camp.views import index, login, remove_items_from_truck, about, campers, signup_for_shift, meal_schedule, remove_self_from_shift, show_signup_table, profile, vehicle, shelter, remove_bike, edit_bike, show_bike_form, bikemutation, edit_truck_inventory, show_inventory_form, register, remove_self_from_pyb_shift, signup_for_pyb_shift, show_pybsignup, calendarview
 
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^remove_items_from_truck/', remove_items_from_truck, name="remove_inventory"),
     url(r'^edit_inventory_item/', edit_truck_inventory, name="edit_inventory"),    
     url(r'^campers/',campers, name="campers"),
+    url(r'^calendar/', calendarview, name="calendar"),
     url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
     url(r'^remove-self-from-pyb-shift/', remove_self_from_pyb_shift, name="remove_self_from_pyb_shift"),
     url(r'^signup_for_pyb_shift/', signup_for_pyb_shift, name="signup_for_pyb_shift"),
