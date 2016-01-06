@@ -234,17 +234,50 @@ def show_bike_form(request):
     # currently owner's last year is required. probably good to remove that field. 
 
 
+def remove_items_from_bikemutation(request):
+    if request.method == 'POST':
+        form = BikeMaterialForm()
+        materials = BicycleMutationInventory.objects.all()
+        item_id = int(request.POST.get('item_id'))  #this line is the problem 
+        item = BicycleMutationInventory.objects.get(id=item_id)       
+        item.delete()
+        return render_to_response('bikemutation.html', {
+            'form':form, 'materials':materials
+            }, RequestContext(request))
+
+def edit_bikemutation(request):
+    materials= BicycleMutationInventory.objects.all()
+    
+    item_id = int(
+        request.POST.get('item_id',
+            request.GET.get('item_id')))
+    
+    item = int(request.POST.get('item_id')) 
+
+    form = BikeMaterialForm(instance=item)
+
+    if request.method == 'POST':
+        form = BikeMaterialForm(data=request.POST, instance=item)
+
+        if form.is_valid():
+            form.save()
+            return redirect('bikemutation')
+
+    context_dict = {
+           'item_id':item_id, 'form':form, 'materials':materials
+            }
+    return render_to_response('bikemutation.html', context_dict, RequestContext(request))
+
+# items getting into database....
 def bikemutation(request):
     model = BicycleMutationInventory
     materials = BicycleMutationInventory.objects.all()
-    form = BikeMaterialForm(data = request.POST)
     if request.method == "POST":
-
+        form = BikeMaterialForm(data = request.POST)
         if form.is_valid():
             form.save()
         else:
             print "FORM WASNT VALID!!! OH NO!!!!"
-
     else:
         form = BikeMaterialForm()
     context_dict = {'form':form, 'materials':materials}

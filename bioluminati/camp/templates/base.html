@@ -49,20 +49,20 @@
                   <li><a href="#">Input data as a chef</a></li>
                 </ul>
               </li>
-              <li><a href={% url 'bikes' %}>Camp Bikes</a></li>
-              <li><a href="#">PYB</a>
+              <li><a href="#">Bike Mutation</a>
                 <ul>
                   <li><a href={% url 'show_pybsignup' %}>Sign up for shifts</a></li>
                   <li><a href={% url 'bikemutation' %}>Input materials</a></li>
                 </ul>
               </li>
+              <li><a href={% url 'calendar' %}>Bio Calendar</a></li>
               <li><a href="#">Operations</a>
                 <ul>
+                  <li><a href={% url 'bikes' %}>Camp Bikes</a></li>
                   <li><a href={% url 'inventory' %}>Truck Inventory</a></li>
                   <li><a href="#">Setup and Exedus</a>
                 </ul>
-              </li>
-               
+              </li>               
               {%else %}
               <li><a href="login">Login</a></li> 
               <li><a href={% url 'about' %}>About Bio</a>

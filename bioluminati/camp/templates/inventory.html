@@ -3,7 +3,7 @@
 
 
 <div>
-	<div id="truck_idventory">
+	<div id="truck_inventory">
 		<h2 id="truck_heading">Truck Inventory </h2>
 		<div class="tablewrap">
 			<table class="gradienttable table_with_form">
@@ -31,14 +31,14 @@
 						<tr class="datarow">
 							<td>{{item.quantity}}</td>
 							<td>{{item.needs_repairs}}</td>
-						<td>
-						<td>
-					        <form action="/remove_items_from_truck/" method="post">
-					            {% csrf_token %}
-					            <input type="hidden" name="item_id" value="{{item.id}}" />
-					            <input type="submit" value="delete item">
-					        </form>
-					    </td>
+							<td>
+							<td>
+						        <form action="/remove_items_from_truck/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="item_id" value="{{item.id}}" />
+						            <input type="submit" value="delete item">
+						        </form>
+					    	</td>
 
 					    </td>
 						</tr>

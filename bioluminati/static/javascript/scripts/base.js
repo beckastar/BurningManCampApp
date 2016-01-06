@@ -62,10 +62,6 @@ function csrfSafeMethod(method) {
 			        }
 			    },
 	            data: data,
-	            success: function(result) {
-	            	// if(result === "no_errors") {
-	            	// }
-	            },
 	            dataType: 'html',
 	          }).done(function(data, textStatus, jqXHR) {
 	            window.location.href = '/vehicle/'; 
