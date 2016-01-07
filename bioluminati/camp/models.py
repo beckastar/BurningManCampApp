@@ -171,6 +171,35 @@ PYB_shifts = (
     (Afternoon, "Afternoon")
     )
 
+nothing = "nothing"
+needs_wheel_or_hub = "needs_wheel_or_hub"
+tube = "tube"
+brake_adjustment = "brake adjustment"
+seat = "seat"
+pedal = "pedal"
+tire = "tire"
+new_chain = "new_chain"
+derailer = "derailer"
+brake_repair = "brake repair"
+head_tightening = "head tightening"
+cable_repair_or_lube = "cable repair or lube"
+other = "other"
+
+Bike_repairs = (
+    (nothing, "nothing"),
+    (needs_wheel_or_hub, "needs_wheel_or_hub"),
+    (tube, "tube"),
+    (brake_adjustment, "brake adjustment"),
+    (seat, "seat"),
+    (pedal, "pedal"),
+    (tire, "tire"),
+    (new_chain, "new_chain"),
+    (derailer, "derailer"),
+    (brake_repair, "brake repair"),
+    (head_tightening, "head tightening"),
+    (cable_repair_or_lube, "cable repair or lube"),
+    (other, "other")
+    )
 
 
 class MealShifts(models.Model):
@@ -248,10 +277,13 @@ class Bikes(models.Model):
     bike_name = models.CharField(max_length=30)
     bike_frame_size_inches = models.IntegerField()
     bike_owner = models.ForeignKey(User, null=True, blank=True)
-    owners_last_year_on_playa = models.IntegerField()
+    owners_last_year_on_playa = models.IntegerField(default=1)
+    stored_in_truck = models.BooleanField(default=True)
     needs_repairs = models.BooleanField(default=False)
+    repair_needed = models.CharField(max_length=30, choices=Bike_repairs, null=True, blank=True)
     in_bike_pool_this_year = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    notes = models.CharField(max_length=30, null=True, blank=True)
 
     def __str__(self):
         return '%s %s %s %s %s'%(

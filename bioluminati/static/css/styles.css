@@ -572,5 +572,9 @@ s
     position: relative;
     width: 80%;
     font: normal bold 18px/1.2em Arial, Verdana, Helvetica;  
+}
 
+#bikeform {
+    position: relative;
+    width: 85%;
 }

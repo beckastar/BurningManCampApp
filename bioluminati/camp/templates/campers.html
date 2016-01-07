@@ -3,7 +3,38 @@
 
 <div>
 	<div id="campers">
-		<h2 id="truck_heading">All Bioluminauts </h2>
+		<h2 id="camper_heading hidden">All Bioluminauts </h2>
+		<div class="tablewrap">
+			<table class="gradienttable">
+				<thead>
+					<tr>
+						<td><p>Photo</p></td>
+						<td><p>Name</p></td>
+						<td><p>City</p></td>
+						<td><p>Culinary habits</p></td>
+						<td><p>What don't they eat</p></td>
+						<td><p>Arrival day</p></td>
+						<td><p>Departure day </p></td>
+					</tr>
+				</thead>
+					{% for camper in campers %}
+						<tr class="datarow">
+							<td>{{camper.picture}}</td>
+							<td>{{camper.user}}</td>
+							<td>{{camper.city}}</td>
+							<td>{{camper.diet_lifestyle}}</td>
+							<td>{{camper.meal_restrictions}}
+								{{camper.other_restrictions}}</td>
+							<td>{{camper.arrival_day}}</td>
+							<td>{{camper.departure_day}}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		</div>
+	</div>
+
+	<div id="campers">
+		<h2 id="camper_heading">This </h2>
 		<div class="tablewrap">
 			<table class="gradienttable">
 				<thead>
@@ -34,5 +65,6 @@
 	</div>
 
 
+</div>
 
 {% endblock %}
