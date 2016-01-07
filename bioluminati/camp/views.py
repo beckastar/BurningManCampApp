@@ -25,6 +25,8 @@ def login(request):
 def about(request):
      return render_to_response('about.html', RequestContext(request))
 
+def prep(request):
+     return render_to_response('prep.html', RequestContext(request))
 
 def campers(request):
     campers = UserProfile.objects.all()
@@ -35,7 +37,6 @@ def campers(request):
 def signup_for_shift(request):
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
-
         shift = MealShifts.objects.get(id=shift_id)
         if shift.camper is not None:
             raise ValueError
@@ -251,7 +252,7 @@ def edit_bikemutation(request):
     item_id = int(
         request.POST.get('item_id',
             request.GET.get('item_id')))
-    
+
     item = int(request.POST.get('item_id')) 
 
     form = BikeMaterialForm(instance=item)
