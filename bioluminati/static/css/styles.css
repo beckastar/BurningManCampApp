@@ -431,14 +431,14 @@ td {
     border: none;
 }
 
-/*.showTable {
+.showTable {
     visibility: visible;
 }
 
 .hideTable {
     display:none;
     visibility: hidden;
-}*/
+}
 
 #allShifts {
   display:none;  
@@ -577,4 +577,36 @@ s
 #bikeform {
     position: relative;
     width: 85%;
+}
+
+#campers {
+    position: relative;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+}
+
+.toggleview { 
+    position: relative;
+    width: 6em;
+    height: 1.5em;
+    border-radius: 5px;
+    margin: 4px;
+    border: 5px solid black;
+    background-color: #450E45;
+    color: #B1E6E9;
+    top: 10%;
+}
+
+.profile_pic {
+    width: 20px;
+    height: auto;
+}
+.camperheading {
+
+}
+
+#campertoggle {
+/*    position: relative;
+    top: 10%;*/
 }

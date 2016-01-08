@@ -4,6 +4,10 @@ $(document).ready(function () {
 	// 	$(".datarow").toggleClass("showTable hideTable");
 	// });
 
+	$('#campertoggle').click(function(){
+		$(".campertable").toggleClass("hidden shown");
+		console.log("clicked");	
+	});
 
 
 	$("#meal_shift_help_icon").click(function(){

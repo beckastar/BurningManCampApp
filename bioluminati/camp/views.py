@@ -30,7 +30,8 @@ def prep(request):
 
 def campers(request):
     campers = UserProfile.objects.all()
-    context_dict = {'campers':campers}
+    campers_this_year = UserProfile.objects.filter(camping_this_year=True)
+    context_dict = {'campers':campers, 'campers_this_year':campers_this_year}
     return render_to_response('campers.html', RequestContext(request, context_dict))
 
 
