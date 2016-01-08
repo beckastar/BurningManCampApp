@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-	// $('.availShifts').click(function(){
-	// 	$(".datarow").toggleClass("showTable hideTable");
-	// });
-
 	$('#campertoggle').click(function(){
 		$(".campertable").toggleClass("hidden shown");
 		console.log("clicked");	

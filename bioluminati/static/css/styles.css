@@ -502,13 +502,15 @@ table td {
     position: fixed;
     z-index: 10;
     width: 6em;
-    left: 2%;
+    left: 15%;
     bottom: 51%;
     font-size: 25px;
     width: 34%;
+    height: 46%;
     border: 2px solid purple;
     border-radius: 5px;
-    z-index: 4;
+    z-index: 3;
+    top: 29%;
     background-color: rgb(237, 210, 229);
 }
 

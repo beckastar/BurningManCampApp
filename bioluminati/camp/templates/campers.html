@@ -4,7 +4,7 @@
 <div id="campers">
 	<div class="toggleview" id="campertoggle"></div>
 	<div class="campertable shown">
-		<div class="camperheading"><h2 id="camper_heading hidden">This year's bioluminauts</h2></div>
+		<div class="camperheading"><h2 id="camper_heading hidden">All Bioluminauts</h2></div>
 		<div class="tablewrap">
 			<table class="gradienttable">
 				<thead>
@@ -33,16 +33,17 @@
 	</div>
 
 	<div class="campertable hidden">
-		<h2 id="camper_heading">All Bioluminauts</h2>
+		<h2 id="camper_heading">This year's bioluminauts</h2>
 		<div class="tablewrap">
 			<table class="gradienttable">
 				<thead>
 					<tr>
 						<td class="profile_pic"><p>Photo</p></td>
+						<td><p>Picture</p></td>
 						<td><p>Name</p></td>
 						<td><p>City</p></td>
-						<td><p>Culinary habits</p></td>
-						<td><p>What don't they eat</p></td> 
+						<td><p>Eating restrictions</p></td>
+						
 					</tr>
 				</thead>
 					{% for camper in campers_this_year %}
