@@ -37,6 +37,7 @@ Right now the following developments are in progress:
 6. Edit python code so shifts don't have to be created manually 
 
 Nice to have features I'm planning to add:
+
 1. Tell each camper how many more shifts they need to sign up for 
 2. Chef control, where each chef can create the number of shifts required for their particular meal
 3. Auto CSV exports included in the happy_new_year script before data is deleted
