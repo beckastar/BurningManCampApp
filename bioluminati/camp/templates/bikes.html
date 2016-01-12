@@ -1,46 +1,76 @@
 {% extends "base.html" %}
 {% block content %}
-
-<div>
-	<div class="formfloatleft">
-
+ 
+	<div class="table_with_form" id="bikeform">
 		<h2>Bike Inventory </h2>
 		<div class="tablewrap">
 			<table class="gradienttable">	
 				<thead>
 					<tr>
 						<th><p>Bike Name</p></th>
-						<th><p>Size (inches)</p></th>
+						<th><p>Bike Size (inches)</p></th>
 						<th><p>Owner</p></th>
-						<th><p>Needs repairs?</p></th>
+						<th><p>What's wrong with this bike? </p></th>
 						<th><p>In bike pool?</p></th>
+						<th><p>In truck?</p></th>
+						<th><p>Notes</p></th>
+						<th><p>Actions</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
+					<tr id="table_form">
+						<form action="/bikes/" method="post">
+							{% csrf_token %}					
+							<td class="table_text_input">{{ form.bike_name }}</td>
+							<td class="table_text_input">{{ form.bike_frame_size_inches }}</td>
+							<td>{{ form.bike_owner }}</td>
+							<td>{{ form.repair_needed }}</td>
+							<td>bike pool{{ form.in_bike_pool_this_year }}</td>
+							<td>truck {{ form.stored_in_truck }}</td>
+							<td class="table_text_input">{{ form.owners_last_year_on_playa }}</td>
+							<td>
+			  					<input class="table_submit_button" type="submit" value="Save bike"/>
+			  				</td>
+						</form>
+					</tr>
 						{% for bike in bicycles %}
 							<tr class="datarow">
-								<td>{{bike.bike_name}}</td>
-								<td>{{bike.bike_size_inches}}</td>
-								<td>{{bike.bike_owner}}</td>
-								<td>{{bike.needs_repairs}}</td>
-								<td>{{bike.in_bike_pool_this_year}}</td>
+								{% if bike_id == bike.id %}
+								    <form action="/edit_bike/" method="post">
+								    <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								    {% csrf_token %}
+									<td>{{ form.bike_name }}</td>
+									<td>{{form.bike_size_inches}}</td>
+									<td>{{form.bike_owner}}</td>
+									<td>{{form.needs_repairs}}</td>
+									<td>{{form.in_bike_pool_this_year}}</td>
+									<td>{{form.owners_last_year_on_playa}}</td>
+								    <td><input class="table_button" type="submit" value="save edits"></td>
+								    </form>
+								{% else %}
+									<td>{{bike.bike_name}}</td>
+									<td>{{bike.bike_size_inches}}</td>
+									<td>{{bike.bike_owner}}</td>
+									<td>{{bike.needs_repairs}}</td>
+									<td>{{bike.in_bike_pool_this_year}}</td>
+									<td>{{bike.owners_last_year_on_playa}}</td>
+									<td>
+								        <form action="/remove-bike-from-db/" method="post">
+								            {% csrf_token %}
+								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								            <input class="table_button" type="submit" value="delete bike">
+								        </form>
+								        <form action="/edit_bike/" method="get">
+								            {% csrf_token %}
+								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
+								            <input class="table_button" type="submit" value="edit bike">
+								        </form>
+								    </td>
+								{% endif %}
 							</tr>
 						{% endfor %}
 				</div>
 			</table>
 		</div>
-	</div>.
 
-	<div class='formfloatright' >
-		<h2>Add a bike</h2>
-		<form action="" method="post">
-		  {% csrf_token %}
-		  	<ul>
-			    {{ form.as_ul}}
-			</ul>
-		  </ul>
-		  <input type="submit" value="Save" />
-		</form>
-	</div>
-</div>
 {% endblock %}

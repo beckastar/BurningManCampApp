@@ -1,33 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-<div>
-	<div class="formfloatleft">
-		<h2>Bioluminaries</h2>
+<div id="campers">
+	<div class="toggleview" id="campertoggle"></div>
+	<div class="campertable shown">
+		<div class="camperheading"><h2 id="camper_heading hidden">All Bioluminauts</h2></div>
 		<div class="tablewrap">
-			<table class="gradienttable">	
+			<table class="gradienttable">
 				<thead>
 					<tr>
-						<th><p>Photo</p></th>
-						<th><p>Camper Name</p></th>
-						<th><p>Playa Name</p></th>
-						<th><p>Link to profile</p></th>
+						<td><p>Photo</p></td>
+						<td><p>Name</p></td>
+						<td><p>City</p></td>
+						<td><p>Dietary restritions </p></td>
+						<td><p>Arrival day</p></td>
+						<td><p>Departure day </p></td>
 					</tr>
 				</thead>
-				<div class="datatables" id="shiftsTaken">
-						{% for camper in Campers %}
-							<tr class="datarow hideTable">
-								<td>{{camper.picture}}</td>
-								<td>{{camper.user}}</td>
-								<td>{{camper.link}}</td>
-							</tr>
-						{% endfor %}
-				</div>
+					{% for camper in campers %}
+						<tr class="datarow">
+							<td  class="profile_pic">{{camper.picture}}</td>
+							<td>{{camper.user}}</td>
+							<td>{{camper.city}}</td> 
+							<td>{{camper.meal_restrictions}}
+								{{camper.other_restrictions}}</td>
+							<td>{{camper.arrival_day}}</td>
+							<td>{{camper.departure_day}}</td>
+						</tr>
+					{% endfor %}
 			</table>
 		</div>
-	</div>.
-</div>
+	</div>
 
+	<div class="campertable hidden">
+		<h2 id="camper_heading">This year's bioluminauts</h2>
+		<div class="tablewrap">
+			<table class="gradienttable">
+				<thead>
+					<tr>
+						<td class="profile_pic"><p>Photo</p></td>
+						<td><p>Picture</p></td>
+						<td><p>Name</p></td>
+						<td><p>City</p></td>
+						<td><p>Eating restrictions</p></td>
+						
+					</tr>
+				</thead>
+					{% for camper in campers_this_year %}
+						<tr class="datarow">
+							<td>{{camper.picture}}</td>
+							<td>{{camper.user}}</td>
+							<td>{{camper.city}}</td> 
+							<td>{{camper.meal_restrictions}}
+								{{camper.other_restrictions}}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		</div>
+	</div>
+
+
+</div>
 
 {% endblock %}

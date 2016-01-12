@@ -3,48 +3,51 @@
 
 
 <div>
-	<div class="formfloatleft">
-
-		<h2>Truck Inventory </h2>
+	<div id="truck_inventory">
+		<h2 id="truck_heading">Truck Inventory </h2>
 		<div class="tablewrap">
-			<table class="gradienttable">	
+			<table class="gradienttable table_with_form">
+				{% csrf_token %}
+				<tr>	
+				 
+						<form action="" method="post">
+						  {% csrf_token %}
+						  	
+						  		<td>{{form.item}}</td>
+						  		<td>{{form.quantity}}</td>
+						  		<td>{{form.needs_repairs}}</td>
+							  	<td> <input class="table_button" type="submit" value="Add inventory" /></td>
+						</form>
+				</td></tr>
 				<thead>
 					<tr>
-						<th><p>Whatcha got?</p></th>
-						<th><p>Needs Repairs</p></th>
-						<th><p>Change</p></th>
+						<td><p>Whatcha got?</p></td>
+						<td><p>Quantity</p></td>
+						<td><p>Needs Repairs</p></td>
+						<td><p>Change</p></td>
 					</tr>
 				</thead>
-				<div class="datatables">
-						{% for things in stuff %}
-							<tr class="datarow">
-								<td>{{things.item}}</td>
-								<td>{{things.needs_repairs}}</td>
+					{% for item in truck_inventory %}
+						<tr class="datarow">
+							<td>{{item.quantity}}</td>
+							<td>{{item.needs_repairs}}</td>
 							<td>
-								<form method="post">
+							<td>
+						        <form action="/remove_items_from_truck/" method="post">
 						            {% csrf_token %}
-						            <input type="submit" value="edit or remove me">
+						            <input type="hidden" name="item_id" value="{{item.id}}" />
+						            <input type="submit" value="delete item">
 						        </form>
-						    </td>
-							</tr>
-						{% endfor %}
-				</div>
+					    	</td>
+
+					    </td>
+						</tr>
+					{% endfor %}
 			</table>
 		</div>
 	</div>
 
 
-	<div class='formfloatright' >
-		<h2>Add stuff</h2>
-		<form action="" method="post">
-		  {% csrf_token %}
-		  	<ul>
-			    {{ form.as_ul}}
-			</ul>
-		  </ul>
-		  <input type="submit" value="Save" />
-		</form>
-	</div>
 
 </div>
 

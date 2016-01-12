@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+
+<div>
+	<div id="truck_idventory">
+		<h2 id="truck_heading">Truck Inventory </h2>
+		<div class="tablewrap">
+			<table class="gradienttable">
+				<thead>
+					<tr>
+						<td><p>Photo</p></td>
+						<td><p>Name</p></td>
+						<td><p>City</p></td>
+						<td><p>Needs a bike?</p></td>
+						<td><p>Culinary habits</p></td>
+						<td><p>What don't they eat</p></td>
+						<td><p>Arrival day</p></td>
+						<td><p>Departure day </p></td>
+					</tr>
+				</thead>
+					{% for camper in campers %}
+						<tr class="datarow">
+							<td>{{camper.picture}}</td>
+							<td>{{camper.user}}</td>
+							<td>{{camper.city}}</td>
+							<td>{{camper.needs_camp_bike}}</td>
+							<td>{{camper.diet_lifestyle}}</td>
+							<td>{{camper.meal_restrictions}}
+								{{camper.other_restrictions}}</td>
+							<td>{{camper.arrival_day}}</td>
+							<td>{{camper.departure_day}}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		</div>
+	</div>
+
+
+
+{% endblock %}

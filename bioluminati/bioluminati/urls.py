@@ -15,24 +15,39 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from camp.views import index, signup, profile, register, bike_form, bikemutation, inventory, about
+from camp.views import index, login, remove_items_from_truck, about, prep, campers, signup_for_shift, meal_schedule, remove_self_from_shift, show_signup_table, profile, vehicle, shelter, remove_bike, edit_bike, show_bike_form, bikemutation, edit_truck_inventory, show_inventory_form, register, remove_self_from_pyb_shift, signup_for_pyb_shift, show_pybsignup, calendarview, edit_bikemutation, remove_items_from_bikemutation
+
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', index, name='index'),
-    url(r'^signup/', signup, name='signup'),
-    url(r'^accounts/profile/$', profile, name='profile'),
-    # url(r'^accounts/campers/$', campers, name='campers'), make profile display page
+    url(r'^register/', register, name='register'),
     url(r'^login/', 'django.contrib.auth.views.login', name='foo',kwargs={'template_name': 'login.html'}),
     url(r'^/logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
-    url(r'^register/$', register, name='register'),
-    url(r'^confirm/$', register, name='confirm'),  
-    url(r'^bikes/$', bike_form, name='bikes'),  
-    url(r'^bikemutation/$', bikemutation, name='bikemutation'), 
-    url(r'^inventory/$', inventory, name='inventory'), 
-    url(r'^about/$', about, name='about'), 
-     # url(r'^about/$', TemplateView.as_view(template_name="about.html"), name='about')
+    url(r'^confirm/', register, name='confirm'),  
+    url(r'^about/', about, name='about'), 
+    url(r'^prep/', prep, name='prep'), 
+    url(r'^profile/', profile, name='profile'), 
+    url(r'^vehicle/', vehicle, name='vehicle'),
+    url(r'^shelter/', shelter, name='shelter'),
+    url(r'^signup/$', signup_for_shift, name='signup'),
+    url(r'^remove-self-from-shift/$', remove_self_from_shift, name="remove_self_from_shift"),
+    url(r'^bikes/', show_bike_form, name='bikes'),
+    url(r'^remove-bike-from-db/', remove_bike, name='remove_bike'),
+    url(r'^edit_bike/', edit_bike, name='edit_bike'),
+    url(r'^meal_schedule/', meal_schedule, name="meal_schedule"),
+    url(r'^inventory/', show_inventory_form, name="inventory"),
+    url(r'^remove_items_from_truck/', remove_items_from_truck, name="remove_inventory"),
+    url(r'^edit_inventory_item/', edit_truck_inventory, name="edit_inventory"),    
+    url(r'^campers/',campers, name="campers"),
+    url(r'^calendar/', calendarview, name="calendar"),
+    url(r'^bikemutation/$', bikemutation, name='bikemutation'),  
+    url(r'^remove_items_from_bikemutation/', remove_items_from_bikemutation, name="remove_items_from_bikemutation"),#change this
+    url(r'^edit_bikemutation_item/', edit_bikemutation, name="edit_bikemutation"),    #change this 
+    url(r'^remove-self-from-pyb-shift/', remove_self_from_pyb_shift, name="remove_self_from_pyb_shift"),
+    url(r'^signup_for_pyb_shift/', signup_for_pyb_shift, name="signup_for_pyb_shift"),
+    url(r'^bikemutationsignup/', show_pybsignup, name="show_pybsignup")
     # url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="">
+		<div class="table_title">
+			<span>
+					<div ></div><div class="instruction_image" id="meal_shift_help_icon"></div>
+					<div class="help_text_wrap">
+						<div class="table_instructions hidden" id="meal_shift_help_text">
+							<p>This page shows all the chef shifts and allows the chef to customize the number of kp and sous chefs needed. <br>
+							This page does not display the overall shift schedules.
+							<br>
+							Click the question mark again to hide this help dialogue.
+							</p> 
+					</div>
+				</div>
+			</span>
+		</div>
+		<div class="tablewrap">
+			<table class="gradienttable table_with_form">	
+				<thead>
+					<tr>
+						<th><p>Day</p></th>
+						<th><p>Chef</p></th>
+						<th><p>Others</p></th>
+						<th><p>Dietary Restrictions</p></th>
+						<th><p>Serving</p></th>
+						<th><p>Number of diners</p></th>
+						<th><p>Meal Restrictions</p></th>
+						<th><p>Actions</p></th>
+					</tr>
+				</thead>
+				<div>
+					{% for meal in shifts_by_meal %}
+							<tr class="datarow">
+									<td>{{ meal.day }}</td>
+									{% for position in meal.positions.items %}
+									 <td>
+									 position: {{ position.0 }} - 
+									   {% for shift_worker in position.1 %}
+									      <div>shift_worker: {{ shift_worker.camper }}</div>
+									   {% endfor %}
+									 </td>
+									{% endfor %}
+									<td>{{ meal.serving}}</td>
+									<td>num served {{ meal.num_served }}</td>
+									<td>restriction {{ meal.restrictions }}</td>
+							</tr>
+						{% endfor %}
+				</div>
+			</table>
+		</div>
+	</div>
+</div> 
+
+{% endblock %}

@@ -7,12 +7,23 @@
 
 		<h2>Material Inventory </h2>
 		<div class="tablewrap">
-			<table class="gradienttable">	
+			<table class="gradienttable table_with_form">	
+			{% csrf_token %}
+			<tr>	
+				<form action="" method="post">
+				  {% csrf_token %}
+				  		<td>{{form.material}}</td>
+				  		<td>{{form.quantity}}</td>
+				  		<td>{{form.units}}</td>
+					  	<td> <input class="table_button" type="submit" value="Add inventory" /></td>
+				</form>
+				</td></tr>
 				<thead>
 					<tr>
 						<th><p>Whatcha got?</p></th>
 						<th><p>Quantity</p></th>
 						<th><p>Units</p></th>
+						<th><p>Delete</p></th>
 					</tr>
 				</thead>
 				<div class="datatables">
@@ -21,27 +32,18 @@
 								<td>{{material.material}}</td>
 								<td>{{material.quantity}}</td>
 								<td>{{material.units}}</td>
+								<td>
+						        <form action="/remove_items_from_bikemutation/" method="post">
+						            {% csrf_token %}
+						            <input type="hidden" name="item_id" value="{{material.id}}" />
+						            <input type="submit" value="delete item">
+						        </form>
+					    </td>
 							</tr>
 						{% endfor %}
 				</div>
 			</table>
 		</div>
-	</div>
-
-
-	<div class='formfloatright' >
-		<h2>Add material</h2>
-		<form action="" method="post">
-		  {% csrf_token %}
-		  	<ul>
-			    {{ form.as_ul}}
-			</ul>
-		  </ul>
-		  <input type="submit" value="Save" />
-		</form>
-	</div>
-
-</div>
-
+	</div> 
 
 {% endblock %}
