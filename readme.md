@@ -34,6 +34,7 @@ Right now the following developments are in progress:
 3. Buttons that export and download data  
 4. Chef's control page, where the chef signs up for a meal, inputs the menu, and dictates the amount of support s/he will need in the kitchen
 5. Set controls so that only admins can edit certain tables
+6. Edit python code so shifts don't have to be created manually 
 
 Nice to have features I'm planning to add:
 1. Tell each camper how many more shifts they need to sign up for 
