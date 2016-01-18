@@ -25,11 +25,11 @@ urlpatterns = [
     url(r'^$', index, name='index'),
     url(r'^register/', register, name='register'),
     url(r'^login/', 'django.contrib.auth.views.login', name='foo',kwargs={'template_name': 'login.html'}),
-    url(r'^/logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
-    url(r'^confirm/', register, name='confirm'),  
-    url(r'^about/', about, name='about'), 
-    url(r'^prep/', prep, name='prep'), 
-    url(r'^profile/', profile, name='profile'), 
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
+    url(r'^confirm/', register, name='confirm'),
+    url(r'^about/', about, name='about'),
+    url(r'^prep/', prep, name='prep'),
+    url(r'^profile/', profile, name='profile'),
     url(r'^vehicle/', vehicle, name='vehicle'),
     url(r'^shelter/', shelter, name='shelter'),
     url(r'^signup/$', signup_for_shift, name='signup'),
@@ -40,12 +40,12 @@ urlpatterns = [
     url(r'^meal_schedule/', meal_schedule, name="meal_schedule"),
     url(r'^inventory/', show_inventory_form, name="inventory"),
     url(r'^remove_items_from_truck/', remove_items_from_truck, name="remove_inventory"),
-    url(r'^edit_inventory_item/', edit_truck_inventory, name="edit_inventory"),    
+    url(r'^edit_inventory_item/', edit_truck_inventory, name="edit_inventory"),
     url(r'^campers/',campers, name="campers"),
     url(r'^calendar/', calendarview, name="calendar"),
-    url(r'^bikemutation/$', bikemutation, name='bikemutation'),  
+    url(r'^bikemutation/$', bikemutation, name='bikemutation'),
     url(r'^remove_items_from_bikemutation/', remove_items_from_bikemutation, name="remove_items_from_bikemutation"),#change this
-    url(r'^edit_bikemutation_item/', edit_bikemutation, name="edit_bikemutation"),    #change this 
+    url(r'^edit_bikemutation_item/', edit_bikemutation, name="edit_bikemutation"),    #change this
     url(r'^remove-self-from-pyb-shift/', remove_self_from_pyb_shift, name="remove_self_from_pyb_shift"),
     url(r'^signup_for_pyb_shift/', signup_for_pyb_shift, name="signup_for_pyb_shift"),
     url(r'^bikemutationsignup/', show_pybsignup, name="show_pybsignup")

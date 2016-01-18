@@ -118,3 +118,4 @@ STATICFILES_DIRS = (
 )
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+LOGIN_REDIRECT_URL = '/profile/'
