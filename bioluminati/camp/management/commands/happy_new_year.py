@@ -7,7 +7,7 @@ import csv
 
 
 
- 
+
 class Command(NoArgsCommand):
     help = "Resets the following fields in the bioluminati camp application so that they can be entered afresh each year"
 
@@ -19,17 +19,17 @@ class Command(NoArgsCommand):
         campers = UserProfile.objects.all()
         print shifts
         for shift in shifts:
-        	print shift.assigned
-        	print shift.camper
-        	shift.camper=None
-        	shift.assigned=False
-        	shift.date = None
-        	print shifts
+            print shift.assigned
+            print shift.camper
+            shift.camper=None
+            shift.assigned=False
+            shift.date = None
+            print shifts
         for camper in campers:
-        	camper.has_ticket = False
-        	camper.looking_for_ticket = False
-        	camper.camping_this_year = False
-        	camper.arrival_day = None
-        	camper.departure_day = None
-        	camper.date = None
+            camper.has_ticket = False
+            camper.looking_for_ticket = False
+            camper.camping_this_year = False
+            camper.arrival_day = None
+            camper.departure_day = None
+            camper.date = None
 
