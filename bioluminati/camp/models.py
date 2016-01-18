@@ -202,7 +202,7 @@ Bike_repairs = (
     )
 
 
-class MealShifts(models.Model):
+class MealShift(models.Model):
     assigned = models.BooleanField(default=False)
     day = models.IntegerField(choices=Days)
     meal = models.CharField(max_length = 10, choices=Meals)
@@ -218,9 +218,9 @@ class MealShifts(models.Model):
 
 class UserProfile(models.Model):
 
-    user = models.OneToOneField(User) 
+    user = models.OneToOneField(User)
     picture = models.ImageField(upload_to='profile_images', blank=True)
-    city = models.CharField(max_length = 20)   
+    city = models.CharField(max_length = 20)
     cell_number = models.CharField(max_length=15)
     email_address = models.CharField(max_length=40)
     emergency_contact_name = models.CharField(max_length=40)
@@ -237,16 +237,16 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
-            self.user, self.picture, self.city, 
+            self.user, self.picture, self.city,
             self.cell_number, self.email_address, self.emergency_contact_name,
             self.emergency_contact_phone,
-            self.meal_restrictions, self.other_restrictions, 
-            self.arrival_day, self.departure_day, self.has_ticket, 
+            self.meal_restrictions, self.other_restrictions,
+            self.arrival_day, self.departure_day, self.has_ticket,
             self.looking_for_ticket, self.camping_this_year, self.date, self.date
             )
 
 class Shelter(models.Model):
-    user = models.OneToOneField(User) 
+    user = models.OneToOneField(User)
     sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
     number_of_people_tent_sleeps = models.IntegerField()
     sleeping_under_ubertent = models.BooleanField(default=False)
@@ -254,13 +254,13 @@ class Shelter(models.Model):
 
     def __str__(self):
         return '%s, %s, %s, %s' %(
-            self.user, self.sleeping_arrangement, self.number_of_people_tent_sleeps, 
+            self.user, self.sleeping_arrangement, self.number_of_people_tent_sleeps,
             self.sleeping_under_ubertent, self.date
             )
 
 
 class Vehicle(models.Model):
-    user = models.OneToOneField(User) 
+    user = models.OneToOneField(User)
     primary_driver_in_your_party = models.BooleanField(default=False)
     model_of_car = models.CharField(max_length=25, blank=True, default=None)
     make_of_car = models.CharField(max_length=15, blank=True, default=None)
@@ -268,11 +268,11 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return '%s, %s, %s, %s' %(
-            self.user, self.primary_driver_in_your_party, self.model_of_car, 
+            self.user, self.primary_driver_in_your_party, self.model_of_car,
             self.make_of_car, self.date
             )
 
-class Bikes(models.Model):
+class Bike(models.Model):
     bike_photo = models.ImageField(upload_to="bike_images", blank=True, null=True)
     bike_name = models.CharField(max_length=30)
     bike_frame_size_inches = models.IntegerField()
@@ -287,7 +287,7 @@ class Bikes(models.Model):
 
     def __str__(self):
         return '%s %s %s %s %s'%(
-            self.bike_name, self.bike_owner, self.bike_size_inches, 
+            self.bike_name, self.bike_owner, self.bike_size_inches,
             self.needs_repairs, self.in_bike_pool_this_year)
 
 class BicycleMutationInventory(models.Model):
@@ -318,4 +318,3 @@ class Inventory(models.Model):
         return '%s %s'%(self.item, self.quantity, self.needs_repairs)
 
 
-         

@@ -15,7 +15,7 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         print "Hello, World!"
-        shifts = MealShifts.objects.all()
+        shifts = MealShift.objects.all()
         campers = UserProfile.objects.all()
         print shifts
         for shift in shifts:

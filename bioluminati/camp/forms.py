@@ -2,15 +2,15 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from .models import MealShifts, UserProfile, Vehicle, Bikes, Shelter, BicycleMutationInventory, Inventory, BikeMutationSchedule
- 
+from .models import MealShift, UserProfile, Vehicle, Bike, Shelter, BicycleMutationInventory, Inventory, BikeMutationSchedule
+
 
 class UserForm(ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())
 
     class Meta:
-        model = User 
-        fields = ('username', 'email', 'password') 
+        model = User
+        fields = ('username', 'email', 'password')
 
 class UserProfileForm(ModelForm):
 
@@ -61,12 +61,12 @@ class UserProfileForm(ModelForm):
         )
 
         model = UserProfile
-        fields = ( 
+        fields = (
           'picture', 'city', 'cell_number',
-          'email_address', 'emergency_contact_name', 'meal_restrictions', 
-          'emergency_contact_phone', 'other_restrictions',  'arrival_day', 
-          'departure_day',  
-          'has_ticket', 
+          'email_address', 'emergency_contact_name', 'meal_restrictions',
+          'emergency_contact_phone', 'other_restrictions',  'arrival_day',
+          'departure_day',
+          'has_ticket',
           'looking_for_ticket', 'camping_this_year'
           )
 
@@ -86,7 +86,7 @@ class ShelterForm(ModelForm):
 
 class BikeForm(ModelForm):
     class Meta:
-        model = Bikes
+        model = Bike
         fields = '__all__'
 
 class BikeMaterialForm(ModelForm):

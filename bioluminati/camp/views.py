@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from models import MealShifts, UserProfile, Bikes, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from models import MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
 from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm
 from django.core.context_processors import csrf
@@ -16,7 +16,7 @@ from django.contrib import messages
 import itertools
 
 def index(request):
-    shifts = MealShifts.objects.all()
+    shifts = MealShift.objects.all()
     return render(request, "index.html", {'shifts': shifts})
 
 def login(request):
@@ -38,7 +38,7 @@ def campers(request):
 def signup_for_shift(request):
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
-        shift = MealShifts.objects.get(id=shift_id)
+        shift = MealShift.objects.get(id=shift_id)
         if shift.camper is not None:
             raise ValueError
         shift.camper = request.user
@@ -52,10 +52,10 @@ def signup_for_shift(request):
 def _initial_meal():
     return {
         'serving': 'bacon', # fix with chef stuff.
-        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': []}, 
+        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': []},
         'restrictions': [],
         'num_served': 0
-    } 
+    }
 
 def _meal_time(shift):
     return (shift.day, shift.meal)
@@ -69,8 +69,8 @@ def _finalize_meal(meal, shift):
     meal['num_served'] = people_that_day.count()
 
 def meal_schedule(request):
-    shifts = MealShifts.objects.order_by('day', 'meal')
-    shifts_by_meal = [] 
+    shifts = MealShift.objects.order_by('day', 'meal')
+    shifts_by_meal = []
     if shifts:
         first_shift = shifts[0]
         previous_meal = _meal_time(first_shift)
@@ -89,7 +89,7 @@ def meal_schedule(request):
 
         if meal_dirty:
             _finalize_meal(meal, shift)
-            shifts_by_meal.append(meal)        
+            shifts_by_meal.append(meal)
 
     context_dict = {'shifts_by_meal': shifts_by_meal}
     return render(request, "meal_schedule.html", RequestContext(request, context_dict))
@@ -97,50 +97,50 @@ def meal_schedule(request):
 def remove_self_from_shift(request):
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
-        shift = MealShifts.objects.get(id=shift_id)
+        shift = MealShift.objects.get(id=shift_id)
         if shift.camper == request.user:
             shift.camper = None
             shift.assigned = False
             shift.save()
 
     return show_signup_table(request)
-    
+
 def show_signup_table(request):
-    # model = MealShifts
+    # model = MealShift
     user = request.user
-    poss_shifts = MealShifts.objects.all().order_by('day')
+    poss_shifts = MealShift.objects.all().order_by('day')
     day_choices = range(0, 6)
     meal_choices = ['Breakfast', 'Dinner']
     shift_choices = ['Chef', 'Sous_Chef', 'KP']
     username = None
-    shift = MealShifts.objects.all()
+    shift = MealShift.objects.all()
 
-    sundayShiftsAvail = MealShifts.objects.filter(day=0, assigned=False)
-    sundayShiftsTaken = MealShifts.objects.filter(day=0, assigned=True)
-    mondayShiftsAvail = MealShifts.objects.filter(day=1, assigned=False)
-    mondayShiftsTaken = MealShifts.objects.filter(day=1, assigned=True)
-    tuesdayShiftsAvail = MealShifts.objects.filter(day=2, assigned=True)
-    tuesdayShiftsTaken = MealShifts.objects.filter(day=2, assigned=True)
-    wednesdayShiftsAvail = MealShifts.objects.filter(day=3, assigned=False)
-    wednesdayShiftsTaken = MealShifts.objects.filter(day=3, assigned=True)
-    thursdayShiftsAvail = MealShifts.objects.filter(day=4, assigned=False)
-    thursdayShiftsTaken = MealShifts.objects.filter(day=4, assigned=True)
-    fridayShiftsAvail = MealShifts.objects.filter(day=5, assigned=False)
-    fridayShiftsTaken = MealShifts.objects.filter(day=5, assigned=True)
-    saturdayShiftsAvail = MealShifts.objects.filter(day=6, assigned=False)
-    saturdayShiftsTaken = MealShifts.objects.filter(day=6, assigned=True)
+    sundayShiftsAvail = MealShift.objects.filter(day=0, assigned=False)
+    sundayShiftsTaken = MealShift.objects.filter(day=0, assigned=True)
+    mondayShiftsAvail = MealShift.objects.filter(day=1, assigned=False)
+    mondayShiftsTaken = MealShift.objects.filter(day=1, assigned=True)
+    tuesdayShiftsAvail = MealShift.objects.filter(day=2, assigned=True)
+    tuesdayShiftsTaken = MealShift.objects.filter(day=2, assigned=True)
+    wednesdayShiftsAvail = MealShift.objects.filter(day=3, assigned=False)
+    wednesdayShiftsTaken = MealShift.objects.filter(day=3, assigned=True)
+    thursdayShiftsAvail = MealShift.objects.filter(day=4, assigned=False)
+    thursdayShiftsTaken = MealShift.objects.filter(day=4, assigned=True)
+    fridayShiftsAvail = MealShift.objects.filter(day=5, assigned=False)
+    fridayShiftsTaken = MealShift.objects.filter(day=5, assigned=True)
+    saturdayShiftsAvail = MealShift.objects.filter(day=6, assigned=False)
+    saturdayShiftsTaken = MealShift.objects.filter(day=6, assigned=True)
 
     context_dict  = {
                 'username':username, 'poss_shifts':poss_shifts,
-                'sundayShiftsAvail':sundayShiftsAvail, 'sundayShiftsTaken':sundayShiftsTaken,  
-                'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,  
-                'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,  
-                'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail, 
-                'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,  
-                'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
+                'sundayShiftsAvail':sundayShiftsAvail, 'sundayShiftsTaken':sundayShiftsTaken,
+                'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
+                'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
+                'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
+                'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,
+                'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,
                 'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
                 }
-    return render_to_response('signup.html', 
+    return render_to_response('signup.html',
         RequestContext(request, context_dict,))
 
 
@@ -187,24 +187,24 @@ def shelter(request):
 def remove_bike(request):
     if request.method == 'POST':
         form = BikeForm()
-        bicycles = Bikes.objects.all()
-        bike_id = int(request.POST.get('bike_id')) 
-        bike = Bikes.objects.get(id=bike_id)
+        bicycles = Bike.objects.all()
+        bike_id = int(request.POST.get('bike_id'))
+        bike = Bike.objects.get(id=bike_id)
         bike.delete()
         return render_to_response('bikes.html', {
-            'form':form, 'bicycles':bicycles, 
+            'form':form, 'bicycles':bicycles,
             }, RequestContext(request))
 
 @staff_member_required
 def edit_bike(request):
-    bicycles = Bikes.objects.all()
+    bicycles = Bike.objects.all()
 
     bike_id = int(
         request.POST.get('bike_id',
             request.GET.get('bike_id')))
 
-    bike = Bikes.objects.get(id=bike_id)
-    
+    bike = Bike.objects.get(id=bike_id)
+
     form = BikeForm(instance=bike)
 
     if request.method == 'POST':
@@ -215,13 +215,13 @@ def edit_bike(request):
             return redirect('bikes')
 
     context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
-    
+
     return render_to_response('bikes.html', context_dict, RequestContext(request))
 
 def show_bike_form(request):
-    model = Bikes
-    bicycles = Bikes.objects.all()
-    
+    model = Bike
+    bicycles = Bike.objects.all()
+
     if request.method == "POST":
         form = BikeForm(data = request.POST)
         if form.is_valid():
@@ -231,17 +231,17 @@ def show_bike_form(request):
         form = BikeForm()
     context = RequestContext(request)
     return render_to_response('bikes.html', {
-            'form':form, 'bicycles':bicycles, 
+            'form':form, 'bicycles':bicycles,
             }, RequestContext(request))
-    # currently owner's last year is required. probably good to remove that field. 
+    # currently owner's last year is required. probably good to remove that field.
 
 
 def remove_items_from_bikemutation(request):
     if request.method == 'POST':
         form = BikeMaterialForm()
         materials = BicycleMutationInventory.objects.all()
-        item_id = int(request.POST.get('item_id'))  #this line is the problem 
-        item = BicycleMutationInventory.objects.get(id=item_id)       
+        item_id = int(request.POST.get('item_id'))  #this line is the problem
+        item = BicycleMutationInventory.objects.get(id=item_id)
         item.delete()
         return render_to_response('bikemutation.html', {
             'form':form, 'materials':materials
@@ -249,12 +249,12 @@ def remove_items_from_bikemutation(request):
 
 def edit_bikemutation(request):
     materials= BicycleMutationInventory.objects.all()
-    
+
     item_id = int(
         request.POST.get('item_id',
             request.GET.get('item_id')))
 
-    item = int(request.POST.get('item_id')) 
+    item = int(request.POST.get('item_id'))
 
     form = BikeMaterialForm(instance=item)
 
@@ -289,11 +289,11 @@ def remove_items_from_truck(request):
     if request.method == 'POST':
         form = InventoryForm()
         truck_inventory = Inventory.objects.all()
-        item_id = int(request.POST.get('item_id'))  #this line is the problem 
-        item = Inventory.objects.get(id=item_id)       
+        item_id = int(request.POST.get('item_id'))  #this line is the problem
+        item = Inventory.objects.get(id=item_id)
         item.delete()
         return render_to_response('inventory.html', {
-            'form':form, 'truck_inventory':truck_inventory, 
+            'form':form, 'truck_inventory':truck_inventory,
             }, RequestContext(request))
 
 def edit_truck_inventory(request):
@@ -303,8 +303,8 @@ def edit_truck_inventory(request):
         request.POST.get('item_id',
             request.GET.get('item_id')))
 
-    item = int(request.POST.get('item_id')) 
-    
+    item = int(request.POST.get('item_id'))
+
     form = InventoryForm(instance=item)
 
     if request.method == 'POST':
@@ -315,7 +315,7 @@ def edit_truck_inventory(request):
             return redirect('inventory')
 
     context_dict = {"item_id": item_id, 'form':form, "truck_inventory":truck_inventory}
-   
+
     return render_to_response('inventory.html', context_dict, RequestContext(request))
 
 def show_inventory_form(request):
@@ -329,7 +329,7 @@ def show_inventory_form(request):
         form = InventoryForm()
     context = RequestContext(request)
     return render_to_response('inventory.html', {
-            'form':form, 'truck_inventory':truck_inventory, 
+            'form':form, 'truck_inventory':truck_inventory,
             }, RequestContext(request))
 
 def register(request):
@@ -359,7 +359,7 @@ def register(request):
     else:
         user_form = UserForm()
         profile_form = UserProfileForm()
-    return render_to_response('register.html', 
+    return render_to_response('register.html',
         RequestContext(request, {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},))
 
 
@@ -406,13 +406,13 @@ def show_pybsignup(request):
 
     context_dict = {
         'username':username, 'poss_shifts':poss_shifts,
-        'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,  
-        'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,  
-        'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail, 
-        'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,  
-        'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,  
+        'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
+        'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
+        'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
+        'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,
+        'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,
     }
-    return render_to_response('bikemutationsignup.html', 
+    return render_to_response('bikemutationsignup.html',
         RequestContext(request, context_dict,))
 
 def calendarview(request):
@@ -427,13 +427,13 @@ def calendarview(request):
 
 
     # mealshifts
-    sundayShiftsTaken = MealShifts.objects.filter(day=0, assigned=True)
-    mondayShiftsTaken = MealShifts.objects.filter(day=1, assigned=True)
-    tuesdayShiftsTaken = MealShifts.objects.filter(day=2, assigned=True)
-    wednesdayShiftsTaken = MealShifts.objects.filter(day=3, assigned=True)
-    thursdayShiftsTaken = MealShifts.objects.filter(day=4, assigned=True)
-    fridayShiftsTaken = MealShifts.objects.filter(day=5, assigned=True)
-    saturdayShiftsTaken = MealShifts.objects.filter(day=6, assigned=True)
+    sundayShiftsTaken = MealShift.objects.filter(day=0, assigned=True)
+    mondayShiftsTaken = MealShift.objects.filter(day=1, assigned=True)
+    tuesdayShiftsTaken = MealShift.objects.filter(day=2, assigned=True)
+    wednesdayShiftsTaken = MealShift.objects.filter(day=3, assigned=True)
+    thursdayShiftsTaken = MealShift.objects.filter(day=4, assigned=True)
+    fridayShiftsTaken = MealShift.objects.filter(day=5, assigned=True)
+    saturdayShiftsTaken = MealShift.objects.filter(day=6, assigned=True)
 
     # bike shifts
     mondayBikeShifts = BikeMutationSchedule.objects.filter(day=1)
@@ -443,14 +443,14 @@ def calendarview(request):
     fridayBikeShifts = BikeMutationSchedule.objects.filter(day=5)
 
     context_dict = {
-    'sundayCampers':sundayCampers, 'mondayCampers':mondayCampers, 
+    'sundayCampers':sundayCampers, 'mondayCampers':mondayCampers,
     'tuesdayCampers':tuesdayCampers, 'wednesdayCampers':wednesdayCampers, 'thursdayCampers':thursdayCampers,
-    'fridayCampers':fridayCampers, 'saturdayCampers':saturdayCampers, 
+    'fridayCampers':fridayCampers, 'saturdayCampers':saturdayCampers,
     'sundayShiftsTaken':sundayShiftsTaken, 'mondayShiftsTaken':mondayShiftsTaken, 'tuesdayShiftsTaken':tuesdayShiftsTaken,
-    'wednesdayShiftsTaken':wednesdayShiftsTaken,'thursdayShiftsTaken ':thursdayShiftsTaken, 'fridayShiftsTaken':fridayShiftsTaken, 
+    'wednesdayShiftsTaken':wednesdayShiftsTaken,'thursdayShiftsTaken ':thursdayShiftsTaken, 'fridayShiftsTaken':fridayShiftsTaken,
     'saturdayShiftsTaken ':saturdayShiftsTaken, 'mondayBikeShifts':mondayBikeShifts,'tuesdayBikeShifts':tuesdayBikeShifts,
-    'wednesdayBikeShifts':wednesdayBikeShifts, 'thursdayBikeShifts':thursdayBikeShifts, 'fridayBikeShifts ':fridayBikeShifts 
+    'wednesdayBikeShifts':wednesdayBikeShifts, 'thursdayBikeShifts':thursdayBikeShifts, 'fridayBikeShifts ':fridayBikeShifts
     }
-    return render_to_response('calendar.html', 
+    return render_to_response('calendar.html',
         RequestContext(request, context_dict,))
 
