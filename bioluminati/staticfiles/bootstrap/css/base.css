@@ -1,0 +1,24 @@
+/** {
+    margin: 0; padding: 0;
+}
+html, body, #container {
+    height: 100%;
+}
+header {
+    height:10%;
+    background: #e71904;
+}
+#main {
+    height: 70%;
+}
+footer {
+    height:20%;
+    background: #f6594a;
+    border-top: medium solid #235B8C;
+}
+.top {
+    height: 100%;
+    background: #EC38F2;
+    border-top: medium solid #235B8C;
+}
+*/
