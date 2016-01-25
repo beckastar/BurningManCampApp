@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,10 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-env_key = os.environ.get('SECRET_KEY')
-if env_key is None:
-    raise ValueError("Expected secret key from environ SECRET_KEY.  Add it.")
-SECRET_KEY = env_key
+SECRET_KEY = '#k=s(-h3e&(%v&%sbht(*mm_fhmf^47n144^c(2yz%vexq$pvk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -95,21 +91,26 @@ WSGI_APPLICATION = 'bioluminati.wsgi.application'
 #     }
 # }
 
-db_config = dj_database_url.config()
-
-if not db_config:
-    print "No db config in env, falling back to sqlite"
-    db_config = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-else:
-    db_config['CONN_MAX_AGE'] = 500
-
-
 DATABASES = {
-    'default': db_config
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'bio',
+        'USER': 'becka',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
+    }
 }
+
+
+
+# HEROKU
+# # Parse database configuration from $DATABASE_URL
+# import dj_database_url
+# DATABASES['default'] =  dj_database_url.config()
+
+# Enable Persistent Connections
+DATABASES['default']['CONN_MAX_AGE'] = 500
 
 # end heroku
 
