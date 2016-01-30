@@ -668,9 +668,16 @@ s
     font-family: Verdana;
     font-size: 1em;
     position: relative;
-    left: 33%;
     padding-top: 1.5%;
     padding-bottom: 2%;
+}
+
+#profile_heading {
+    left: 30%;
+}
+
+#vehicle_heading {
+    left: 38%;
 }
 
 /*form items*/
@@ -685,7 +692,7 @@ s
     top: 10%;*/
 }
 
-.squaredTwo #id_camping_this_year, .squaredTwo #id_has_ticket, .squaredTwo #id_looking_for_ticket, .squaredTwo #id_primary_driver_in_your_party {
+.bigcheck #id_camping_this_year, .bigcheck #id_has_ticket, .bigcheck #id_looking_for_ticket, .bigcheck #id_primary_driver_in_your_party {
   width: 28px;
   height: 28px;
   position: relative;
@@ -727,4 +734,3 @@ s
     }    
   }
 }
-/* end .squaredTwo */
