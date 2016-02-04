@@ -366,15 +366,25 @@ footer {
 }
 
 .decoborder {
-    width: 92%;
-    height: 5%;
     position: relative;
-    top: 43em;
-    left: -36%;
     opacity: .6;
     -ms-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
+}
+
+#profile_border {
+    width: 92%;
+    top: 43em;
+    height: 5%;
+    left: -36%;
+}
+
+#vehicle_border {
+    width: 28%;
+    top: 13em;
+    height: 3em;
+    left: -6%;
 }
 
 #landingtext {
