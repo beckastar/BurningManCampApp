@@ -32,6 +32,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "sheltered-island-22241.herokuapp.com"]
 
+LOGIN_REDIRECT_URL = '/profile/'
 
 # Application definition
 

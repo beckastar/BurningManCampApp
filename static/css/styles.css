@@ -387,6 +387,13 @@ footer {
     left: -6%;
 }
 
+#sleeping_border {
+    width: 28%;
+    top: 13em;
+    height: 3em;
+    left: -6%;
+}
+
 #landingtext {
     position: relative;
     left: 7%;
@@ -678,11 +685,25 @@ s
 
 .title {
     font-family: Verdana;
-    font-size: 1em;
+    font-style: bold;
     position: relative;
-    left: 33%;
     padding-top: 1.5%;
     padding-bottom: 2%;
+}
+
+#profile_title {
+    font-size: 1.3em;
+    left: 36%;
+}
+
+#vehicle_title {
+    font-size: 1.3em;
+    left: 36%;
+}
+
+#sleeping_title {
+    font-size: 1.3em;
+    left: 36%;
 }
 
 /*form items*/

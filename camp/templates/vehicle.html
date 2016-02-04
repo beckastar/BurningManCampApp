@@ -7,7 +7,7 @@
 	<img class="decoborder" id="vehicle_border" src="{% static 'images/decoborder.png' %}">
 </div>
 <div id="vehicle_form">
-		<div id="vehicle_heading" class="title">How're you getting to the Burn? </div>
+		<div id="vehicle_title" class="title" id="vehicle_title">How're you getting to the Burn? </div>
 		<form action="/vehicle/" method="post" id='vehicle_form'>
 	<table id="vehicle_table" class="gradienttable table_with_form">	
 			{% csrf_token %}
