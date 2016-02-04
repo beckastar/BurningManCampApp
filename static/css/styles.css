@@ -424,16 +424,6 @@ table td {
     /*background: #ebecda;*/
     background:  #F8C4F6; /*this is the table body */
 }
-/*rename gradienttable class */
-/*table.gradienttable th p{
-    margin:0px;
-}
-
-*/
-/*table.gradienttable td p{
-    margin:0px;
-    padding:8px;
-}*/
 
 td {
     border: none;
