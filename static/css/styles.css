@@ -27,7 +27,7 @@ footer {
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;
-    height: 15%;
+    height: 22%;
 }
 
 #headerbg {
@@ -365,6 +365,18 @@ footer {
     animation-delay: 1.4s;
 }
 
+.decoborder {
+    width: 92%;
+    height: 5%;
+    position: relative;
+    top: 43em;
+    left: -36%;
+    opacity: .6;
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
 #landingtext {
     position: relative;
     left: 7%;
@@ -406,9 +418,9 @@ thead th:last-child {
 }*/
 
 table {
-    font-family: verdana,arial,sans-serif;
+/*    font-family: verdana;
     font-size:15px;
-    color:#333333;
+    color:#333333;*/
     border-collapse: collapse;
 }
 
@@ -422,13 +434,12 @@ table td {
     padding-left: 2em;
     padding-right: 2em;
     /*background: #ebecda;*/
-    background:  #F8C4F6; /*this is the table body */
+    background: rgb(191, 179, 191); /*this is the table body */
 }
 
-td {
-    border: none;
-}
+tr td:first-child {
 
+}
 .showTable {
     visibility: visible;
 }
@@ -454,6 +465,11 @@ td {
     font-size: 23px;
 }
 
+.table_instructions {
+    font-family: verdana;
+    font-size:15px;
+    color:#333333;
+}
 
 td input {
    border-radius: 7px;
@@ -477,10 +493,6 @@ table td {
     margin-bottom: 4%;
     border-collapse: collapse;
 }
-
-/*.table_with_form tr {
-    border-bottom: 1pt solid black;
-}*/
 
 .table_with_form tr td:first-child{
     border-radius: 10px 0px 0px 10px;
@@ -547,7 +559,7 @@ input #vehicle_button .table_button {
     position: relative;
 }
 
-.table_instructions {
+/*.table_instructions {
     position: fixed;
     z-index: 10;
     width: 6em;
@@ -561,7 +573,7 @@ input #vehicle_button .table_button {
     z-index: 3;
     top: 29%;
     background-color: rgb(237, 210, 229);
-}
+}*/
 
 .instruction_image {
     width: 4em;
