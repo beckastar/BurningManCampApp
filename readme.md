@@ -27,18 +27,20 @@ A master view displays the deatils for the week. In a calendar view for the week
 
 There's an admin script that deletes the data that is known to change every year, which can be run at the terminal with python manage.py happy_new_year.  It resets the arrival and departure days in people's profiles, sets the value for whether or not people are attending that year to False, and clears all of the meal shift assignments. 
 
-Right now the following developments are in progress:
+It can be viewed on Heroku at https://sheltered-island-22241.herokuapp.com/
 
-1. Change database to postgres
-2. Deploy to Heroku
+The following features are still under development:
+
+1. Design changes -   Create wireframes. Adjust color scheme, borders, centering.
+2. UI changes
 3. Buttons that export and download data  
 4. Chef's control page, where the chef signs up for a meal, inputs the menu, and dictates the amount of support s/he will need in the kitchen
-5. Set controls so that only admins can edit certain tables
-6. Edit python code so shifts don't have to be created manually 
+5. Edit python code to automatically create shifts
+6. Add site to URL, currently owned by former webmaster.
 
 Nice to have features I'm planning to add:
 
-1. Tell each camper how many more shifts they need to sign up for 
+1. Tell each camper how many more shifts they need still need to sign up for
 2. Chef control, where each chef can create the number of shifts required for their particular meal
 3. Auto CSV exports included in the happy_new_year script before data is deleted
 4. Easy view into old data
