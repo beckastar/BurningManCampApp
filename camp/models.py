@@ -109,7 +109,7 @@ Days = (
     (3, "Wednesday"),
     (4, "Thursday"),
     (5, "Friday"),
-    (6, "Saturday"),
+    (6, "Saturday")
     )
 
 PYB_days = (
@@ -117,7 +117,7 @@ PYB_days = (
     (2, "Tuesday"),
     (3, "Wednesday"),
     (4, "Thursday"),
-    (5, "Friday"),
+    (5, "Friday")
     )
 
 Fish = "Fish"
@@ -302,7 +302,7 @@ class BicycleMutationInventory(models.Model):
 class BikeMutationSchedule(models.Model):
     shift = models.CharField(max_length=25, choices=PYB_shifts)
     camper = models.ForeignKey(User, null=True, blank=True, default=None)
-    day = models.IntegerField(max_length=25, choices = PYB_days)
+    day = models.IntegerField(choices = PYB_days)
     assigned = models.BooleanField(default=False)
 
     def __str__(self):

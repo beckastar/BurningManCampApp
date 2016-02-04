@@ -1,0 +1,7 @@
+gunicorn==19.4.5
+Django==1.9.1
+Pillow==3.1.0
+psycopg2==2.6.1
+wheel==0.24.0
+whitenoise==2.0.6
+dj-database-url==0.3.0
