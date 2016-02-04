@@ -20,6 +20,22 @@ def index(request):
     return render(request, "index.html", {'shifts': shifts})
 
 def login(request):
+
+    username = request.POST['username']
+    
+    password = request.POST['password']
+    
+    user = authenticate(username=username, password=password)
+    
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return redirect('/profile.html')
+        # else:
+            # Return a 'disabled account' error message
+                # else:
+        # Return an 'invalid login' error message.
+        
     return render(request, 'login.html')
 
 def about(request):

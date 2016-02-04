@@ -1,26 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Bioluminati</h2>
-<p>Welcome to Bioluminati!  We're also known on Playa as Bicycle Mutation Station, formerly Pimp Your Bike.  <br>
+
+{% csrf_token %}
+
+<div id="landingtext">
+	<h2>Bioluminati</h2>
+	<p>Welcome to Bioluminati!  We're also known on Playa as Bicycle Mutation Station, formerly Pimp Your Bike.  <br>
 
 
-This camp has been on Playa for 20 consecutive years. That's a long time! 
-</p>
+	This camp has been on Playa for 20 consecutive years. That's a long time! 
+	</p>
 
-We welcome new campers.
+	We welcome new campers.
 
-<br>
+	<br>
 
-{% if user.is_authenticated %}
+	{% if user.is_authenticated %}
 
-If you're logging in for the first time ever or even the first time this year, you have multiple steps to complete:
-<ul>
-<li>Sign up for meal shifts.  Each person should sign up for FOUR meal shifts total. </li>
-<li>Sign up for PYB shifts. Each person should sign up for TWO PYB shifts. </li>
-<li>Complete your profile </li>
-
-
+	If you're logging in for the first time ever or even the first time this year, you have multiple steps to complete:
+	<ul>
+		<li>Sign up for meal shifts.  Each person should sign up for FOUR meal shifts total. </li>
+		<li>Sign up for PYB shifts. Each person should sign up for TWO PYB shifts. </li>
+		<li>Complete your profile </li>
+	</ul>
+</div>
 
 {% endif %}
 
