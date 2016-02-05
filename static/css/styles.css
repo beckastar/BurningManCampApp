@@ -673,6 +673,13 @@ s
 #campertoggle { 
 }
 
+.profile_text_input input {
+    position: relative;
+    top: 35%;
+    width: 65%;
+    height: 40%;
+}
+
 .squaredTwo #id_camping_this_year, .squaredTwo #id_has_ticket, .squaredTwo #id_looking_for_ticket, .squaredTwo #id_primary_driver_in_your_party {
   width: 28px;
   height: 28px;
