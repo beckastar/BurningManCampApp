@@ -6,7 +6,8 @@ html, body, .container {
 }
 
 body {
-    background-color: #86AAAC;
+    background-color: #FBEFFF;
+    /*old: #86AAAC;*/
 }
 header {
     padding: 25px 0 35px;
@@ -64,19 +65,9 @@ footer {
 #nav li:hover a{
     background-image: none;
     color: pink;
-    /*background-color: purple;*/
 }
 
-
-/*this doesn't seem to do anything */
-/*#nav li:hover a < li a {
-    background-image: none;
-    background-color: #673E67;
-}*/
-
 #nav li:hover ul li {
-    /*background-image: none;*/
-    /*color: purple;*/
     width: 100%
 }
 
@@ -84,12 +75,7 @@ footer {
 #nav li a:hover {
     color: purple;
 }
-
-/*this doesn't do anything */
-/*#nav li .li_child:hover a {
-    color: red;
-}*/
-/*the items in the header need to be at 10 of total width for ten items %*/
+ 
 #nav li {
     width: 12.5%;
 }
@@ -366,7 +352,6 @@ footer {
 }
 
 .decoborder {
-    position: relative;
     opacity: .6;
     -ms-transform: rotate(90deg);
     -webkit-transform: rotate(90deg);
@@ -374,10 +359,11 @@ footer {
 }
 
 #profile_border {
-    width: 92%;
-    top: 43em;
-    height: 5%;
-    left: -36%;
+    position: relative;
+    width: 78%;
+    top: 49em;
+    height: 15%;
+    left: -31%;
 }
 
 #vehicle_border {
@@ -421,23 +407,15 @@ table {
 }
 
 /*for tables with thead*/
-thead th:first-child {
+/*thead th:first-child {
     border-radius: 10px 0px 0px 0px;
 }
 
 thead th:last-child {
     border-radius: 0px 10px 10px 0px;
 }
-
-/*for tabels without thead*/
-/*#profile_table tr:first-child {
-    border-radius: 10px 0px 0px 0px;
-}*/
-
-table {
-/*    font-family: verdana;
-    font-size:15px;
-    color:#333333;*/
+*/
+table { 
     border-collapse: collapse;
 }
 
@@ -451,12 +429,10 @@ table td {
     padding-left: 2em;
     padding-right: 2em;
     /*background: #ebecda;*/
-    background: rgb(191, 179, 191); /*this is the table body */
+    background: #276693;
+    /*background: rgb(191, 179, 191); /*this is the table body */*/
 }
 
-tr td:first-child {
-
-}
 .showTable {
     visibility: visible;
 }
@@ -484,8 +460,11 @@ tr td:first-child {
 
 .table_instructions {
     font-family: verdana;
-    font-size:15px;
-    color:#333333;
+    font-size: 15px;
+    color: #FBEFFF;
+    position: relative;
+    /* top: -0.9em; */
+    padding-top: 19px;
 }
 
 td input {
@@ -494,8 +473,7 @@ td input {
 
 table td {
     height: 3em;
-    /* border-bottom: 1px dotted purple; */
-    border-bottom: 8px solid #86AAAC;
+    border-bottom: 8px solid #FBEFFF;
     text-align: left;
     vertical-align: top;
 }
@@ -505,39 +483,19 @@ table td {
     position: relative;
     left: 18%;
     z-index: 2;
-    /* border: 3px solid black; */
     padding-bottom: 4%;
     margin-bottom: 4%;
     border-collapse: collapse;
+    color: #FBEFFF
 }
 
 .table_with_form tr td:first-child{
-    border-radius: 10px 0px 0px 10px;
+    border-radius: 15px 0px 0px 15px;
 }
 
 .table_with_form tr td:nth-child(2){
-    border-radius: 0px 10px 10px 0px;
+    border-radius: 0px 15px 15px 0px;
 }
-
-/*.table_with_form tr:first-child td:first-child {
-    border-radius: 8px 0px 0px 0px;
-}
-
-.table_with_form tr:first-child td:nth-child(2) {
-    border-radius: 0px 8px 0px 0px;
-}
-
-.table_with_form tr:last-child td:first-child {
-    border-radius: 0px 0px 0px 8px;
-}
-
-.table_with_form tr:last-child td:nth-child(2) {
-    border-radius: 0px 0px 8px 0px;
-}*/
-
-/*.table_with_form tr {
-    border-bottom: 2% white solid;
-}*/
 
 .table_button {
     top: 0.5em;
@@ -693,7 +651,7 @@ s
 
 #profile_title {
     font-size: 1.3em;
-    left: 36%;
+    left: 29%;
 }
 
 #vehicle_title {
@@ -705,17 +663,14 @@ s
     font-size: 1.3em;
     left: 36%;
 }
-
-/*form items*/
+ 
 #food_restrictions li {
     list-style: none;
     margin-left: auto;
     margin-right: auto;
 }
 
-#campertoggle {
-/*    position: relative;
-    top: 10%;*/
+#campertoggle { 
 }
 
 .squaredTwo #id_camping_this_year, .squaredTwo #id_has_ticket, .squaredTwo #id_looking_for_ticket, .squaredTwo #id_primary_driver_in_your_party {
@@ -759,5 +714,4 @@ s
       opacity: 1;
     }    
   }
-}
-/* end .squaredTwo */
+} 
