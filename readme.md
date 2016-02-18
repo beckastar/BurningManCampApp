@@ -32,11 +32,10 @@ It can be viewed on Heroku at https://sheltered-island-22241.herokuapp.com/
 The following features are still under development:
 
 1. Design changes -   Create wireframes. Adjust color scheme, borders, centering.
-2. UI changes
-3. Buttons that export and download data  
+2. UI changes - accessibility and user flow
+3. Export / download data  
 4. Chef's control page, where the chef signs up for a meal, inputs the menu, and dictates the amount of support s/he will need in the kitchen
-5. Edit python code to automatically create shifts
-6. Add site to URL, currently owned by former webmaster.
+5. Get access to bioluminati.org 
 
 Nice to have features I'm planning to add:
 
