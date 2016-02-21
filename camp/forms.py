@@ -1,9 +1,27 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import Form, ModelForm
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from .models import MealShift, UserProfile, Vehicle, Bike, Shelter, BicycleMutationInventory, Inventory, BikeMutationSchedule
 
+from .models import (
+  Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
+  Meal, MealShift, Shelter, UserProfile, Vehicle)
+
+class ChefForm(forms.Form):
+    MAX_WORKERS = [(i, i) for i in range(5)]
+
+    def __init__(self, meal, **kwargs):
+        super(ChefForm, self).__init__(**kwargs)
+        self.url = reverse()
+
+    meal = forms.IntegerField(widget=forms.HiddenInput())
+    need_courier = forms.BooleanField(initial=False)
+    number_of_sous = forms.ChoiceField(initial=0, choices=MAX_WORKERS)
+    number_of_kp = forms.ChoiceField(initial=0, choices=MAX_WORKERS)
+
+    @classmethod
+    def for_meal(cls, meal, data=None):
+        return ChefForm(data=data, prefix="meal-%s" % meal.id, meal=meal)
 
 class UserForm(ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())

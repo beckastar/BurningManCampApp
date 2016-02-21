@@ -41,7 +41,7 @@
               <li><a href={% url 'campers' %}>Campers</a></li>
               <li><a href="#">Meals</a>
                 <ul>
-                  <li><a href={% url 'signup' %}>Sign up for kitchen shifts</a></li>
+                  <li><a href={% url 'meal_shifts' %}>Sign up for kitchen shifts</a></li>
                   <li><a href={% url 'meal_schedule' %}>Input data as a chef</a></li>
                 </ul>
               </li>
@@ -79,9 +79,8 @@
           </div>
         </div>
       </header>
-          {% block content %}
-          {% endblock %}
-        </div>
+      {% block content %}
+      {% endblock %}
    </div>
   </body>
 </html>

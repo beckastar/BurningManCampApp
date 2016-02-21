@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
@@ -96,12 +98,6 @@ tent_size_width_inches = (
     (eleven_inches, "eleven inches")
     )
 
-Sunday = "Sunday"
-Monday = "Monday"
-Tuesday = "Tuesday"
-Wednesday = "Wednesday"
-Thursday = "Thursday"
-Friday = "Friday"
 Days = (
     (0, "Sunday"),
     (1, "Monday"),
@@ -202,19 +198,63 @@ Bike_repairs = (
     )
 
 
-class MealShift(models.Model):
-    assigned = models.BooleanField(default=False)
-    day = models.IntegerField(choices=Days)
-    meal = models.CharField(max_length = 10, choices=Meals)
-    shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
-    camper = models.ForeignKey(User, null=True, blank=True, default=None)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
+class Event(models.Model):
+    name = models.CharField(max_length=500, unique=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+
+class Meal(models.Model):
+    Breakfast = "Breakfast"
+    Dinner = "Dinner"
+
+    Kinds = (
+         (Breakfast, "Breakfast"),
+         (Dinner, "Dinner"),
+    )
+
+    event = models.ForeignKey(Event, help_text="What year/regional is this for?")
+    day = models.DateField()
+    kind = models.CharField(choices=Kinds, default=Dinner, max_length=10)
+    chef = models.ForeignKey(User, null=True)
+    private_notes = models.TextField(help_text="Private to you", blank=True)
+    public_notes = models.TextField(help_text="Public description", blank=True)
+    need_courier = models.BooleanField(default=False)
+    number_of_sous = models.IntegerField(default=0)
+    number_of_kp = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ("day", "meal", "shift")
+        ordering = ('day', 'kind')
 
-    def __str__(self):
-        return '%s %s %s %s %s %s'%(self.id, self.assigned, self.day, self.meal, self.shift, self.camper)
+    def __unicode__(self):
+        return "%s %s" % (self.day, self.kind)
+
+class MealShiftManager(models.Manager):
+    def non_chef(self):
+        return self.exclude(role=MealShift.Chef)
+
+class MealShift(models.Model):
+    Chef = "chef"
+    Sous_Chef = "sous-chef"
+    KP ="kp"
+    Courier = "courier"
+
+    Roles = (
+        (Courier, "Courier"),
+        (Chef, "Chef"),
+        (Sous_Chef, "Sous Chef"),
+        (KP, "KP (cleaning/assistance)"),
+    )
+
+    meal = models.ForeignKey(Meal, related_name='shifts')
+    role = models.CharField(max_length = 10, choices=Roles, default=KP)
+    worker = models.ForeignKey(User, null=True)
+
+    objects = MealShiftManager()
+
+    class Meta:
+        ordering = ('meal', 'role', 'pk')
+
 
 class UserProfile(models.Model):
 
@@ -301,12 +341,12 @@ class BicycleMutationInventory(models.Model):
 
 class BikeMutationSchedule(models.Model):
     shift = models.CharField(max_length=25, choices=PYB_shifts)
-    camper = models.ForeignKey(User, null=True, blank=True, default=None)
+    worker = models.ForeignKey(User, null=True, blank=True, default=None)
     day = models.IntegerField(choices = PYB_days)
     assigned = models.BooleanField(default=False)
 
     def __str__(self):
-        return '%s %s %s %s'%(self.shift, self.camper, self.day, self.assigned)
+        return '%s %s %s %s'%(self.shift, self.worker, self.day, self.assigned)
 
 class Inventory(models.Model):
     item = models.CharField(max_length=20, blank=True)

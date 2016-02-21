@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+
+from itertools import groupby
+
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
-from models import MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm
 from django.core.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -13,7 +15,55 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
-import itertools
+
+from .models import Meal, MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm
+
+
+@login_required
+def meal_shifts(request):
+    meals = Meal.objects.all().prefetch_related('shifts')
+
+    return render(request, 'meal_shifts.html',
+        {'meals':meals})
+
+@login_required
+def chef_signup(request, meal_id):
+    if request.method != 'POST':
+        raise Http404
+    meal = get_object_or_404(Meal, pk=meal_id)
+    if meal.chef_id is not None:
+        raise Http404("A chef is already assigned to that meal")
+    meal.chef = request.user
+    meal.save()
+
+@login_required
+def chef_requirements(request, meal_id):
+    if request.method != 'POST':
+        raise Http404()
+    meal = get_object_or_404(Meal, pk=meal_id)
+    if meal.chef_id != request.user.id:
+        raise Http404("Can not edit requirements if you're not chef.")
+    requirements = forms.ChefForm.for_meal(meal=meal, data=request.POST)
+    if not requirements.is_valid():
+        raise Http404("Bad meal worker requirements")
+
+    # generate or remove shifts as required.
+
+    return redirect('meal_shifts')
+
+@login_required
+def worker_signup(request, shift_id):
+    if request.method != 'POST':
+        raise Http404
+    shift = get_object_or_404(Shift, pk=meal_id)
+
+    if shift.worker_id == request.user.id:
+        shift.worker = None
+    else:
+        shift.worker = request.user
+    shift.save()
+    return redirect('meal_shifts')
 
 def index(request):
     shifts = MealShift.objects.all()
@@ -22,11 +72,11 @@ def index(request):
 def login(request):
 
     username = request.POST['username']
-    
+
     password = request.POST['password']
-    
+
     user = authenticate(username=username, password=password)
-    
+
     if user is not None:
         if user.is_active:
             login(request, user)
@@ -35,7 +85,7 @@ def login(request):
             # Return a 'disabled account' error message
                 # else:
         # Return an 'invalid login' error message.
-        
+
     return render(request, 'login.html')
 
 def about(request):
@@ -49,20 +99,6 @@ def campers(request):
     campers_this_year = UserProfile.objects.filter(camping_this_year=True)
     context_dict = {'campers':campers, 'campers_this_year':campers_this_year}
     return render_to_response('campers.html', RequestContext(request, context_dict))
-
-
-def signup_for_shift(request):
-    if request.method == 'POST':
-        shift_id = int(request.POST.get('shift_id'))
-        shift = MealShift.objects.get(id=shift_id)
-        if shift.camper is not None:
-            raise ValueError
-        shift.camper = request.user
-        print "shift camper %s" %shift.camper
-        shift.assigned = True
-        shift.save()
-
-    return show_signup_table(request)
 
 
 def _initial_meal():

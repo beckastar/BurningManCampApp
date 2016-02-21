@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load meals %}
+
+{% block content %}
+
+{% for meal in meals %}
+   {{ meal|chef_widget:user }}
+   {% for shift in meal.shifts.non_chef %}
+      {{ shift|shift_widget:user }}
+   {% endfor %}
+{% endfor %}
+
+{% endblock content %}
