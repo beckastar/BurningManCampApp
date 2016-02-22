@@ -1,5 +1,5 @@
 
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.utils.encoding import smart_str
 from datetime import datetime, timedelta
 from camp.models import Event, Meal, UserProfile, MealShift
@@ -12,7 +12,7 @@ def _parse_date(value):
 
     return datetime(year, month, day)
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = "Sets up a new event/year"
 
     def add_arguments(self, parser):
@@ -22,7 +22,7 @@ class Command(NoArgsCommand):
             action='store_false', dest='interactive', default=True,
             help='Do NOT prompt the user for input of any kind.')
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         start_date = options['start_date']
         num_days = options['num_days']
         interactive = options['interactive']

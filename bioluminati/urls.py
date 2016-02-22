@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 from camp import views
 
 from django.views.generic.edit import CreateView
@@ -24,8 +25,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
     url(r'^register/', views.register, name='register'),
-    url(r'^login/', 'django.contrib.auth.views.login', name='foo',kwargs={'template_name': 'login.html'}),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'next_page': '/'}),
+    url(r'^login/', login, name='foo',kwargs={'template_name': 'login.html'}),
+    url(r'^logout/$', logout, name='logout', kwargs={'next_page': '/'}),
     url(r'^confirm/', views.register, name='confirm'),
     url(r'^about/', views.about, name='about'),
     url(r'^prep/', views.prep, name='prep'),

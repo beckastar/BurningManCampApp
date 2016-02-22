@@ -2,11 +2,12 @@ from __future__ import absolute_import
 
 from itertools import groupby
 
+from django.db.transaction import atomic
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, get_object_or_404
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
@@ -24,6 +25,7 @@ from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMateria
 def meal_shifts(request):
     meals = Meal.objects.all().prefetch_related('shifts')
 
+    print meals.count()
     return render(request, 'meal_shifts.html',
         {'meals':meals})
 
@@ -32,10 +34,54 @@ def chef_signup(request, meal_id):
     if request.method != 'POST':
         raise Http404
     meal = get_object_or_404(Meal, pk=meal_id)
-    if meal.chef_id is not None:
-        raise Http404("A chef is already assigned to that meal")
-    meal.chef = request.user
+    if meal.chef_id != request.user.id:
+        if meal.chef_id is not None:
+            raise Http404("A chef is already assigned to that meal")
+        # nobody is chef yet.
+        meal.chef = request.user
+    else:
+        # step down from the meal
+        meal.chef = None
     meal.save()
+
+    redirect('meal_shifts')
+
+def _maintain_role_requirement(meal, role, needed):
+    qs = MealShift.objects.filter(meal=meal, role=role)
+    existing = qs.count()
+
+    if existing == needed:
+        return
+    elif existing > needed:
+        extra = existing - needed
+        # prefer to get rid of unclaimed shifts.
+        unassigned_pks = qs.filter(worker__isnull=True
+            ).values_list('pk', flat=True)
+        if len(unassigned_pks) > extra:
+            # remove just some of the unassigned
+            unassigned_pks = unassigned_pks[:extra]
+        qs.filter(pk__in=unassigned_pks).delete()
+        extra -= len(unassigned_pks)
+
+        if extra > 0:
+            # no choice but to delete assigned shifts. Do in order of PK,
+            # which is roughly signup order.
+            extra_pks = qs.order_by('-pk').values_list('pk', flat=True)[:extra]
+            qs.filter(pk__in=extra_pks).delete()
+    else: # existing < needed
+        for i in range(needed - existing):
+            MealShift.objects.create(meal=meal, role=role)
+
+def _maintain_meal_requirements(meal, chef_form):
+    # generate or remove shifts as required.
+    need = 1 if chef_form.cleaned_data['need_courier'] else 0
+    _maintain_role_requirement(meal, MealShift.Courier, need)
+
+    _maintain_role_requirement(meal, MealShift.Sous_Chef,
+        int(chef_form.cleaned_data['number_of_sous']))
+
+    _maintain_role_requirement(meal, MealShift.KP,
+        int(chef_form.cleaned_data['number_of_kp']))
 
 @login_required
 def chef_requirements(request, meal_id):
@@ -44,11 +90,13 @@ def chef_requirements(request, meal_id):
     meal = get_object_or_404(Meal, pk=meal_id)
     if meal.chef_id != request.user.id:
         raise Http404("Can not edit requirements if you're not chef.")
-    requirements = forms.ChefForm.for_meal(meal=meal, data=request.POST)
-    if not requirements.is_valid():
-        raise Http404("Bad meal worker requirements")
+    requirements = ChefForm.for_meal(meal=meal, data=request.POST)
 
-    # generate or remove shifts as required.
+    if not requirements.is_valid():
+        return render(request, "meals/chef_requirements.html", {"meal": meal, "form": requirements})
+
+    with _atomic():
+        _maintain_meal_requirements(meal, requirements)
 
     return redirect('meal_shifts')
 
@@ -58,11 +106,16 @@ def worker_signup(request, shift_id):
         raise Http404
     shift = get_object_or_404(Shift, pk=meal_id)
 
-    if shift.worker_id == request.user.id:
-        shift.worker = None
-    else:
+    if shift.worker_id != request.user.id:
+        if shift.worker_id is not None:
+            raise ValueError("A worker is already working that shift.")
+        # nobody is signed up yet.
         shift.worker = request.user
+    else:
+        # step down from the shift.
+        shift.worker = None
     shift.save()
+
     return redirect('meal_shifts')
 
 def index(request):

@@ -1,0 +1,11 @@
+<form action="{% url 'chef_signup' meal_id=meal.id %}" method="post">
+<button>Quit the meal</button>
+{% csrf_token %}
+</form>
+
+<form action="{{ form.url }}" method="post">
+{{ form.as_ul }}
+{% csrf_token %}
+<button>Update requirements</button>
+</form>
+

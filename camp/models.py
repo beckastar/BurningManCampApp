@@ -4,6 +4,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
+
 RV = "RV"
 sedan = "sedan"
 small_suv = "small_suv"
@@ -203,6 +204,8 @@ class Event(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
+    def __unicode__(self):
+        return self.name
 
 class Meal(models.Model):
     Breakfast = "Breakfast"
@@ -219,15 +222,12 @@ class Meal(models.Model):
     chef = models.ForeignKey(User, null=True)
     private_notes = models.TextField(help_text="Private to you", blank=True)
     public_notes = models.TextField(help_text="Public description", blank=True)
-    need_courier = models.BooleanField(default=False)
-    number_of_sous = models.IntegerField(default=0)
-    number_of_kp = models.IntegerField(default=0)
 
     class Meta:
         ordering = ('day', 'kind')
 
     def __unicode__(self):
-        return "%s %s" % (self.day, self.kind)
+        return "%s %s %s" % (self.event, self.day, self.kind)
 
 class MealShiftManager(models.Manager):
     def non_chef(self):
@@ -255,6 +255,8 @@ class MealShift(models.Model):
     class Meta:
         ordering = ('meal', 'role', 'pk')
 
+    def __unicode__(self):
+        return "%s %s" % (self.meal, self.role)
 
 class UserProfile(models.Model):
 
@@ -275,15 +277,8 @@ class UserProfile(models.Model):
     camping_this_year = models.BooleanField()
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    def __str__(self):
-        return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
-            self.user, self.picture, self.city,
-            self.cell_number, self.email_address, self.emergency_contact_name,
-            self.emergency_contact_phone,
-            self.meal_restrictions, self.other_restrictions,
-            self.arrival_day, self.departure_day, self.has_ticket,
-            self.looking_for_ticket, self.camping_this_year, self.date, self.date
-            )
+    def __unicode__(self):
+        return '%s profile' % self.user
 
 class Shelter(models.Model):
     user = models.OneToOneField(User)
@@ -292,7 +287,7 @@ class Shelter(models.Model):
     sleeping_under_ubertent = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s, %s, %s, %s' %(
             self.user, self.sleeping_arrangement, self.number_of_people_tent_sleeps,
             self.sleeping_under_ubertent, self.date
@@ -306,7 +301,7 @@ class Vehicle(models.Model):
     make_of_car = models.CharField(max_length=15, blank=True, default=None)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s, %s, %s, %s' %(
             self.user, self.primary_driver_in_your_party, self.model_of_car,
             self.make_of_car, self.date
@@ -325,7 +320,7 @@ class Bike(models.Model):
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     notes = models.CharField(max_length=30, null=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s %s %s %s'%(
             self.bike_name, self.bike_owner, self.bike_size_inches,
             self.needs_repairs, self.in_bike_pool_this_year)
@@ -336,7 +331,7 @@ class BicycleMutationInventory(models.Model):
     units = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s %s'%(self.material, self.quantity, self.units)
 
 class BikeMutationSchedule(models.Model):
@@ -345,7 +340,7 @@ class BikeMutationSchedule(models.Model):
     day = models.IntegerField(choices = PYB_days)
     assigned = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s %s %s'%(self.shift, self.worker, self.day, self.assigned)
 
 class Inventory(models.Model):
@@ -354,7 +349,7 @@ class Inventory(models.Model):
     needs_repairs = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s'%(self.item, self.quantity, self.needs_repairs)
 
 

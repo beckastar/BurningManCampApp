@@ -3,10 +3,13 @@
 
 {% block content %}
 
+<h1>Meal shift signups</h1>
+
 {% for meal in meals %}
-   {{ meal|chef_widget:user }}
+   <h2>{{ meal.day }} {{ meal.kind }}</h2>
+   {% chef_widget meal user %}
    {% for shift in meal.shifts.non_chef %}
-      {{ shift|shift_widget:user }}
+      {% shift_widget meal user %}
    {% endfor %}
 {% endfor %}
 
