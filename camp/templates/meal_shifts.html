@@ -1,5 +1,10 @@
 {% extends "base.html" %}
-{% load meals %}
+{% load meals staticfiles %}
+
+{% block extrahead %}
+<link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 
 {% block content %}
 
@@ -8,9 +13,18 @@
 {% for meal in meals %}
    <h2>{{ meal.day }} {{ meal.kind }}</h2>
    {% chef_widget meal user %}
-   {% for shift in meal.shifts.non_chef %}
-      {% shift_widget meal user %}
-   {% endfor %}
+   {% if not meal|is_chef:user %}
+       {% for shift in meal.shifts.non_chef %}
+          {% if forloop.first %}
+             <h3>Available shifts:</h3>
+          {% endif %}
+          {% shift_widget shift user %}
+       {% endfor %}
+   {% else %}
+      {% for shift in meal.shifts.non_chef %}
+        {% chef_worker_widget shift %}
+      {% endfor %}
+   {% endif %}
 {% endfor %}
 
 {% endblock content %}

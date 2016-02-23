@@ -207,6 +207,9 @@ class Event(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ('start_date',)
+
 class Meal(models.Model):
     Breakfast = "Breakfast"
     Dinner = "Dinner"
@@ -220,8 +223,10 @@ class Meal(models.Model):
     day = models.DateField()
     kind = models.CharField(choices=Kinds, default=Dinner, max_length=10)
     chef = models.ForeignKey(User, null=True)
-    private_notes = models.TextField(help_text="Private to you", blank=True)
-    public_notes = models.TextField(help_text="Public description", blank=True)
+    private_notes = models.TextField(blank=True,
+        help_text="Private to you")
+    public_notes = models.TextField(blank=True,
+        help_text="Public description")
 
     class Meta:
         ordering = ('day', 'kind')

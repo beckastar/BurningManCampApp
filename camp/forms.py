@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django import forms
 from django.forms import Form, ModelForm
 from django.core.exceptions import ValidationError
@@ -18,11 +20,25 @@ class ChefForm(forms.Form):
     need_courier = forms.BooleanField(initial=False, required=False)
     number_of_sous = forms.ChoiceField(initial=0, choices=MAX_WORKERS)
     number_of_kp = forms.ChoiceField(initial=0, choices=MAX_WORKERS)
+    private_notes = forms.CharField(required=False, max_length=100000, widget=forms.Textarea,
+        help_text="Notes for yourself")
+    public_notes = forms.CharField(required=False, max_length=100000, widget=forms.Textarea,
+        help_text="Describe the meal and any details you'd like to share.")
 
     @classmethod
     def for_meal(cls, meal, data=None):
         prefix = "meal-%s" % meal.id
-        return ChefForm(data=data, prefix=prefix, meal=meal)
+
+        role_counts = defaultdict(int)
+        for shift in meal.shifts.all():
+            role_counts[shift.role] += 1
+
+        initial = {
+          'need_courier': role_counts[MealShift.Courier] > 0,
+          'number_of_sous': role_counts[MealShift.Sous_Chef],
+          'number_of_kp': role_counts[MealShift.KP]
+        }
+        return ChefForm(data=data, initial=initial, prefix=prefix, meal=meal)
 
 class UserForm(ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())

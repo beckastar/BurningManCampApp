@@ -38,7 +38,6 @@ urlpatterns = [
     url(r'^chef_signup/(?P<meal_id>[^/]+)/$', views.chef_signup, name='chef_signup'),
     url(r'^chef_requirements/(?P<meal_id>[^/]+)/$', views.chef_requirements, name='chef_requirements'),
     url(r'^worker_signup/(?P<shift_id>[^/]+)/$', views.worker_signup, name='worker_signup'),
-    url(r'^remove-self-from-shift/$', views.remove_self_from_shift, name="remove_self_from_shift"),
     url(r'^bikes/', views.show_bike_form, name='bikes'),
     url(r'^remove-bike-from-db/', views.remove_bike, name='remove_bike'),
     url(r'^edit_bike/', views.edit_bike, name='edit_bike'),

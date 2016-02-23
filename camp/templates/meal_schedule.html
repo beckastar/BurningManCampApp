@@ -37,8 +37,8 @@
 									{% for position in meal.positions.items %}
 									 <td>
 									 position: {{ position.0 }} - 
-									   {% for shift_worker in position.1 %}
-									      <div>shift_worker: {{ shift_worker.camper }}</div>
+									   {% for shift in position.1 %}
+									      <div>shift_worker: {{ shift.worker }}</div>
 									   {% endfor %}
 									 </td>
 									{% endfor %}

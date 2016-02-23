@@ -17,7 +17,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
 
-from .models import Meal, MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from .models import Event, Meal, MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm
 
 
@@ -44,7 +44,7 @@ def chef_signup(request, meal_id):
         meal.chef = None
     meal.save()
 
-    redirect('meal_shifts')
+    return redirect('meal_shifts')
 
 def _maintain_role_requirement(meal, role, needed):
     qs = MealShift.objects.filter(meal=meal, role=role)
@@ -83,6 +83,10 @@ def _maintain_meal_requirements(meal, chef_form):
     _maintain_role_requirement(meal, MealShift.KP,
         int(chef_form.cleaned_data['number_of_kp']))
 
+    meal.private_notes = chef_form.cleaned_data['private_notes']
+    meal.public_notes = chef_form.cleaned_data['public_notes']
+    meal.save()
+
 @login_required
 def chef_requirements(request, meal_id):
     if request.method != 'POST':
@@ -95,7 +99,7 @@ def chef_requirements(request, meal_id):
     if not requirements.is_valid():
         return render(request, "meals/chef_requirements.html", {"meal": meal, "form": requirements})
 
-    with _atomic():
+    with atomic():
         _maintain_meal_requirements(meal, requirements)
 
     return redirect('meal_shifts')
@@ -154,61 +158,36 @@ def campers(request):
     return render_to_response('campers.html', RequestContext(request, context_dict))
 
 
-def _initial_meal():
+def _initial_meal(meal):
+    people_that_day = UserProfile.objects.filter(
+        arrival_day__lt=meal.day,  departure_day__gt=meal.day)
+    restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
+
     return {
-        'serving': 'bacon', # fix with chef stuff.
-        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': []},
-        'restrictions': [],
-        'num_served': 0
+        'day': meal.day,
+        'meal': meal.kind,
+        'serving': meal.public_notes,
+        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': [], 'Courier': []},
+        'restrictions': restrictions,
+        'num_served': people_that_day.count()
     }
 
-def _meal_time(shift):
-    return (shift.day, shift.meal)
-
-def _finalize_meal(meal, shift):
-    people_that_day = UserProfile.objects.filter(arrival_day__lt=shift.day,  departure_day__gt=shift.day)
-    restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
-    meal['day'] = shift.day
-    meal['meal'] = shift.meal
-    meal['restrictions'] = restrictions
-    meal['num_served'] = people_that_day.count()
 
 def meal_schedule(request):
-    shifts = MealShift.objects.order_by('day', 'meal')
+    # FIXME: maybe urls should include the event they are related to?
+    event = Event.objects.last()
+
     shifts_by_meal = []
-    if shifts:
-        first_shift = shifts[0]
-        previous_meal = _meal_time(first_shift)
-        meal = _initial_meal()
-        meal_dirty = False
+    for meal in Meal.objects.filter(event=event):
+        meal_summary = _initial_meal(meal)
+
         for shift in shifts:
-            meal_time = _meal_time(shift)
-            if previous_meal != meal_time:
-                _finalize_meal(meal, shift)
-                shifts_by_meal.append(meal)
-                meal = _initial_meal()
-                meal_dirty = False
+            meal_summary['positions'][shift.role].append(shift)
 
-            meal_dirty = True
-            meal['positions'][shift.shift].append(shift)
-
-        if meal_dirty:
-            _finalize_meal(meal, shift)
-            shifts_by_meal.append(meal)
+        shifts_by_meal.append(meal_summary)
 
     context_dict = {'shifts_by_meal': shifts_by_meal}
     return render(request, "meal_schedule.html", RequestContext(request, context_dict))
-
-def remove_self_from_shift(request):
-    if request.method == 'POST':
-        shift_id = int(request.POST.get('shift_id'))
-        shift = MealShift.objects.get(id=shift_id)
-        if shift.camper == request.user:
-            shift.camper = None
-            shift.assigned = False
-            shift.save()
-
-    return show_signup_table(request)
 
 def show_signup_table(request):
     # model = MealShift

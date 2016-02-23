@@ -1,10 +1,14 @@
+{% load crispy_forms_tags %}
+<div>
+<h3>You are cheffing this meal</h3>
+
 <form action="{% url 'chef_signup' meal_id=meal.id %}" method="post">
 <button>Quit the meal</button>
 {% csrf_token %}
 </form>
 
 <form action="{{ form.url }}" method="post">
-{{ form.as_ul }}
+{{ form|crispy }}
 {% csrf_token %}
 <button>Update requirements</button>
 </form>

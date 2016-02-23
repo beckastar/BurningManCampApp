@@ -9,6 +9,10 @@ from ..shortcuts import render_template
 
 register = template.Library()
 
+@register.filter
+def is_chef(meal, viewer):
+    return meal.chef_id == viewer.id
+
 @register.simple_tag(takes_context=True)
 def chef_widget(context, meal, viewer):
     req = context['request']
@@ -31,14 +35,25 @@ def chef_widget(context, meal, viewer):
 
 @register.simple_tag(takes_context=True)
 def shift_widget(context, shift, user):
+    req = context['request']
     # a claimed shift
     if shift.worker_id:
         # the worker
         if user.id == shift.worker_id:
             # TODO: widget to vacate shift
-            return "quit the shift"
+            return render_template(req, "meals/worker_quit.html", {
+                "shift": shift
+            })
         else:
             # show worker
-            return "working: %s" % user.username
+            return user.username
     else:
-        return "sign up for the shift"
+        return render_template(req, "meals/worker_signup.html", {
+            "shift": shift
+        })
+
+@register.simple_tag(takes_context=True)
+def chef_worker_widget(context, shift):
+    req = context['request']
+    return render_template(req, "meals/worker_bio.html",
+     {"shift": shift})
