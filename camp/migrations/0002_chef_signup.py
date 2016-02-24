@@ -23,6 +23,9 @@ class Migration(migrations.Migration):
                 ('start_date', models.DateField()),
                 ('end_date', models.DateField()),
             ],
+            options={
+                'ordering': ('start_date',)
+            }
         ),
         migrations.CreateModel(
             name='Meal',

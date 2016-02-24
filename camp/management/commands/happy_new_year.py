@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand
 from django.utils.encoding import smart_str
 from datetime import datetime, timedelta
-from camp.models import Event, Meal, UserProfile, MealShift
+from camp.models import Event, Meal, User, MealShift
 import csv
 
 
@@ -53,7 +53,7 @@ class Command(BaseCommand):
         # No need to reset shifts, as we keep old events and shifts (which are tied to events).
 
         # Reset camper fields that are year-specific, though.
-        UserProfile.objects.update(has_ticket=False, looking_for_ticket=False,
+        User.objects.update(has_ticket=False, looking_for_ticket=False,
             camping_this_year=False, date=None,
             arrival_day=None, departure_day=None)
 

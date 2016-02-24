@@ -4,11 +4,10 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 
 from .models import (
     Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
-    Meal, MealShift, Shelter, UserProfile, Vehicle)
+    Meal, MealShift, Shelter, User, Vehicle)
 
 class ChefForm(forms.Form):
     MAX_WORKERS = [(i, i) for i in range(5)]
@@ -95,12 +94,12 @@ class UserProfileForm(ModelForm):
           (Nuts, "Nuts")
         )
 
-        model = UserProfile
+        model = User
         fields = (
           'picture', 'city', 'cell_number',
-          'email_address', 'emergency_contact_name', 'meal_restrictions',
-          'emergency_contact_phone', 'other_restrictions',  'arrival_day',
-          'departure_day',
+          'emergency_contact_name', 'emergency_contact_phone',
+          'meal_restrictions', 'other_restrictions',
+          'arrival_day', 'departure_day',
           'has_ticket',
           'looking_for_ticket', 'camping_this_year'
           )

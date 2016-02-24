@@ -143,4 +143,4 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+AUTH_USER_MODEL = 'camp.User'

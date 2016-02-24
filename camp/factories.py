@@ -19,7 +19,7 @@ class UserFactory(DjangoModelFactory):
     date_joined = factory.LazyAttribute(lambda o: datetime.now(tz=timezone.utc))
 
     class Meta:
-        model = 'auth.User'
+        model = 'camp.User'
 
 class EventFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: "event %d" % n)

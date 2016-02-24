@@ -17,7 +17,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
 
-from .models import Event, Meal, MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from .models import Event, Meal, MealShift, User, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm
 
 
@@ -152,14 +152,14 @@ def prep(request):
      return render_to_response('prep.html', RequestContext(request))
 
 def campers(request):
-    campers = UserProfile.objects.all()
-    campers_this_year = UserProfile.objects.filter(camping_this_year=True)
+    campers = User.objects.all()
+    campers_this_year = User.objects.filter(camping_this_year=True)
     context_dict = {'campers':campers, 'campers_this_year':campers_this_year}
     return render_to_response('campers.html', RequestContext(request, context_dict))
 
 
 def _initial_meal(meal):
-    people_that_day = UserProfile.objects.filter(
+    people_that_day = User.objects.filter(
         arrival_day__lt=meal.day,  departure_day__gt=meal.day)
     restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
 
@@ -234,7 +234,6 @@ def profile(request):
     if request.method == 'POST':
         if form.is_valid():
             userprofile = form.save(commit=False)
-            userprofile.user = request.user
             userprofile.save()
         else:
             print(messages.error(request, "Error"))
@@ -501,13 +500,13 @@ def show_pybsignup(request):
 
 def calendarview(request):
     # campers present and meal restrictions
-    sundayCampers = UserProfile.objects.exclude(arrival_day__gte=0).exclude(departure_day__lt=0)
-    mondayCampers = UserProfile.objects.exclude(arrival_day__gte=1).exclude(departure_day__lt=1)
-    tuesdayCampers = UserProfile.objects.exclude(arrival_day__gte=2).exclude(departure_day__lt=2)
-    wednesdayCampers = UserProfile.objects.exclude(arrival_day__gte=3).exclude(departure_day__lt=3)
-    thursdayCampers = UserProfile.objects.exclude(arrival_day__gte=4).exclude(departure_day__lt=4)
-    fridayCampers = UserProfile.objects.exclude(arrival_day__gte=5).exclude(departure_day__lt=5)
-    saturdayCampers = UserProfile.objects.exclude(arrival_day__gte=6).exclude(departure_day__lt=6)
+    sundayCampers = User.objects.exclude(arrival_day__gte=0).exclude(departure_day__lt=0)
+    mondayCampers = User.objects.exclude(arrival_day__gte=1).exclude(departure_day__lt=1)
+    tuesdayCampers = User.objects.exclude(arrival_day__gte=2).exclude(departure_day__lt=2)
+    wednesdayCampers = User.objects.exclude(arrival_day__gte=3).exclude(departure_day__lt=3)
+    thursdayCampers = User.objects.exclude(arrival_day__gte=4).exclude(departure_day__lt=4)
+    fridayCampers = User.objects.exclude(arrival_day__gte=5).exclude(departure_day__lt=5)
+    saturdayCampers = User.objects.exclude(arrival_day__gte=6).exclude(departure_day__lt=6)
 
 
     # mealshifts

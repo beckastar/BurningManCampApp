@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.forms import ModelForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
 RV = "RV"
@@ -210,6 +210,28 @@ class Event(models.Model):
     class Meta:
         ordering = ('start_date',)
 
+class User(AbstractUser):
+    # FIXME: if we don't want these nullable, we should have them as part of
+    # signup.
+    # FIXME: if we want to track attendance, we should pull out year-specific
+    #  stuff to a separate model.
+    picture = models.ImageField(upload_to='profile_images', blank=True, null=True)
+    city = models.CharField(max_length=20, blank=True)
+    cell_number = models.CharField(max_length=15, blank=True)
+    emergency_contact_name = models.CharField(max_length=40, blank=True)
+    emergency_contact_phone = models.CharField(max_length=15, blank=True)
+    meal_restrictions = models.CharField(max_length = 200, blank= True)
+    other_restrictions = models.CharField(max_length=100, blank=True)
+    arrival_day =  models.IntegerField(choices=Days, null=True, blank=True)
+    departure_day = models.IntegerField(choices=Days, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    has_ticket = models.BooleanField(default=False)
+    looking_for_ticket = models.BooleanField(default=True)
+    camping_this_year = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return '%s profile' % self.username
+
 class Meal(models.Model):
     Breakfast = "Breakfast"
     Dinner = "Dinner"
@@ -263,27 +285,6 @@ class MealShift(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.meal, self.role)
 
-class UserProfile(models.Model):
-
-    user = models.OneToOneField(User)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
-    city = models.CharField(max_length = 20)
-    cell_number = models.CharField(max_length=15)
-    email_address = models.CharField(max_length=40)
-    emergency_contact_name = models.CharField(max_length=40)
-    emergency_contact_phone = models.CharField(max_length=15)
-    meal_restrictions = models.CharField(max_length = 200, blank= True)
-    other_restrictions = models.CharField(max_length=100, blank=True)
-    arrival_day =  models.IntegerField(choices=Days)
-    departure_day = models.IntegerField(choices=Days)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
-    has_ticket = models.BooleanField(default = False)
-    looking_for_ticket = models.BooleanField(default = True)
-    camping_this_year = models.BooleanField()
-    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-
-    def __unicode__(self):
-        return '%s profile' % self.user
 
 class Shelter(models.Model):
     user = models.OneToOneField(User)
