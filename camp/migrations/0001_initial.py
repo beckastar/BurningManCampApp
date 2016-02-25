@@ -12,10 +12,51 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('auth', '__first__'),
     ]
 
+
+
     operations = [
+        migrations.CreateModel(
+            name='User',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=30, unique=True, validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username. This value may contain only letters, numbers and @/./+/-/_ characters.')], verbose_name='username')),
+                ('first_name', models.CharField(blank=True, max_length=30, verbose_name='first name')),
+                ('last_name', models.CharField(blank=True, max_length=30, verbose_name='last name')),
+                ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
+                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
+                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+                ('picture', models.ImageField(blank=True, null=True, upload_to='profile_images')),
+                ('city', models.CharField(blank=True, max_length=20)),
+                ('cell_number', models.CharField(blank=True, max_length=15)),
+                ('emergency_contact_name', models.CharField(blank=True, max_length=40)),
+                ('emergency_contact_phone', models.CharField(blank=True, max_length=15)),
+                ('meal_restrictions', models.CharField(blank=True, max_length=200)),
+                ('other_restrictions', models.CharField(blank=True, max_length=100)),
+                ('arrival_day', models.IntegerField(blank=True, null=True, choices=[(0, 'Sunday'), (1, 'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday')])),
+                ('departure_day', models.IntegerField(blank=True, null=True, choices=[(0, 'Sunday'), (1, 'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday')])),
+                ('has_ticket', models.BooleanField(default=False)),
+                ('looking_for_ticket', models.BooleanField(default=True)),
+                ('camping_this_year', models.BooleanField(default=False)),
+                ('date', models.DateTimeField(auto_now_add=True, null=True)),
+                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
+                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+            },
+            managers=[
+                ('objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
         migrations.CreateModel(
             name='BicycleMutationInventory',
             fields=[
@@ -82,27 +123,6 @@ class Migration(migrations.Migration):
                 ('sleeping_arrangement', models.CharField(choices=[(b'bringing_own_tent', b'bringing own tent'), (b"sharing someone else's tent", b"sharing someone else's tent"), (b'using camp yurt', b'using_camp_yurt'), (b'sharing rv', b'sharing_rv'), (b'other', b'other')], max_length=25)),
                 ('number_of_people_tent_sleeps', models.IntegerField()),
                 ('sleeping_under_ubertent', models.BooleanField(default=False)),
-                ('date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='UserProfile',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('picture', models.ImageField(blank=True, upload_to=b'profile_images')),
-                ('city', models.CharField(max_length=20)),
-                ('cell_number', models.CharField(max_length=15)),
-                ('email_address', models.CharField(max_length=40)),
-                ('emergency_contact_name', models.CharField(max_length=40)),
-                ('emergency_contact_phone', models.CharField(max_length=15)),
-                ('meal_restrictions', models.CharField(blank=True, max_length=200)),
-                ('other_restrictions', models.CharField(blank=True, max_length=100)),
-                ('arrival_day', models.IntegerField(choices=[(0, b'Sunday'), (1, b'Monday'), (2, b'Tuesday'), (3, b'Wednesday'), (4, b'Thursday'), (5, b'Friday'), (6, b'Saturday')])),
-                ('departure_day', models.IntegerField(choices=[(0, b'Sunday'), (1, b'Monday'), (2, b'Tuesday'), (3, b'Wednesday'), (4, b'Thursday'), (5, b'Friday'), (6, b'Saturday')])),
-                ('has_ticket', models.BooleanField(default=False)),
-                ('looking_for_ticket', models.BooleanField(default=True)),
-                ('camping_this_year', models.BooleanField()),
                 ('date', models.DateTimeField(auto_now_add=True, null=True)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

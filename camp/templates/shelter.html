@@ -12,7 +12,13 @@
 		<form action="/shelter/" method="post" id='shelter_form'>
 	<table id="shelter_table" class="gradienttable table_with_form">	
 			{% csrf_token %}
-		    	<thead><tr id="profile_submit_row"><td>Click here to enter your data</td><td><input id="shelterbutton" class="table_button" type="submit" value="enter shelter info"></td></tr>
+		    	<thead>
+		    	<tr id="profile_submit_row">
+		    		<td>Click here to enter your data</td>
+		    		<td>
+		    			<input id="shelterbutton" class="table_button" type="submit" value="enter shelter info" />
+		    		</td></td>
+		    	</tr>
 			    <tr><td>What kind of structure are you sleeping in? </td><td>{{form.sleeping_arrangement}}</td></tr>
 			    <tr><td>If it's a tent, how many people does it sleep (according to the manufacturer)? </td><td>{{form.number_of_people_tent_sleeps}}</td></tr>
 			    <tr><td>Do you need space under the Ubertent? </td><td>{{form.sleeping_under_ubertent}}</td></tr>

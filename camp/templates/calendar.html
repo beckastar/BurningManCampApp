@@ -4,56 +4,44 @@
 
 <div class="calendar_container">
 	<table id="calendar_table">	
-		    <thead>
-		    	<tr>
-		    		<td class="weekdaycell"><h3>Sunday</h3><br>
-			    		<p>In camp:</p> {% for camper in sundayCampers %}
-			    			{{camper.user}}
-			    			<p>Can't eat: {{camper.meal_restrictions}}</p>
-			    			<p>{{camper.other_restrictions}}</p>
-			    		{% endfor %}
-			    		{% for shift in sundayShiftsTaken %}
-			    			<p>meal: {{shift.meal}}:</p>
-			    			<p>working: {{shift.shift}}:{{shift.camper}}</p>
-			    		{% endfor %}
-		    		</td>
-		    		<td class="weekdaycell"><h3>Monday</h3><br>
-			    		<p>In camp:</p> {% for camper in mondayCampers %}
-			    			<p>{{camper.user}}</p>
-			    			<p>Can't eat: {{camper.meal_restrictions}}</p>
-			    			<p>{{camper.other_restrictions}}</p>
-			    		{% endfor %}
-			    		{% for shift in mondayShiftsTaken %}
-			    			<p>meal: {{shift.meal}}:</p>
-			    			<p>working: {{shift.shift}}:{{shift.camper}}</p>
-			    		{% endfor %}
-		    		</td>
-		    		<td class="weekdaycell"><h3>Tuesday</h3>
-		    			<p>In camp:</p>{% for camper in tuesdayCampers %}
-			    			<p>{{camper.user}}</p>
-			    			<p>restrictions {{camper.meal_restrictions}}</p>
-			    			<p>{{camper.other_restrictions}}</p>
-			    		{% endfor %}
-			    		{% for shift in tuesdayShiftsTaken %}
-			    			<p>meal: {{shift.meal}}:</p>
-			    			<p>working: {{shift.shift}}:{{shift.camper}}</p>
-			    		{% endfor %}
-		    		</td>
-		    		<td class="weekdaycell"><h3>Wednesday</h3>
-		    			<p>In camp:</p>{% for camper in tuesdayCampers %}
-			    			<p>{{camper.user}}</p>
-			    			<p>restrictions {{camper.meal_restrictions}}</p>
-			    			<p>{{camper.other_restrictions}}</p>
-			    		{% endfor %}
-			    		{% for shift in tuesdayShiftsTaken %}
-			    			<p>meal: {{shift.meal}}:</p>
-			    			<p>working: {{shift.shift}}:{{shift.camper}}</p>
-			    		{% endfor %}
-		    		</td>
-		    	</tr>
-			</thead>
-
-
+	   <thead>
+	   <tr>
+	   {% for day in days %}
+	     <th>{{ day }}</th>
+	   {% endfor %}
+	   </tr>
+	   </thead>
+		<tr>
+			{% for day, campers in campers_by_day %}
+				<td class="weekdaycell">
+	    		<p>In camp:</p>
+	    		{% for camper in campers %}
+	    			{{camper.username}}
+	    			<p>Can't eat: {{camper.meal_restrictions}}</p>
+	    			<p>{{camper.other_restrictions}}</p>
+	    		{% endfor %}
+	    		</td>
+			{% endfor %}
+		</tr>
+		<tr>
+		{% for day, shifts in meal_shifts_by_day %}
+			<td>
+			<p>cooking:</p>
+			{% for shift in shifts %}
+				<p>{{ shift.meal.kind }} - {{shift.role}}:{{shift.worker}}</p>
+			{% endfor %}
+			</td>
+		{% endfor %}
+		</tr>
+		<tr>
+		{% for day, shifts in bike_shifts_by_day %}
+			<td>
+			<p>bikes:</p>
+			{% for shift in shifts %}
+				<p>{{shift.shift}}:{{shift.worker}}</p>
+			{% endfor %}
+		{% endfor %}
+		</tr>		
 	</table>
 </div>
 

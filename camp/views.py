@@ -1,10 +1,13 @@
+from __future__ import absolute_import
+
+from itertools import groupby
+
+from django.db.transaction import atomic
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
-from models import MealShift, UserProfile, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from django.shortcuts import render_to_response, get_object_or_404
-from forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
@@ -13,7 +16,112 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
-import itertools
+
+from .shortcuts import get_current_event
+from .models import Event, Meal, MealShift, User, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm
+
+
+@login_required
+def meal_shifts(request):
+    meals = Meal.objects.all().prefetch_related('shifts')
+
+    print meals.count()
+    return render(request, 'meal_shifts.html',
+        {'meals':meals})
+
+@login_required
+def chef_signup(request, meal_id):
+    if request.method != 'POST':
+        raise Http404
+    meal = get_object_or_404(Meal, pk=meal_id)
+    if meal.chef_id != request.user.id:
+        if meal.chef_id is not None:
+            raise Http404("A chef is already assigned to that meal")
+        # nobody is chef yet.
+        meal.chef = request.user
+    else:
+        # step down from the meal
+        meal.chef = None
+    meal.save()
+
+    return redirect('meal_shifts')
+
+def _maintain_role_requirement(meal, role, needed):
+    qs = MealShift.objects.filter(meal=meal, role=role)
+    existing = qs.count()
+
+    if existing == needed:
+        return
+    elif existing > needed:
+        extra = existing - needed
+        # prefer to get rid of unclaimed shifts.
+        unassigned_pks = qs.filter(worker__isnull=True
+            ).values_list('pk', flat=True)
+        if len(unassigned_pks) > extra:
+            # remove just some of the unassigned
+            unassigned_pks = unassigned_pks[:extra]
+        qs.filter(pk__in=unassigned_pks).delete()
+        extra -= len(unassigned_pks)
+
+        if extra > 0:
+            # no choice but to delete assigned shifts. Do in order of PK,
+            # which is roughly signup order.
+            extra_pks = qs.order_by('-pk').values_list('pk', flat=True)[:extra]
+            qs.filter(pk__in=extra_pks).delete()
+    else: # existing < needed
+        for i in range(needed - existing):
+            MealShift.objects.create(meal=meal, role=role)
+
+def _maintain_meal_requirements(meal, chef_form):
+    # generate or remove shifts as required.
+    need = 1 if chef_form.cleaned_data['need_courier'] else 0
+    _maintain_role_requirement(meal, MealShift.Courier, need)
+
+    _maintain_role_requirement(meal, MealShift.Sous_Chef,
+        int(chef_form.cleaned_data['number_of_sous']))
+
+    _maintain_role_requirement(meal, MealShift.KP,
+        int(chef_form.cleaned_data['number_of_kp']))
+
+    meal.private_notes = chef_form.cleaned_data['private_notes']
+    meal.public_notes = chef_form.cleaned_data['public_notes']
+    meal.save()
+
+@login_required
+def chef_requirements(request, meal_id):
+    if request.method != 'POST':
+        raise Http404()
+    meal = get_object_or_404(Meal, pk=meal_id)
+    if meal.chef_id != request.user.id:
+        raise Http404("Can not edit requirements if you're not chef.")
+    requirements = ChefForm.for_meal(meal=meal, data=request.POST)
+
+    if not requirements.is_valid():
+        return render(request, "meals/chef_requirements.html", {"meal": meal, "form": requirements})
+
+    with atomic():
+        _maintain_meal_requirements(meal, requirements)
+
+    return redirect('meal_shifts')
+
+@login_required
+def worker_signup(request, shift_id):
+    if request.method != 'POST':
+        raise Http404
+    shift = get_object_or_404(Shift, pk=meal_id)
+
+    if shift.worker_id != request.user.id:
+        if shift.worker_id is not None:
+            raise ValueError("A worker is already working that shift.")
+        # nobody is signed up yet.
+        shift.worker = request.user
+    else:
+        # step down from the shift.
+        shift.worker = None
+    shift.save()
+
+    return redirect('meal_shifts')
 
 def index(request):
     shifts = MealShift.objects.all()
@@ -22,11 +130,11 @@ def index(request):
 def login(request):
 
     username = request.POST['username']
-    
+
     password = request.POST['password']
-    
+
     user = authenticate(username=username, password=password)
-    
+
     if user is not None:
         if user.is_active:
             login(request, user)
@@ -35,7 +143,7 @@ def login(request):
             # Return a 'disabled account' error message
                 # else:
         # Return an 'invalid login' error message.
-        
+
     return render(request, 'login.html')
 
 def about(request):
@@ -45,131 +153,51 @@ def prep(request):
      return render_to_response('prep.html', RequestContext(request))
 
 def campers(request):
-    campers = UserProfile.objects.all()
-    campers_this_year = UserProfile.objects.filter(camping_this_year=True)
+    campers = User.objects.all()
+    campers_this_year = User.objects.filter(camping_this_year=True)
     context_dict = {'campers':campers, 'campers_this_year':campers_this_year}
     return render_to_response('campers.html', RequestContext(request, context_dict))
 
 
-def signup_for_shift(request):
-    if request.method == 'POST':
-        shift_id = int(request.POST.get('shift_id'))
-        shift = MealShift.objects.get(id=shift_id)
-        if shift.camper is not None:
-            raise ValueError
-        shift.camper = request.user
-        print "shift camper %s" %shift.camper
-        shift.assigned = True
-        shift.save()
+def _initial_meal(meal):
+    people_that_day = User.objects.filter(
+        arrival_date__lt=meal.day,  departure_date__gt=meal.day)
+    restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
 
-    return show_signup_table(request)
-
-
-def _initial_meal():
     return {
-        'serving': 'bacon', # fix with chef stuff.
-        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': []},
-        'restrictions': [],
-        'num_served': 0
+        'day': meal.day,
+        'meal': meal.kind,
+        'serving': meal.public_notes,
+        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': [], 'Courier': []},
+        'restrictions': ", ".join(restrictions) if restrictions else "None",
+        'num_served': people_that_day.count()
     }
 
-def _meal_time(shift):
-    return (shift.day, shift.meal)
-
-def _finalize_meal(meal, shift):
-    people_that_day = UserProfile.objects.filter(arrival_day__lt=shift.day,  departure_day__gt=shift.day)
-    restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
-    meal['day'] = shift.day
-    meal['meal'] = shift.meal
-    meal['restrictions'] = restrictions
-    meal['num_served'] = people_that_day.count()
 
 def meal_schedule(request):
-    shifts = MealShift.objects.order_by('day', 'meal')
+    # FIXME: maybe urls should include the event they are related to?
+    event = get_current_event()
+
     shifts_by_meal = []
-    if shifts:
-        first_shift = shifts[0]
-        previous_meal = _meal_time(first_shift)
-        meal = _initial_meal()
-        meal_dirty = False
-        for shift in shifts:
-            meal_time = _meal_time(shift)
-            if previous_meal != meal_time:
-                _finalize_meal(meal, shift)
-                shifts_by_meal.append(meal)
-                meal = _initial_meal()
-                meal_dirty = False
+    for meal in Meal.objects.filter(event=event):
+        meal_summary = _initial_meal(meal)
 
-            meal_dirty = True
-            meal['positions'][shift.shift].append(shift)
+        for shift in meal.shifts.all().prefetch_related('worker'):
+            meal_summary['positions'][shift.get_role_display()].append(shift)
 
-        if meal_dirty:
-            _finalize_meal(meal, shift)
-            shifts_by_meal.append(meal)
+        shifts_by_meal.append(meal_summary)
 
     context_dict = {'shifts_by_meal': shifts_by_meal}
     return render(request, "meal_schedule.html", RequestContext(request, context_dict))
 
-def remove_self_from_shift(request):
-    if request.method == 'POST':
-        shift_id = int(request.POST.get('shift_id'))
-        shift = MealShift.objects.get(id=shift_id)
-        if shift.camper == request.user:
-            shift.camper = None
-            shift.assigned = False
-            shift.save()
-
-    return show_signup_table(request)
-
-def show_signup_table(request):
-    # model = MealShift
-    user = request.user
-    poss_shifts = MealShift.objects.all().order_by('day')
-    day_choices = range(0, 6)
-    meal_choices = ['Breakfast', 'Dinner']
-    shift_choices = ['Chef', 'Sous_Chef', 'KP']
-    username = None
-    shift = MealShift.objects.all()
-
-    sundayShiftsAvail = MealShift.objects.filter(day=0, assigned=False)
-    sundayShiftsTaken = MealShift.objects.filter(day=0, assigned=True)
-    mondayShiftsAvail = MealShift.objects.filter(day=1, assigned=False)
-    mondayShiftsTaken = MealShift.objects.filter(day=1, assigned=True)
-    tuesdayShiftsAvail = MealShift.objects.filter(day=2, assigned=True)
-    tuesdayShiftsTaken = MealShift.objects.filter(day=2, assigned=True)
-    wednesdayShiftsAvail = MealShift.objects.filter(day=3, assigned=False)
-    wednesdayShiftsTaken = MealShift.objects.filter(day=3, assigned=True)
-    thursdayShiftsAvail = MealShift.objects.filter(day=4, assigned=False)
-    thursdayShiftsTaken = MealShift.objects.filter(day=4, assigned=True)
-    fridayShiftsAvail = MealShift.objects.filter(day=5, assigned=False)
-    fridayShiftsTaken = MealShift.objects.filter(day=5, assigned=True)
-    saturdayShiftsAvail = MealShift.objects.filter(day=6, assigned=False)
-    saturdayShiftsTaken = MealShift.objects.filter(day=6, assigned=True)
-
-    context_dict  = {
-                'username':username, 'poss_shifts':poss_shifts,
-                'sundayShiftsAvail':sundayShiftsAvail, 'sundayShiftsTaken':sundayShiftsTaken,
-                'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
-                'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
-                'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
-                'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,
-                'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,
-                'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
-                }
-    return render_to_response('signup.html',
-        RequestContext(request, context_dict,))
-
-
 @login_required
 def profile(request):
-    form = UserProfileForm(request.POST)
+    form = UserProfileForm(instance=request.user)
     if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             userprofile = form.save(commit=False)
-            userprofile.user = request.user
             userprofile.save()
-        else:
-            print(messages.error(request, "Error"))
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 @login_required
@@ -186,15 +214,20 @@ def vehicle(request):
 
 @login_required
 def shelter(request):
-    form = ShelterForm(request.POST)
+    try:
+        shelter = Shelter.objects.filter(user=request.user).get()
+    except Shelter.DoesNotExist:
+        shelter = None
+
+    form = ShelterForm(instance=shelter)
     if request.method == 'POST':
+        form = ShelterForm(request.POST, instance=shelter)
         if form.is_valid():
             shelter = form.save(commit=False)
             shelter.user = request.user
             shelter.save()
-        else:
-            print(messages.error(request, "Error"))
-    return render(request, "shelter.html", RequestContext(request, {'form': form, 'profile': profile,}))
+
+    return render(request, "shelter.html", RequestContext(request, {'form': form}))
 
 
 
@@ -235,7 +268,6 @@ def edit_bike(request):
     return render_to_response('bikes.html', context_dict, RequestContext(request))
 
 def show_bike_form(request):
-    model = Bike
     bicycles = Bike.objects.all()
 
     if request.method == "POST":
@@ -384,44 +416,40 @@ def signup_for_pyb_shift(request):
         shift_id = int(request.POST.get('shift_id'))
 
         shift = BikeMutationSchedule.objects.get(id=shift_id)
-        if shift.camper is not None:
+        if shift.worker_id is not None:
             raise ValueError
-        shift.camper = request.user
-        print "shift camper %s" %shift.camper
-        shift.assigned = True
+
+        shift.worker = request.user
+
         shift.save()
 
-    return show_pybsignup(request)
+    return redirect('show_pybsignup')
 
 
 def remove_self_from_pyb_shift(request):
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
         shift = BikeMutationSchedule.objects.get(id=shift_id)
-        if shift.camper == request.user:
-            shift.camper = None
-            shift.assigned = False
+        if shift.worker_id == request.user.id:
+            shift.worker = None
             shift.save()
 
-    return show_pybsignup(request)
+    return redirect('show_pybsignup')
 
 def show_pybsignup(request):
-    user = request.user
-    username = None
-    poss_shifts = BikeMutationSchedule.objects.all().order_by('day')
-    mondayShiftsAvail = BikeMutationSchedule.objects.filter(day=1, assigned=False)
-    mondayShiftsTaken = BikeMutationSchedule.objects.filter(day=1, assigned=True)
-    tuesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=2, assigned=True)
-    tuesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=2, assigned=True)
-    wednesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=3, assigned=False)
-    wednesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=3, assigned=True)
-    thursdayShiftsAvail = BikeMutationSchedule.objects.filter(day=4, assigned=False)
-    thursdayShiftsTaken = BikeMutationSchedule.objects.filter(day=4, assigned=True)
-    fridayShiftsAvail = BikeMutationSchedule.objects.filter(day=5, assigned=False)
-    fridayShiftsTaken = BikeMutationSchedule.objects.filter(day=5, assigned=True)
+    # FIXME: use day-of-week numbers and loop.
+    mondayShiftsAvail = BikeMutationSchedule.objects.filter(day=1, worker__isnull=True)
+    mondayShiftsTaken = BikeMutationSchedule.objects.filter(day=1, worker__isnull=False)
+    tuesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=2, worker__isnull=False)
+    tuesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=2, worker__isnull=False)
+    wednesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=3, worker__isnull=True)
+    wednesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=3, worker__isnull=False)
+    thursdayShiftsAvail = BikeMutationSchedule.objects.filter(day=4, worker__isnull=True)
+    thursdayShiftsTaken = BikeMutationSchedule.objects.filter(day=4, worker__isnull=False)
+    fridayShiftsAvail = BikeMutationSchedule.objects.filter(day=5, worker__isnull=True)
+    fridayShiftsTaken = BikeMutationSchedule.objects.filter(day=5, worker__isnull=False)
 
     context_dict = {
-        'username':username, 'poss_shifts':poss_shifts,
         'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
         'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
         'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
@@ -432,41 +460,29 @@ def show_pybsignup(request):
         RequestContext(request, context_dict,))
 
 def calendarview(request):
+    # FIXME: DRY
     # campers present and meal restrictions
-    sundayCampers = UserProfile.objects.exclude(arrival_day__gte=0).exclude(departure_day__lt=0)
-    mondayCampers = UserProfile.objects.exclude(arrival_day__gte=1).exclude(departure_day__lt=1)
-    tuesdayCampers = UserProfile.objects.exclude(arrival_day__gte=2).exclude(departure_day__lt=2)
-    wednesdayCampers = UserProfile.objects.exclude(arrival_day__gte=3).exclude(departure_day__lt=3)
-    thursdayCampers = UserProfile.objects.exclude(arrival_day__gte=4).exclude(departure_day__lt=4)
-    fridayCampers = UserProfile.objects.exclude(arrival_day__gte=5).exclude(departure_day__lt=5)
-    saturdayCampers = UserProfile.objects.exclude(arrival_day__gte=6).exclude(departure_day__lt=6)
+    event = get_current_event()
 
+    days = list(event.days)
+    campers_by_day = []
+    meal_shifts_by_day = []
+    bike_shifts_by_day = []
+    for day in days:
+        campers_by_day.append((day, User.objects.exclude(
+            arrival_date__gte=day).exclude(departure_date__lt=day)))
 
-    # mealshifts
-    sundayShiftsTaken = MealShift.objects.filter(day=0, assigned=True)
-    mondayShiftsTaken = MealShift.objects.filter(day=1, assigned=True)
-    tuesdayShiftsTaken = MealShift.objects.filter(day=2, assigned=True)
-    wednesdayShiftsTaken = MealShift.objects.filter(day=3, assigned=True)
-    thursdayShiftsTaken = MealShift.objects.filter(day=4, assigned=True)
-    fridayShiftsTaken = MealShift.objects.filter(day=5, assigned=True)
-    saturdayShiftsTaken = MealShift.objects.filter(day=6, assigned=True)
-
-    # bike shifts
-    mondayBikeShifts = BikeMutationSchedule.objects.filter(day=1)
-    tuesdayBikeShifts = BikeMutationSchedule.objects.filter(day=2)
-    wednesdayBikeShifts = BikeMutationSchedule.objects.filter(day=3)
-    thursdayBikeShifts = BikeMutationSchedule.objects.filter(day=4)
-    fridayBikeShifts = BikeMutationSchedule.objects.filter(day=5)
+        meal_shifts_by_day.append((day, MealShift.objects.filter(
+            meal__day=day, worker__isnull=False).prefetch_related('meal')))
+        bike_shifts_by_day.append((day, BikeMutationSchedule.objects.filter(
+            date=day, worker__isnull=False)))
 
     context_dict = {
-    'sundayCampers':sundayCampers, 'mondayCampers':mondayCampers,
-    'tuesdayCampers':tuesdayCampers, 'wednesdayCampers':wednesdayCampers, 'thursdayCampers':thursdayCampers,
-    'fridayCampers':fridayCampers, 'saturdayCampers':saturdayCampers,
-    'sundayShiftsTaken':sundayShiftsTaken, 'mondayShiftsTaken':mondayShiftsTaken, 'tuesdayShiftsTaken':tuesdayShiftsTaken,
-    'wednesdayShiftsTaken':wednesdayShiftsTaken,'thursdayShiftsTaken ':thursdayShiftsTaken, 'fridayShiftsTaken':fridayShiftsTaken,
-    'saturdayShiftsTaken ':saturdayShiftsTaken, 'mondayBikeShifts':mondayBikeShifts,'tuesdayBikeShifts':tuesdayBikeShifts,
-    'wednesdayBikeShifts':wednesdayBikeShifts, 'thursdayBikeShifts':thursdayBikeShifts, 'fridayBikeShifts ':fridayBikeShifts
+        'days': days,
+        'campers_by_day': campers_by_day,
+        'meal_shifts_by_day': meal_shifts_by_day,
+        'bike_shifts_by_day': bike_shifts_by_day
     }
     return render_to_response('calendar.html',
-        RequestContext(request, context_dict,))
+        RequestContext(request, context_dict))
 

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load meals staticfiles %}
+
+{% block extrahead %}
+{% endblock %}
+
+
+{% block content %}
+
+<h1>Meal shift signups</h1>
+
+{% for meal in meals %}
+   <h2>{{ meal.day }} {{ meal.kind }} <a name="meal-{{meal.id}}"></a><a href="#meal-{{meal.id}}">#</a></h2>
+   {% chef_widget meal user %}
+   {% if not meal|is_chef:user %}
+       {% for shift in meal.shifts.non_chef %}
+          {% if forloop.first %}
+             <h3>Available shifts:</h3>
+          {% endif %}
+          {% shift_widget shift user %}
+       {% endfor %}
+   {% else %}
+      {% for shift in meal.shifts.non_chef %}
+        {% chef_worker_widget shift %}
+      {% endfor %}
+   {% endif %}
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,4 @@
+<form action="{% url 'worker_signup' shift_id=shift.id %}" method="post">
+<button>Quit as {{ shift.role }}</button>
+{% csrf_token %}
+</form>

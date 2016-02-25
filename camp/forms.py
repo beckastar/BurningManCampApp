@@ -1,9 +1,43 @@
-from django import forms
-from django.forms import ModelForm
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
-from .models import MealShift, UserProfile, Vehicle, Bike, Shelter, BicycleMutationInventory, Inventory, BikeMutationSchedule
+from collections import defaultdict
 
+from django import forms
+from django.forms import Form, ModelForm
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+
+from .models import (
+    Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
+    Meal, MealShift, Shelter, User, Vehicle)
+
+class ChefForm(forms.Form):
+    MAX_WORKERS = [(i, i) for i in range(5)]
+
+    def __init__(self, meal, **kwargs):
+        super(ChefForm, self).__init__(**kwargs)
+        self.url = reverse('chef_requirements', kwargs={'meal_id': meal.id})
+
+    need_courier = forms.BooleanField(initial=False, required=False)
+    number_of_sous = forms.ChoiceField(initial=0, choices=MAX_WORKERS)
+    number_of_kp = forms.ChoiceField(initial=0, choices=MAX_WORKERS)
+    private_notes = forms.CharField(required=False, max_length=100000, widget=forms.Textarea,
+        help_text="Notes for yourself")
+    public_notes = forms.CharField(required=False, max_length=100000, widget=forms.Textarea,
+        help_text="Describe the meal and any details you'd like to share.")
+
+    @classmethod
+    def for_meal(cls, meal, data=None):
+        prefix = "meal-%s" % meal.id
+
+        role_counts = defaultdict(int)
+        for shift in meal.shifts.all():
+            role_counts[shift.role] += 1
+
+        initial = {
+          'need_courier': role_counts[MealShift.Courier] > 0,
+          'number_of_sous': role_counts[MealShift.Sous_Chef],
+          'number_of_kp': role_counts[MealShift.KP]
+        }
+        return ChefForm(data=data, initial=initial, prefix=prefix, meal=meal)
 
 class UserForm(ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())
@@ -60,12 +94,12 @@ class UserProfileForm(ModelForm):
           (Nuts, "Nuts")
         )
 
-        model = UserProfile
+        model = User
         fields = (
           'picture', 'city', 'cell_number',
-          'email_address', 'emergency_contact_name', 'meal_restrictions',
-          'emergency_contact_phone', 'other_restrictions',  'arrival_day',
-          'departure_day',
+          'emergency_contact_name', 'emergency_contact_phone',
+          'meal_restrictions', 'other_restrictions',
+          'arrival_date', 'departure_date',
           'has_ticket',
           'looking_for_ticket', 'camping_this_year'
           )

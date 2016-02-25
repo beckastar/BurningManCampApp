@@ -119,7 +119,7 @@ $(document).ready(function () {
 	  $("#shelterbutton").click(function(e){
 	    e.preventDefault();
 	    var obj = null;
-	    $('<div></div>').appendTo('#vehicle_message')
+	    $('<div></div>').appendTo('#shelter_message')
 	    .html('<div><h3> Next, pick your meal shifts. </h3></div>')
 	    .dialog({
 	      title: "Confirm",

@@ -1,6 +1,11 @@
+from __future__ import unicode_literals
+
+from datetime import timedelta
+
 from django.db import models
 from django.forms import ModelForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
 
 RV = "RV"
 sedan = "sedan"
@@ -22,8 +27,8 @@ other = "other"
 Sleeping_arrangements = (
     (bringing_own_tent, "bringing own tent"),
     (sharing_someone_elses_tent, "sharing someone else's tent" ),
-    (using_camp_yurt, "using_camp_yurt"),
-    (sharing_rv, "sharing_rv"),
+    (using_camp_yurt, "using camp yurt"),
+    (sharing_rv, "sharing rv"),
     (other, "other")
     )
 
@@ -96,29 +101,13 @@ tent_size_width_inches = (
     (eleven_inches, "eleven inches")
     )
 
-Sunday = "Sunday"
-Monday = "Monday"
-Tuesday = "Tuesday"
-Wednesday = "Wednesday"
-Thursday = "Thursday"
-Friday = "Friday"
-Days = (
-    (0, "Sunday"),
-    (1, "Monday"),
-    (2, "Tuesday"),
-    (3, "Wednesday"),
-    (4, "Thursday"),
-    (5, "Friday"),
-    (6, "Saturday")
-    )
-
 PYB_days = (
-    (1, "Monday"),
-    (2, "Tuesday"),
-    (3, "Wednesday"),
-    (4, "Thursday"),
-    (5, "Friday")
-    )
+    (0, "Monday"), # python day ints
+    (1, "Tuesday"),
+    (2, "Wednesday"),
+    (3, "Thursday"),
+    (4, "Friday")
+)
 
 Fish = "Fish"
 Mammal = "Mammal"
@@ -202,48 +191,99 @@ Bike_repairs = (
     )
 
 
-class MealShift(models.Model):
-    assigned = models.BooleanField(default=False)
-    day = models.IntegerField(choices=Days)
-    meal = models.CharField(max_length = 10, choices=Meals)
-    shift = models.CharField(max_length = 10, choices=Shifts, default=KP)
-    camper = models.ForeignKey(User, null=True, blank=True, default=None)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
+class Event(models.Model):
+    name = models.CharField(max_length=500, unique=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    @property
+    def days(self):
+        day = self.start_date
+        while day < self.end_date:
+            yield day
+            day += timedelta(days=1)
+
+    def __unicode__(self):
+        return self.name
 
     class Meta:
-        unique_together = ("day", "meal", "shift")
+        ordering = ('start_date',)
 
-    def __str__(self):
-        return '%s %s %s %s %s %s'%(self.id, self.assigned, self.day, self.meal, self.shift, self.camper)
-
-class UserProfile(models.Model):
-
-    user = models.OneToOneField(User)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
-    city = models.CharField(max_length = 20)
-    cell_number = models.CharField(max_length=15)
-    email_address = models.CharField(max_length=40)
-    emergency_contact_name = models.CharField(max_length=40)
-    emergency_contact_phone = models.CharField(max_length=15)
+class User(AbstractUser):
+    # FIXME: if we don't want these nullable, we should have them as part of
+    # signup.
+    # FIXME: if we want to track attendance, we should pull out year-specific
+    #  stuff to a separate model.
+    picture = models.ImageField(upload_to='profile_images', blank=True, null=True)
+    city = models.CharField(max_length=20, blank=True)
+    cell_number = models.CharField(max_length=15, blank=True)
+    emergency_contact_name = models.CharField(max_length=40, blank=True)
+    emergency_contact_phone = models.CharField(max_length=15, blank=True)
     meal_restrictions = models.CharField(max_length = 200, blank= True)
     other_restrictions = models.CharField(max_length=100, blank=True)
-    arrival_day =  models.IntegerField(choices=Days)
-    departure_day = models.IntegerField(choices=Days)
-    date = models.DateTimeField(auto_now_add=True, blank=True)
-    has_ticket = models.BooleanField(default = False)
-    looking_for_ticket = models.BooleanField(default = True)
-    camping_this_year = models.BooleanField()
-    date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    arrival_date =  models.DateTimeField(null=True, blank=True)
+    departure_date = models.DateTimeField(null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    has_ticket = models.BooleanField(default=False)
+    looking_for_ticket = models.BooleanField(default=True)
+    camping_this_year = models.BooleanField(default=False)
 
-    def __str__(self):
-        return '%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s' %(
-            self.user, self.picture, self.city,
-            self.cell_number, self.email_address, self.emergency_contact_name,
-            self.emergency_contact_phone,
-            self.meal_restrictions, self.other_restrictions,
-            self.arrival_day, self.departure_day, self.has_ticket,
-            self.looking_for_ticket, self.camping_this_year, self.date, self.date
-            )
+    def __unicode__(self):
+        return '%s' % self.username
+
+class Meal(models.Model):
+    Breakfast = "Breakfast"
+    Dinner = "Dinner"
+
+    Kinds = (
+         (Breakfast, "Breakfast"),
+         (Dinner, "Dinner"),
+    )
+
+    event = models.ForeignKey(Event, help_text="What year/regional is this for?")
+    day = models.DateField()
+    kind = models.CharField(choices=Kinds, default=Dinner, max_length=10)
+    chef = models.ForeignKey(User, null=True)
+    private_notes = models.TextField(blank=True,
+        help_text="Private to you")
+    public_notes = models.TextField(blank=True,
+        help_text="Public description")
+
+    class Meta:
+        ordering = ('day', 'kind')
+
+    def __unicode__(self):
+        return "%s %s %s" % (self.event, self.day, self.kind)
+
+class MealShiftManager(models.Manager):
+    def non_chef(self):
+        return self.exclude(role=MealShift.Chef)
+
+class MealShift(models.Model):
+    Chef = "chef"
+    Sous_Chef = "sous-chef"
+    KP ="kp"
+    Courier = "courier"
+
+    Roles = (
+        (Courier, "Courier"),
+        (Chef, "Chef"),
+        (Sous_Chef, "Sous Chef"),
+        (KP, "KP (cleaning/assistance)"),
+    )
+
+    meal = models.ForeignKey(Meal, related_name='shifts')
+    role = models.CharField(max_length = 10, choices=Roles, default=KP)
+    worker = models.ForeignKey(User, null=True)
+
+    objects = MealShiftManager()
+
+    class Meta:
+        ordering = ('meal', 'role', 'pk')
+
+    def __unicode__(self):
+        return "%s %s" % (self.meal, self.role)
+
 
 class Shelter(models.Model):
     user = models.OneToOneField(User)
@@ -252,7 +292,7 @@ class Shelter(models.Model):
     sleeping_under_ubertent = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s, %s, %s, %s' %(
             self.user, self.sleeping_arrangement, self.number_of_people_tent_sleeps,
             self.sleeping_under_ubertent, self.date
@@ -266,7 +306,7 @@ class Vehicle(models.Model):
     make_of_car = models.CharField(max_length=15, blank=True, default=None)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s, %s, %s, %s' %(
             self.user, self.primary_driver_in_your_party, self.model_of_car,
             self.make_of_car, self.date
@@ -285,7 +325,7 @@ class Bike(models.Model):
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     notes = models.CharField(max_length=30, null=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s %s %s %s'%(
             self.bike_name, self.bike_owner, self.bike_size_inches,
             self.needs_repairs, self.in_bike_pool_this_year)
@@ -296,17 +336,17 @@ class BicycleMutationInventory(models.Model):
     units = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s %s'%(self.material, self.quantity, self.units)
 
 class BikeMutationSchedule(models.Model):
+    event = models.ForeignKey(Event)
     shift = models.CharField(max_length=25, choices=PYB_shifts)
-    camper = models.ForeignKey(User, null=True, blank=True, default=None)
-    day = models.IntegerField(choices = PYB_days)
-    assigned = models.BooleanField(default=False)
+    worker = models.ForeignKey(User, null=True, blank=True, default=None)
+    date = models.DateField()
 
-    def __str__(self):
-        return '%s %s %s %s'%(self.shift, self.camper, self.day, self.assigned)
+    def __unicode__(self):
+        return '%s %s %s %s'%(self.shift, self.worker, self.day)
 
 class Inventory(models.Model):
     item = models.CharField(max_length=20, blank=True)
@@ -314,7 +354,7 @@ class Inventory(models.Model):
     needs_repairs = models.BooleanField(default=True)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s %s'%(self.item, self.quantity, self.needs_repairs)
 
 
