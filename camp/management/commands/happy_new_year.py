@@ -50,11 +50,15 @@ class Command(BaseCommand):
                 # Each meal needs a chef, who will define further shift needs.
                 MealShift.objects.create(meal=meal, role=MealShift.Chef)
 
+            if day.weekday() in range(5): # (monday through friday)
+                for kind, _ in BikeMutationSchedule.PYB_shifts:
+                    BikeMutationSchedule.objects.create(event=event, date=day, shift=kind)
+
         # No need to reset shifts, as we keep old events and shifts (which are tied to events).
 
         # Reset camper fields that are year-specific, though.
         User.objects.update(has_ticket=False, looking_for_ticket=False,
             camping_this_year=False, date=None,
-            arrival_day=None, departure_day=None)
+            arrival_date=None, departure_date=None)
 
         print "Done setting up %s" % event_name

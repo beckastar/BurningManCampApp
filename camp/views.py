@@ -17,6 +17,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
 
+from .shortcuts import get_current_event
 from .models import Event, Meal, MealShift, User, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm
 
@@ -160,7 +161,7 @@ def campers(request):
 
 def _initial_meal(meal):
     people_that_day = User.objects.filter(
-        arrival_day__lt=meal.day,  departure_day__gt=meal.day)
+        arrival_date__lt=meal.day,  departure_date__gt=meal.day)
     restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
 
     return {
@@ -168,65 +169,26 @@ def _initial_meal(meal):
         'meal': meal.kind,
         'serving': meal.public_notes,
         'positions': {'Chef': [], 'KP': [], 'Sous-Chef': [], 'Courier': []},
-        'restrictions': restrictions,
+        'restrictions': ", ".join(restrictions) if restrictions else "None",
         'num_served': people_that_day.count()
     }
 
 
 def meal_schedule(request):
     # FIXME: maybe urls should include the event they are related to?
-    event = Event.objects.last()
+    event = get_current_event()
 
     shifts_by_meal = []
     for meal in Meal.objects.filter(event=event):
         meal_summary = _initial_meal(meal)
 
-        for shift in shifts:
-            meal_summary['positions'][shift.role].append(shift)
+        for shift in meal.shifts.all().prefetch_related('worker'):
+            meal_summary['positions'][shift.get_role_display()].append(shift)
 
         shifts_by_meal.append(meal_summary)
 
     context_dict = {'shifts_by_meal': shifts_by_meal}
     return render(request, "meal_schedule.html", RequestContext(request, context_dict))
-
-def show_signup_table(request):
-    # model = MealShift
-    user = request.user
-    poss_shifts = MealShift.objects.all().order_by('day')
-    day_choices = range(0, 6)
-    meal_choices = ['Breakfast', 'Dinner']
-    shift_choices = ['Chef', 'Sous_Chef', 'KP']
-    username = None
-    shift = MealShift.objects.all()
-
-    sundayShiftsAvail = MealShift.objects.filter(day=0, assigned=False)
-    sundayShiftsTaken = MealShift.objects.filter(day=0, assigned=True)
-    mondayShiftsAvail = MealShift.objects.filter(day=1, assigned=False)
-    mondayShiftsTaken = MealShift.objects.filter(day=1, assigned=True)
-    tuesdayShiftsAvail = MealShift.objects.filter(day=2, assigned=True)
-    tuesdayShiftsTaken = MealShift.objects.filter(day=2, assigned=True)
-    wednesdayShiftsAvail = MealShift.objects.filter(day=3, assigned=False)
-    wednesdayShiftsTaken = MealShift.objects.filter(day=3, assigned=True)
-    thursdayShiftsAvail = MealShift.objects.filter(day=4, assigned=False)
-    thursdayShiftsTaken = MealShift.objects.filter(day=4, assigned=True)
-    fridayShiftsAvail = MealShift.objects.filter(day=5, assigned=False)
-    fridayShiftsTaken = MealShift.objects.filter(day=5, assigned=True)
-    saturdayShiftsAvail = MealShift.objects.filter(day=6, assigned=False)
-    saturdayShiftsTaken = MealShift.objects.filter(day=6, assigned=True)
-
-    context_dict  = {
-                'username':username, 'poss_shifts':poss_shifts,
-                'sundayShiftsAvail':sundayShiftsAvail, 'sundayShiftsTaken':sundayShiftsTaken,
-                'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
-                'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
-                'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
-                'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,
-                'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,
-                'saturdayShiftsTaken':saturdayShiftsTaken, 'saturdayShiftsAvail':saturdayShiftsAvail
-                }
-    return render_to_response('signup.html',
-        RequestContext(request, context_dict,))
-
 
 @login_required
 def profile(request):
@@ -252,15 +214,20 @@ def vehicle(request):
 
 @login_required
 def shelter(request):
-    form = ShelterForm(request.POST)
+    try:
+        shelter = Shelter.objects.filter(user=request.user).get()
+    except Shelter.DoesNotExist:
+        shelter = None
+
+    form = ShelterForm(instance=shelter)
     if request.method == 'POST':
+        form = ShelterForm(request.POST, instance=shelter)
         if form.is_valid():
             shelter = form.save(commit=False)
             shelter.user = request.user
             shelter.save()
-        else:
-            print(messages.error(request, "Error"))
-    return render(request, "shelter.html", RequestContext(request, {'form': form, 'profile': profile,}))
+
+    return render(request, "shelter.html", RequestContext(request, {'form': form}))
 
 
 
@@ -301,7 +268,6 @@ def edit_bike(request):
     return render_to_response('bikes.html', context_dict, RequestContext(request))
 
 def show_bike_form(request):
-    model = Bike
     bicycles = Bike.objects.all()
 
     if request.method == "POST":
@@ -450,44 +416,40 @@ def signup_for_pyb_shift(request):
         shift_id = int(request.POST.get('shift_id'))
 
         shift = BikeMutationSchedule.objects.get(id=shift_id)
-        if shift.camper is not None:
+        if shift.worker_id is not None:
             raise ValueError
-        shift.camper = request.user
-        print "shift camper %s" %shift.camper
-        shift.assigned = True
+
+        shift.worker = request.user
+
         shift.save()
 
-    return show_pybsignup(request)
+    return redirect('show_pybsignup')
 
 
 def remove_self_from_pyb_shift(request):
     if request.method == 'POST':
         shift_id = int(request.POST.get('shift_id'))
         shift = BikeMutationSchedule.objects.get(id=shift_id)
-        if shift.camper == request.user:
-            shift.camper = None
-            shift.assigned = False
+        if shift.worker_id == request.user.id:
+            shift.worker = None
             shift.save()
 
-    return show_pybsignup(request)
+    return redirect('show_pybsignup')
 
 def show_pybsignup(request):
-    user = request.user
-    username = None
-    poss_shifts = BikeMutationSchedule.objects.all().order_by('day')
-    mondayShiftsAvail = BikeMutationSchedule.objects.filter(day=1, assigned=False)
-    mondayShiftsTaken = BikeMutationSchedule.objects.filter(day=1, assigned=True)
-    tuesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=2, assigned=True)
-    tuesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=2, assigned=True)
-    wednesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=3, assigned=False)
-    wednesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=3, assigned=True)
-    thursdayShiftsAvail = BikeMutationSchedule.objects.filter(day=4, assigned=False)
-    thursdayShiftsTaken = BikeMutationSchedule.objects.filter(day=4, assigned=True)
-    fridayShiftsAvail = BikeMutationSchedule.objects.filter(day=5, assigned=False)
-    fridayShiftsTaken = BikeMutationSchedule.objects.filter(day=5, assigned=True)
+    # FIXME: use day-of-week numbers and loop.
+    mondayShiftsAvail = BikeMutationSchedule.objects.filter(day=1, worker__isnull=True)
+    mondayShiftsTaken = BikeMutationSchedule.objects.filter(day=1, worker__isnull=False)
+    tuesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=2, worker__isnull=False)
+    tuesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=2, worker__isnull=False)
+    wednesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=3, worker__isnull=True)
+    wednesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=3, worker__isnull=False)
+    thursdayShiftsAvail = BikeMutationSchedule.objects.filter(day=4, worker__isnull=True)
+    thursdayShiftsTaken = BikeMutationSchedule.objects.filter(day=4, worker__isnull=False)
+    fridayShiftsAvail = BikeMutationSchedule.objects.filter(day=5, worker__isnull=True)
+    fridayShiftsTaken = BikeMutationSchedule.objects.filter(day=5, worker__isnull=False)
 
     context_dict = {
-        'username':username, 'poss_shifts':poss_shifts,
         'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
         'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
         'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
@@ -498,41 +460,29 @@ def show_pybsignup(request):
         RequestContext(request, context_dict,))
 
 def calendarview(request):
+    # FIXME: DRY
     # campers present and meal restrictions
-    sundayCampers = User.objects.exclude(arrival_day__gte=0).exclude(departure_day__lt=0)
-    mondayCampers = User.objects.exclude(arrival_day__gte=1).exclude(departure_day__lt=1)
-    tuesdayCampers = User.objects.exclude(arrival_day__gte=2).exclude(departure_day__lt=2)
-    wednesdayCampers = User.objects.exclude(arrival_day__gte=3).exclude(departure_day__lt=3)
-    thursdayCampers = User.objects.exclude(arrival_day__gte=4).exclude(departure_day__lt=4)
-    fridayCampers = User.objects.exclude(arrival_day__gte=5).exclude(departure_day__lt=5)
-    saturdayCampers = User.objects.exclude(arrival_day__gte=6).exclude(departure_day__lt=6)
+    event = get_current_event()
 
+    days = list(event.days)
+    campers_by_day = []
+    meal_shifts_by_day = []
+    bike_shifts_by_day = []
+    for day in days:
+        campers_by_day.append((day, User.objects.exclude(
+            arrival_date__gte=day).exclude(departure_date__lt=day)))
 
-    # mealshifts
-    sundayShiftsTaken = MealShift.objects.filter(day=0, assigned=True)
-    mondayShiftsTaken = MealShift.objects.filter(day=1, assigned=True)
-    tuesdayShiftsTaken = MealShift.objects.filter(day=2, assigned=True)
-    wednesdayShiftsTaken = MealShift.objects.filter(day=3, assigned=True)
-    thursdayShiftsTaken = MealShift.objects.filter(day=4, assigned=True)
-    fridayShiftsTaken = MealShift.objects.filter(day=5, assigned=True)
-    saturdayShiftsTaken = MealShift.objects.filter(day=6, assigned=True)
-
-    # bike shifts
-    mondayBikeShifts = BikeMutationSchedule.objects.filter(day=1)
-    tuesdayBikeShifts = BikeMutationSchedule.objects.filter(day=2)
-    wednesdayBikeShifts = BikeMutationSchedule.objects.filter(day=3)
-    thursdayBikeShifts = BikeMutationSchedule.objects.filter(day=4)
-    fridayBikeShifts = BikeMutationSchedule.objects.filter(day=5)
+        meal_shifts_by_day.append((day, MealShift.objects.filter(
+            meal__day=day, worker__isnull=False).prefetch_related('meal')))
+        bike_shifts_by_day.append((day, BikeMutationSchedule.objects.filter(
+            date=day, worker__isnull=False)))
 
     context_dict = {
-    'sundayCampers':sundayCampers, 'mondayCampers':mondayCampers,
-    'tuesdayCampers':tuesdayCampers, 'wednesdayCampers':wednesdayCampers, 'thursdayCampers':thursdayCampers,
-    'fridayCampers':fridayCampers, 'saturdayCampers':saturdayCampers,
-    'sundayShiftsTaken':sundayShiftsTaken, 'mondayShiftsTaken':mondayShiftsTaken, 'tuesdayShiftsTaken':tuesdayShiftsTaken,
-    'wednesdayShiftsTaken':wednesdayShiftsTaken,'thursdayShiftsTaken ':thursdayShiftsTaken, 'fridayShiftsTaken':fridayShiftsTaken,
-    'saturdayShiftsTaken ':saturdayShiftsTaken, 'mondayBikeShifts':mondayBikeShifts,'tuesdayBikeShifts':tuesdayBikeShifts,
-    'wednesdayBikeShifts':wednesdayBikeShifts, 'thursdayBikeShifts':thursdayBikeShifts, 'fridayBikeShifts ':fridayBikeShifts
+        'days': days,
+        'campers_by_day': campers_by_day,
+        'meal_shifts_by_day': meal_shifts_by_day,
+        'bike_shifts_by_day': bike_shifts_by_day
     }
     return render_to_response('calendar.html',
-        RequestContext(request, context_dict,))
+        RequestContext(request, context_dict))
 

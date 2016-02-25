@@ -26,6 +26,10 @@ if env_key is None:
     raise ValueError("Expected secret key from environ SECRET_KEY.  Add it.")
 SECRET_KEY = env_key
 
+# set this to the PK of the event you want the site to be active for.
+#  If None, defaults to the event with the latest start date.
+CURRENT_EVENT_ID = None
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 

@@ -2,7 +2,6 @@
 {% load meals staticfiles %}
 
 {% block extrahead %}
-<link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 
@@ -11,7 +10,7 @@
 <h1>Meal shift signups</h1>
 
 {% for meal in meals %}
-   <h2>{{ meal.day }} {{ meal.kind }}</h2>
+   <h2>{{ meal.day }} {{ meal.kind }} <a name="meal-{{meal.id}}"></a><a href="#meal-{{meal.id}}">#</a></h2>
    {% chef_widget meal user %}
    {% if not meal|is_chef:user %}
        {% for shift in meal.shifts.non_chef %}

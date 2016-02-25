@@ -21,30 +21,31 @@
 				<thead>
 					<tr>
 						<th><p>Day</p></th>
-						<th><p>Chef</p></th>
-						<th><p>Others</p></th>
-						<th><p>Dietary Restrictions</p></th>
+						<th><p>Workers</p></th>
 						<th><p>Serving</p></th>
 						<th><p>Number of diners</p></th>
 						<th><p>Meal Restrictions</p></th>
-						<th><p>Actions</p></th>
 					</tr>
 				</thead>
 				<div>
 					{% for meal in shifts_by_meal %}
-							<tr class="datarow">
-									<td>{{ meal.day }}</td>
-									{% for position in meal.positions.items %}
-									 <td>
-									 position: {{ position.0 }} - 
-									   {% for shift in position.1 %}
-									      <div>shift_worker: {{ shift.worker }}</div>
-									   {% endfor %}
-									 </td>
-									{% endfor %}
-									<td>{{ meal.serving}}</td>
-									<td>num served {{ meal.num_served }}</td>
-									<td>restriction {{ meal.restrictions }}</td>
+						<tr class="datarow">
+							<td>{{ meal.day }}, {{ meal.meal }}</td>
+							<td>
+							{% for position in meal.positions.items %}
+							<div>
+							 {{ position.0 }}:
+							   {% for shift in position.1 %}
+							      {% if shift.worker %}
+							      <li>: {{ shift.worker }}</li>
+							      {% endif %}
+							   {% endfor %}
+							</div>
+							{% endfor %}
+							 </td>									
+							<td>{{ meal.public_notes}}</td>
+							<td>num served {{ meal.num_served }}</td>
+							<td>restrictions: {{ meal.restrictions }}</td>
 							</tr>
 						{% endfor %}
 				</div>

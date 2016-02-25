@@ -99,7 +99,7 @@ class UserProfileForm(ModelForm):
           'picture', 'city', 'cell_number',
           'emergency_contact_name', 'emergency_contact_phone',
           'meal_restrictions', 'other_restrictions',
-          'arrival_day', 'departure_day',
+          'arrival_date', 'departure_date',
           'has_ticket',
           'looking_for_ticket', 'camping_this_year'
           )
