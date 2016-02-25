@@ -230,13 +230,12 @@ def show_signup_table(request):
 
 @login_required
 def profile(request):
-    form = UserProfileForm(request.POST)
+    form = UserProfileForm(instance=request.user)
     if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             userprofile = form.save(commit=False)
             userprofile.save()
-        else:
-            print(messages.error(request, "Error"))
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 @login_required
