@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand
 from django.utils.encoding import smart_str
 from datetime import datetime, timedelta
-from camp.models import Event, Meal, User, MealShift
+from camp.models import Event, Meal, User, MealShift, BikeMutationSchedule, PYB_shifts
 import csv
 
 
@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 MealShift.objects.create(meal=meal, role=MealShift.Chef)
 
             if day.weekday() in range(5): # (monday through friday)
-                for kind, _ in BikeMutationSchedule.PYB_shifts:
+                for kind, _ in PYB_shifts:
                     BikeMutationSchedule.objects.create(event=event, date=day, shift=kind)
 
         # No need to reset shifts, as we keep old events and shifts (which are tied to events).

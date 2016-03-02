@@ -26,7 +26,6 @@ from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMateria
 def meal_shifts(request):
     meals = Meal.objects.all().prefetch_related('shifts')
 
-    print meals.count()
     return render(request, 'meal_shifts.html',
         {'meals':meals})
 
