@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% load common %}
+
 <div id="campers">
 	<div class="toggleview" id="campertoggle"></div>
 	<div class="campertable shown">
@@ -19,8 +21,8 @@
 				</thead>
 					{% for camper in campers %}
 						<tr class="datarow">
-							<td  class="profile_pic">{{camper.picture}}</td>
-							<td>{{camper.user}}</td>
+							<td  class="profile_pic">{% image camper.picture %}</td>
+							<td>{{camper.first_name}} {{camper.last_name}}</td>
 							<td>{{camper.city}}</td> 
 							<td>{{camper.meal_restrictions}}
 								{{camper.other_restrictions}}</td>
