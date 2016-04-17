@@ -193,7 +193,7 @@ def meal_schedule(request):
 def profile(request):
     form = UserProfileForm(instance=request.user)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             userprofile = form.save(commit=False)
             userprofile.save()
