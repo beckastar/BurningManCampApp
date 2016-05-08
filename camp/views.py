@@ -108,7 +108,7 @@ def chef_requirements(request, meal_id):
 def worker_signup(request, shift_id):
     if request.method != 'POST':
         raise Http404
-    shift = get_object_or_404(MealShift, pk=meal_id)
+    shift = get_object_or_404(MealShift, pk=shift_id)
 
     if shift.worker_id != request.user.id:
         if shift.worker_id is not None:
