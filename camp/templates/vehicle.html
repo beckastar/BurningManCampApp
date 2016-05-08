@@ -6,13 +6,15 @@
 <div id="left_border">
 	<img class="decoborder" id="vehicle_border" src="{% static 'images/decoborder.png' %}">
 </div>
+		error: {{ form.errors }} please fix 
+		{% csrf_token %}
 <div id="vehicle_form">
 		<div id="vehicle_title" class="title" id="vehicle_title">How're you getting to the Burn? </div>
 		<form action="/vehicle/" method="post" id='vehicle_form'>
 	<table id="vehicle_table" class="gradienttable table_with_form">	
 			{% csrf_token %}
 		    	<thead><tr id="profile_submit_row"><td>Click here to enter your vehicle data</td><td><input id="vehicle_button" class="table_button" type="submit" value="enter vehicle info"></td></tr>
-			    <tr><td>If you are coming in a car, AND you are the primary driver, check this box! </td><td class="squaredTwo">{{form.primary_driver_in_your_party}}</td></tr>
+			    <tr><td>If you are coming in a car, AND you are the primary driver, check this box! </td><td>{{form.primary_driver_in_your_party}}</td></tr>
 			    <tr><td>What make of car? </td><td>{{form.make_of_car}}</td></tr>
 			    <tr><td>What model of car? </td><td>{{form.model_of_car}}</td></tr>
 	</table>
@@ -20,7 +22,6 @@
 </div> 
 
 <div class="message_container" id="vehicle_message">
-		{% csrf_token %}
 		
 </div>
 

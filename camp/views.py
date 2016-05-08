@@ -201,7 +201,12 @@ def profile(request):
 
 @login_required
 def vehicle(request):
-    form = VehicleForm(request.POST)
+    try:
+        instance = Vehicle.objects.get(user=request.user)
+    except Vehicle.DoesNotExist:
+        instance = None
+
+    form = VehicleForm(request.POST, instance=instance)
     if request.method == 'POST':
         if form.is_valid():
             vehicle = form.save(commit=False)

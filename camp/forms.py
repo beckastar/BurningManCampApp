@@ -4,6 +4,7 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from arrow.parser import ParserError
 
 from .models import (
     Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
@@ -46,53 +47,60 @@ class UserForm(ModelForm):
         model = User
         fields = ('username', 'email', 'password')
 
+
+
+Fish = "Fish"
+Mammal = "Mammal"
+Vegetarian = "Vegetarian"
+Omnivore = "Omnivore"
+Onions = "Onions"
+Cucumber = "Cucumber"
+Peppers = "Peppers"
+Gluten_free = "Gluten_free"
+Vegan = "Vegan"
+Shellfish = "Shellfish"
+Olives = "Olives"
+Pork = "Pork"
+Soy = "Soy"
+Dairy = "Dairy"
+Cilantro = "Cilantro"
+Quinoa = "Quinoa"
+Nightshades = "Nightshades"
+Nuts = "Nuts"
+Pescaterian = "Pescaterian"
+All_Meat = "All_Meat"
+Legumes = "Legumes"
+Shellfish= "Shellfish"
+Gluten = "Gluten"
+
+Restrictions = (
+  (Legumes, "Legumes"),
+  (Shellfish, "Shellfish"),
+  (Gluten, "Gluten"),
+  (All_Meat, "All_Meat"),
+  (Fish, "Fish"),
+  (Mammal, "Mammal"),
+  (Onions, "Onions"),
+  (Cilantro, "Cilantro"),
+  (Soy, "Soy"),
+  (Dairy, "Dairy"),
+  (Quinoa, "Quinoa"),
+  (Pork, "Pork"),
+  (Olives, "Olives"),
+  (Dairy, "Dairy"),
+  (Peppers, "Peppers"),
+  (Cucumber, "Cucumber"),
+  (Nightshades, "Nightshades"),
+  (Nuts, "Nuts")
+)
+
 class UserProfileForm(ModelForm):
+    def clean(self):
+      cleaned_data = super(UserProfileForm, self).clean()
+      if cleaned_data['arrival_date'] > cleaned_data['departure_date']:
+        raise ValidationError("arrival date must be before departure_date")
 
     class Meta:
-        Fish = "Fish"
-        Mammal = "Mammal"
-        Vegetarian = "Vegetarian"
-        Omnivore = "Omnivore"
-        Onions = "Onions"
-        Cucumber = "Cucumber"
-        Peppers = "Peppers"
-        Gluten_free = "Gluten_free"
-        Vegan = "Vegan"
-        Shellfish = "Shellfish"
-        Olives = "Olives"
-        Pork = "Pork"
-        Soy = "Soy"
-        Dairy = "Dairy"
-        Cilantro = "Cilantro"
-        Quinoa = "Quinoa"
-        Nightshades = "Nightshades"
-        Nuts = "Nuts"
-        Pescaterian = "Pescaterian"
-        All_Meat = "All_Meat"
-        Legumes = "Legumes"
-        Shellfish= "Shellfish"
-        Gluten = "Gluten"
-
-        Restrictions = (
-          (Legumes, "Legumes"),
-          (Shellfish, "Shellfish"),
-          (Gluten, "Gluten"),
-          (All_Meat, "All_Meat"),
-          (Fish, "Fish"),
-          (Mammal, "Mammal"),
-          (Onions, "Onions"),
-          (Cilantro, "Cilantro"),
-          (Soy, "Soy"),
-          (Dairy, "Dairy"),
-          (Quinoa, "Quinoa"),
-          (Pork, "Pork"),
-          (Olives, "Olives"),
-          (Dairy, "Dairy"),
-          (Peppers, "Peppers"),
-          (Cucumber, "Cucumber"),
-          (Nightshades, "Nightshades"),
-          (Nuts, "Nuts")
-        )
 
         model = User
         fields = (
@@ -101,17 +109,45 @@ class UserProfileForm(ModelForm):
           'meal_restrictions', 'other_restrictions',
           'arrival_date', 'departure_date',
           'has_ticket',
-          'looking_for_ticket', 'camping_this_year'
+          'looking_for_ticket', 'camping_this_year', 'email'
           )
 
         widgets = {
             'meal_restrictions': forms.widgets.CheckboxSelectMultiple(choices=Restrictions),
+            'arrival_date': forms.widgets.SelectDateWidget(),
+            'departure_date': forms.widgets.SelectDateWidget()
         }
+
+        # these get called automagically before clean
+        # def clean_arrival_date(self, value):
+        #   try:
+        #     return arrow.get(value)
+        #   except ParserError:
+        #     raise ValidationError("you done fucked up")
+
+        # def clean_departure_date(self, value):
+        #   try:
+        #     return arrow.get(value)
+        #   except ParserError:
+        #     raise ValidationError("you done fucked up")
+
 
 class VehicleForm(ModelForm):
   class Meta:
     model = Vehicle
-    fields = '__all__'
+    fields = ('primary_driver_in_your_party', 'model_of_car', 'make_of_car')
+
+  def clean(self):
+    cleaned_data = super(VehicleForm, self).clean()
+    if cleaned_data['primary_driver_in_your_party']:
+      if not (cleaned_data['model_of_car'] and cleaned_data['make_of_car']):
+        raise ValidationError('Please supply your car\'s make and model if you are the primary driver in your party')
+    else:
+      if (cleaned_data['model_of_car'] or cleaned_data['make_of_car']):
+        raise ValidationError('If you are not the primary driver in your party, please leave the make and model fields blank')
+    return cleaned_data
+
+
 
 class ShelterForm(ModelForm):
   class Meta:
