@@ -138,8 +138,8 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME', None)
 
 if AWS_ACCESS_KEY_ID is None or AWS_SECRET_ACCESS_KEY is None or AWS_STORAGE_BUCKET_NAME is None:
     print "You need to configure your environment for S3 upload.  Upload won't work until you do."
-
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+else:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 from boto.s3.connection import SubdomainCallingFormat
 AWS_CALLING_FORMAT = SubdomainCallingFormat
