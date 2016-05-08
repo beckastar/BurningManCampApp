@@ -108,7 +108,7 @@ def chef_requirements(request, meal_id):
 def worker_signup(request, shift_id):
     if request.method != 'POST':
         raise Http404
-    shift = get_object_or_404(Shift, pk=meal_id)
+    shift = get_object_or_404(MealShift, pk=shift_id)
 
     if shift.worker_id != request.user.id:
         if shift.worker_id is not None:
@@ -163,11 +163,13 @@ def _initial_meal(meal):
         arrival_date__lt=meal.day,  departure_date__gt=meal.day)
     restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
 
+    positions = {role_display: [] for role_code, role_display in MealShift.Roles}
+
     return {
         'day': meal.day,
         'meal': meal.kind,
         'serving': meal.public_notes,
-        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': [], 'Courier': []},
+        'positions': positions,
         'restrictions': ", ".join(restrictions) if restrictions else "None",
         'num_served': people_that_day.count()
     }
@@ -193,7 +195,7 @@ def meal_schedule(request):
 def profile(request):
     form = UserProfileForm(instance=request.user)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             userprofile = form.save(commit=False)
             userprofile.save()

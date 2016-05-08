@@ -33,7 +33,7 @@ CURRENT_EVENT_ID = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "sheltered-island-22241.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "bioluminati-prod.herokuapp.com", "bioluminati.org", "bioluminati.com"]
 
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'raven.contrib.django.raven_compat',
     # 'django_tables2',
     'camp',
     # 'bootstrap3',
@@ -131,6 +132,17 @@ USE_L10N = True
 USE_TZ = True
 
 
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', None)
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', None)
+AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME', None)
+
+if AWS_ACCESS_KEY_ID is None or AWS_SECRET_ACCESS_KEY is None or AWS_STORAGE_BUCKET_NAME is None:
+    print "You need to configure your environment for S3 upload.  Upload won't work until you do."
+else:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+from boto.s3.connection import SubdomainCallingFormat
+AWS_CALLING_FORMAT = SubdomainCallingFormat
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 

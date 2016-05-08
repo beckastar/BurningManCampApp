@@ -8,7 +8,7 @@
 <div id="profile">
 		<div class="title" id="profile_title">We're so glad you're joining us. Tell us a little about yourself.</div>
 		errors: {{ form.errors }}
-		<form action="/profile/" method="post">
+		<form action="/profile/" method="post"  enctype="multipart/form-data">
 	<table id="profile_table" class="table_with_form">	
 			{% csrf_token %}
 		    	<thead><tr id="profile_submit_row"><td></td><td><input id="profile_button" class="table_button" type="submit" value="Save profile" id="profilebutton"></td></tr>
