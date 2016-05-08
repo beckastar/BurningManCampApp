@@ -269,7 +269,7 @@ class MealShift(models.Model):
         (Courier, "Courier"),
         (Chef, "Chef"),
         (Sous_Chef, "Sous Chef"),
-        (KP, "KP (cleaning/assistance)"),
+        (KP, "KP"),
     )
 
     meal = models.ForeignKey(Meal, related_name='shifts')
@@ -346,7 +346,7 @@ class BikeMutationSchedule(models.Model):
     date = models.DateField()
 
     def __unicode__(self):
-        return '%s %s %s %s'%(self.shift, self.worker, self.day)
+        return '%s %s %s %s'%(self.shift, self.worker, self.date)
 
 class Inventory(models.Model):
     item = models.CharField(max_length=20, blank=True)

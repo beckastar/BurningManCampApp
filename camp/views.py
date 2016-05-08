@@ -163,11 +163,13 @@ def _initial_meal(meal):
         arrival_date__lt=meal.day,  departure_date__gt=meal.day)
     restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
 
+    positions = {role_display: [] for role_code, role_display in MealShift.Roles}
+
     return {
         'day': meal.day,
         'meal': meal.kind,
         'serving': meal.public_notes,
-        'positions': {'Chef': [], 'KP': [], 'Sous-Chef': [], 'Courier': []},
+        'positions': positions,
         'restrictions': ", ".join(restrictions) if restrictions else "None",
         'num_served': people_that_day.count()
     }
