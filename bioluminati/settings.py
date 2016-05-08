@@ -33,7 +33,7 @@ CURRENT_EVENT_ID = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "sheltered-island-22241.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "bioluminati-prod.herokuapp.com"]
 
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
