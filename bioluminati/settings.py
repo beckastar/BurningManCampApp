@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'raven.contrib.django.raven_compat',
     # 'django_tables2',
     'camp',
     # 'bootstrap3',
