@@ -24,7 +24,9 @@ from django.contrib.auth.forms import UserCreationForm
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
-    url(r'^register/', views.register, name='register'),
+    # FIXME: should the public be able to register?
+    #  Likely should have a prompt to contact council or seek sponsor
+    #  url(r'^register/', views.register, name='register'),
     url(r'^login/', login, name='foo',kwargs={'template_name': 'login.html'}),
     url(r'^logout/$', logout, name='logout', kwargs={'next_page': '/'}),
     url(r'^confirm/', views.register, name='confirm'),
@@ -38,20 +40,21 @@ urlpatterns = [
     url(r'^chef_signup/(?P<meal_id>[^/]+)/$', views.chef_signup, name='chef_signup'),
     url(r'^chef_requirements/(?P<meal_id>[^/]+)/$', views.chef_requirements, name='chef_requirements'),
     url(r'^worker_signup/(?P<shift_id>[^/]+)/$', views.worker_signup, name='worker_signup'),
-    url(r'^bikes/', views.show_bike_form, name='bikes'),
+    url(r'^bikes/$', views.show_bike_form, name='bikes'),
+    url(r'^bikes/(?P<bike_id>[^/]+)/edit/$', views.edit_bike, name='edit_bike'),
     url(r'^remove-bike-from-db/', views.remove_bike, name='remove_bike'),
-    url(r'^edit_bike/', views.edit_bike, name='edit_bike'),
+
     url(r'^meal_schedule/', views.meal_schedule, name="meal_schedule"),
     url(r'^inventory/', views.show_inventory_form, name="inventory"),
     url(r'^remove_items_from_truck/', views.remove_items_from_truck, name="remove_inventory"),
     url(r'^edit_inventory_item/', views.edit_truck_inventory, name="edit_inventory"),
     url(r'^campers/', views.campers, name="campers"),
     url(r'^calendar/', views.calendarview, name="calendar"),
-    url(r'^bikemutation/$', views.bikemutation, name='bikemutation'),
+    url(r'^bikemutation/shifts/$', views.bms_shifts, name="bms_shifts"),
+    url(r'^bikemutation/shifts/(?P<shift_id>[^/]+)/$', views.bms_worker_signup, name="bms_worker_signup"),
+
     url(r'^remove_items_from_bikemutation/', views.remove_items_from_bikemutation, name="remove_items_from_bikemutation"),#change this
     url(r'^edit_bikemutation_item/', views.edit_bikemutation, name="edit_bikemutation"),    #change this
-    url(r'^remove-self-from-pyb-shift/', views.remove_self_from_pyb_shift, name="remove_self_from_pyb_shift"),
-    url(r'^signup_for_pyb_shift/', views.signup_for_pyb_shift, name="signup_for_pyb_shift"),
-    url(r'^bikemutationsignup/', views.show_pybsignup, name="show_pybsignup")
+    url(r'^bikemutation/schedule/$', views.bikemutation, name='bikemutation'),
     # url(r'^accounts/', include('django.contrib.auth.urls')),
 ]

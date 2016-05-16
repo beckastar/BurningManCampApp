@@ -36,7 +36,9 @@ class ChefForm(forms.Form):
         initial = {
           'need_courier': role_counts[MealShift.Courier] > 0,
           'number_of_sous': role_counts[MealShift.Sous_Chef],
-          'number_of_kp': role_counts[MealShift.KP]
+          'number_of_kp': role_counts[MealShift.KP],
+          'public_notes': meal.public_notes,
+          'private_notes': meal.private_notes,
         }
         return ChefForm(data=data, initial=initial, prefix=prefix, meal=meal)
 
@@ -97,14 +99,21 @@ Restrictions = (
 class UserProfileForm(ModelForm):
     def clean(self):
       cleaned_data = super(UserProfileForm, self).clean()
-      if cleaned_data['arrival_date'] > cleaned_data['departure_date']:
-        raise ValidationError("arrival date must be before departure_date")
+      arr = cleaned_data.get('arrival_date')
+      dept = cleaned_data.get('departure_date')
+      if bool(arr) != bool(dept):
+        raise ValidationError("If either arrival or departure are given, both must be given.")
+      if dept:
+        if arr > dept:
+          raise ValidationError("Arrival date must be before departure date.")
 
     class Meta:
 
         model = User
         fields = (
+          'first_name', 'last_name', 'playa_name',
           'picture', 'city', 'cell_number',
+          'email',
           'emergency_contact_name', 'emergency_contact_phone',
           'meal_restrictions', 'other_restrictions',
           'arrival_date', 'departure_date',
@@ -117,20 +126,6 @@ class UserProfileForm(ModelForm):
             'arrival_date': forms.widgets.SelectDateWidget(),
             'departure_date': forms.widgets.SelectDateWidget()
         }
-
-        # these get called automagically before clean
-        # def clean_arrival_date(self, value):
-        #   try:
-        #     return arrow.get(value)
-        #   except ParserError:
-        #     raise ValidationError("you done fucked up")
-
-        # def clean_departure_date(self, value):
-        #   try:
-        #     return arrow.get(value)
-        #   except ParserError:
-        #     raise ValidationError("you done fucked up")
-
 
 class VehicleForm(ModelForm):
   class Meta:

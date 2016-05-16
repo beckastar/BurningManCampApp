@@ -94,6 +94,7 @@ def chef_requirements(request, meal_id):
     meal = get_object_or_404(Meal, pk=meal_id)
     if meal.chef_id != request.user.id:
         raise Http404("Can not edit requirements if you're not chef.")
+
     requirements = ChefForm.for_meal(meal=meal, data=request.POST)
 
     if not requirements.is_valid():
@@ -137,7 +138,7 @@ def login(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return redirect('/profile.html')
+            return redirect('profile')
         # else:
             # Return a 'disabled account' error message
                 # else:
@@ -163,10 +164,11 @@ def _initial_meal(meal):
         arrival_date__lt=meal.day,  departure_date__gt=meal.day)
     restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
 
-    positions = {role_display: [] for role_code, role_display in MealShift.Roles}
+    positions = {role_display: [] for role_code, role_display in MealShift.Roles if role_code != MealShift.Chef}
 
     return {
         'day': meal.day,
+        'chef': meal.chef,
         'meal': meal.kind,
         'serving': meal.public_notes,
         'positions': positions,
@@ -184,7 +186,8 @@ def meal_schedule(request):
         meal_summary = _initial_meal(meal)
 
         for shift in meal.shifts.all().prefetch_related('worker'):
-            meal_summary['positions'][shift.get_role_display()].append(shift)
+            if shift.role != MealShift.Chef:
+                meal_summary['positions'][shift.get_role_display()].append(shift)
 
         shifts_by_meal.append(meal_summary)
 
@@ -199,6 +202,8 @@ def profile(request):
         if form.is_valid():
             userprofile = form.save(commit=False)
             userprofile.save()
+            return redirect('profile')
+
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 @login_required
@@ -235,9 +240,6 @@ def shelter(request):
 
     return render(request, "shelter.html", RequestContext(request, {'form': form}))
 
-
-
-
 @staff_member_required
 def remove_bike(request):
     if request.method == 'POST':
@@ -251,15 +253,8 @@ def remove_bike(request):
             }, RequestContext(request))
 
 @staff_member_required
-def edit_bike(request):
-    bicycles = Bike.objects.all()
-
-    bike_id = int(
-        request.POST.get('bike_id',
-            request.GET.get('bike_id')))
-
+def edit_bike(request, bike_id):
     bike = Bike.objects.get(id=bike_id)
-
     form = BikeForm(instance=bike)
 
     if request.method == 'POST':
@@ -269,9 +264,8 @@ def edit_bike(request):
             form.save()
             return redirect('bikes')
 
-    context_dict = {"bike_id": bike_id, 'form':form, "bicycles":bicycles}
-
-    return render_to_response('bikes.html', context_dict, RequestContext(request))
+    context_dict = {'form':form}
+    return render_to_response('edit_bike.html', context_dict, RequestContext(request))
 
 def show_bike_form(request):
     bicycles = Bike.objects.all()
@@ -280,6 +274,7 @@ def show_bike_form(request):
         form = BikeForm(data = request.POST)
         if form.is_valid():
             form.save()
+            return redirect('bikes')
 
     else:
         form = BikeForm()
@@ -326,7 +321,6 @@ def edit_bikemutation(request):
 
 # items getting into database....
 def bikemutation(request):
-    model = BicycleMutationInventory
     materials = BicycleMutationInventory.objects.all()
     if request.method == "POST":
         form = BikeMaterialForm(data = request.POST)
@@ -373,7 +367,6 @@ def edit_truck_inventory(request):
     return render_to_response('inventory.html', context_dict, RequestContext(request))
 
 def show_inventory_form(request):
-    model = Inventory
     truck_inventory = Inventory.objects.all()
     if request.method == "POST":
         form = InventoryForm(data = request.POST)
@@ -416,52 +409,34 @@ def register(request):
     return render_to_response('register.html',
         RequestContext(request, {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},))
 
+@login_required
+def bms_worker_signup(request, shift_id):
+    if request.method != 'POST':
+        raise Http404
 
-def signup_for_pyb_shift(request):
-    if request.method == 'POST':
-        shift_id = int(request.POST.get('shift_id'))
+    shift = get_object_or_404(BikeMutationSchedule, pk=shift_id)
 
-        shift = BikeMutationSchedule.objects.get(id=shift_id)
-        if shift.worker_id is not None:
-            raise ValueError
-
+    if shift.worker is None:
         shift.worker = request.user
+        shift.save()
+        return redirect('bms_shifts')
 
+    if shift.worker != request.user:
+        raise Http404
+    else:
+        shift.worker = None
         shift.save()
 
-    return redirect('show_pybsignup')
+        return redirect('bms_shifts')
 
-
-def remove_self_from_pyb_shift(request):
-    if request.method == 'POST':
-        shift_id = int(request.POST.get('shift_id'))
-        shift = BikeMutationSchedule.objects.get(id=shift_id)
-        if shift.worker_id == request.user.id:
-            shift.worker = None
-            shift.save()
-
-    return redirect('show_pybsignup')
-
-def show_pybsignup(request):
-    # FIXME: use day-of-week numbers and loop.
-    mondayShiftsAvail = BikeMutationSchedule.objects.filter(day=1, worker__isnull=True)
-    mondayShiftsTaken = BikeMutationSchedule.objects.filter(day=1, worker__isnull=False)
-    tuesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=2, worker__isnull=False)
-    tuesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=2, worker__isnull=False)
-    wednesdayShiftsAvail = BikeMutationSchedule.objects.filter(day=3, worker__isnull=True)
-    wednesdayShiftsTaken = BikeMutationSchedule.objects.filter(day=3, worker__isnull=False)
-    thursdayShiftsAvail = BikeMutationSchedule.objects.filter(day=4, worker__isnull=True)
-    thursdayShiftsTaken = BikeMutationSchedule.objects.filter(day=4, worker__isnull=False)
-    fridayShiftsAvail = BikeMutationSchedule.objects.filter(day=5, worker__isnull=True)
-    fridayShiftsTaken = BikeMutationSchedule.objects.filter(day=5, worker__isnull=False)
+def bms_shifts(request):
+    event = get_current_event()
+    shifts = BikeMutationSchedule.objects.filter(event=event).order_by('date', 'shift')
 
     context_dict = {
-        'mondayShiftsTaken':mondayShiftsTaken, 'mondayShiftsAvail':mondayShiftsAvail,
-        'tuesdayShiftsTaken':tuesdayShiftsTaken, 'tuesdayShiftsAvail':tuesdayShiftsAvail,
-        'wednesdayShiftsTaken':wednesdayShiftsTaken, 'wednesdayShiftsAvail':wednesdayShiftsAvail,
-        'thursdayShiftsTaken':thursdayShiftsTaken, 'thursdayShiftsAvail':thursdayShiftsAvail,
-        'fridayShiftsTaken':fridayShiftsTaken, 'fridayShiftsAvail':fridayShiftsAvail,
+        'shifts': shifts
     }
+
     return render_to_response('bikemutationsignup.html',
         RequestContext(request, context_dict,))
 

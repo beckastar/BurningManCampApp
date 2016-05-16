@@ -214,6 +214,7 @@ class User(AbstractUser):
     # signup.
     # FIXME: if we want to track attendance, we should pull out year-specific
     #  stuff to a separate model.
+    playa_name = models.CharField(max_length=255, blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True, null=True)
     city = models.CharField(max_length=20, blank=True)
     cell_number = models.CharField(max_length=15, blank=True)
@@ -228,8 +229,14 @@ class User(AbstractUser):
     looking_for_ticket = models.BooleanField(default=True)
     camping_this_year = models.BooleanField(default=False)
 
+    @property
+    def display_name(self):
+        return self.playa_name or \
+            "%s %s" % (self.first_name, self.last_name) or \
+            self.username
+
     def __unicode__(self):
-        return '%s' % self.username
+        return '%s' % self.display_name
 
 class Meal(models.Model):
     Breakfast = "Breakfast"
@@ -284,6 +291,7 @@ class MealShift(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.meal, self.role)
 
+SIZE_CHOICES = [(i/12.0, i/12.0) for i in range(3*12, 20*12, 6)]
 
 class Shelter(models.Model):
     user = models.OneToOneField(User)
@@ -291,13 +299,11 @@ class Shelter(models.Model):
     number_of_people_tent_sleeps = models.IntegerField()
     sleeping_under_ubertent = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    width = models.FloatField(choices=SIZE_CHOICES)
+    length = models.FloatField(choices=SIZE_CHOICES)
 
     def __unicode__(self):
-        return '%s, %s, %s, %s' %(
-            self.user, self.sleeping_arrangement, self.number_of_people_tent_sleeps,
-            self.sleeping_under_ubertent, self.date
-            )
-
+        return '%s in %s' % (self.user, self.sleeping_arrangement)
 
 class Vehicle(models.Model):
     user = models.OneToOneField(User)
@@ -305,6 +311,8 @@ class Vehicle(models.Model):
     model_of_car = models.CharField(max_length=25, blank=True, default=None)
     make_of_car = models.CharField(max_length=15, blank=True, default=None)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    width = models.FloatField(choices=SIZE_CHOICES)
+    length = models.FloatField(choices=SIZE_CHOICES)
 
     def __unicode__(self):
         return '%s, %s, %s, %s' %(

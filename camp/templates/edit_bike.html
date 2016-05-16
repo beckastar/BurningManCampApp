@@ -2,7 +2,7 @@
 {% block content %}
  
 	<div id="bikeform">
-		<h2>Bike Inventory </h2>
+		<h2>Edit Bike</h2>
 			<table class="gradienttable">	
 				<thead>
 					<tr>
@@ -32,24 +32,6 @@
 			  				</td>
 						</form>
 					</tr>
-						{% for bike in bicycles %}
-							<tr class="datarow">
-									<td>{{bike.bike_name}}</td>
-									<td>{{bike.bike_size_inches}}</td>
-									<td>{{bike.bike_owner}}</td>
-									<td>{{bike.repair_needed}}</td>
-									<td>{{bike.in_bike_pool_this_year}}</td>
-									<td>{{bike.owners_last_year_on_playa}}</td>
-									<td>
-								        <form action="/remove-bike-from-db/" method="post">
-								            {% csrf_token %}
-								            <input type="hidden" name="bike_id" value="{{bike.id}}" />
-								            <input class="table_button" type="submit" value="delete bike">
-								        </form>
-								        <a href="{% url 'edit_bike' bike.id %}">Edit bike</a>
-								    </td>
-							</tr>
-						{% endfor %}
 				</div>
 			</table>
 		</div>
