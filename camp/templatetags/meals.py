@@ -57,3 +57,9 @@ def chef_worker_widget(context, shift):
     req = context['request']
     return render_template(req, "meals/worker_bio.html",
      {"shift": shift})
+
+@register.simple_tag(takes_context=False)
+def show_restrictions(people_by_restriction, restriction):
+    num_people = len(people_by_restriction[restriction])
+    people_display = ', '.join(people_by_restriction[restriction])
+    return "%s: (%s) %s" % (restriction, num_people, people_display)

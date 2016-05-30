@@ -122,7 +122,7 @@ class UserProfileForm(ModelForm):
           )
 
         widgets = {
-            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(choices=Restrictions),
+            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(),
             'arrival_date': forms.widgets.SelectDateWidget(),
             'departure_date': forms.widgets.SelectDateWidget()
         }

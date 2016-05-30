@@ -209,6 +209,12 @@ class Event(models.Model):
     class Meta:
         ordering = ('start_date',)
 
+class MealRestriction(models.Model):
+    name = models.CharField(max_length=255, blank=False, null=False)
+
+    def __unicode__(self):
+        return self.name
+
 class User(AbstractUser):
     # FIXME: if we don't want these nullable, we should have them as part of
     # signup.
@@ -220,7 +226,6 @@ class User(AbstractUser):
     cell_number = models.CharField(max_length=15, blank=True)
     emergency_contact_name = models.CharField(max_length=40, blank=True)
     emergency_contact_phone = models.CharField(max_length=15, blank=True)
-    meal_restrictions = models.CharField(max_length = 200, blank= True)
     other_restrictions = models.CharField(max_length=100, blank=True)
     arrival_date =  models.DateTimeField(null=True, blank=True)
     departure_date = models.DateTimeField(null=True, blank=True)
@@ -228,6 +233,8 @@ class User(AbstractUser):
     has_ticket = models.BooleanField(default=False)
     looking_for_ticket = models.BooleanField(default=True)
     camping_this_year = models.BooleanField(default=False)
+
+    meal_restrictions = models.ManyToManyField(MealRestriction, related_name="campers")
 
     @property
     def display_name(self):

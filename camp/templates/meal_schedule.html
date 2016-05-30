@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load meals %}
 {% block content %}
 
 	<div class="">
@@ -34,18 +35,24 @@
 							<td>
 							{% for position in meal.positions.items %}
 							<div>
-							 {{ position.0 }}:
-							   {% for shift in position.1 %}
-							      {% if shift.worker %}
-							      <li>: {{ shift.worker }}</li>
-							      {% endif %}
-							   {% endfor %}
+								{{ position.0 }}:
+								{% for shift in position.1 %}
+									{% if shift.worker %}
+										<li>: {{ shift.worker }}</li>
+									{% endif %}
+								{% endfor %}
 							</div>
 							{% endfor %}
-							 </td>									
+							 </td>
 							<td>{{ meal.public_notes}}</td>
 							<td>num served {{ meal.num_served }}</td>
-							<td>restrictions: {{ meal.restrictions }}</td>
+							<td>
+								<ul>
+									{% for restriction in meal.restrictions %}
+										<li>{% show_restrictions meal.restrictions restriction %}
+									{% endfor %}
+								</ul>
+							</td>
 							</tr>
 						{% endfor %}
 				</div>

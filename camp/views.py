@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from collections import defaultdict
 from itertools import groupby
 
 from django.db.transaction import atomic
@@ -161,10 +162,22 @@ def campers(request):
 
 def _initial_meal(meal):
     people_that_day = User.objects.filter(
-        arrival_date__lt=meal.day,  departure_date__gt=meal.day)
-    restrictions = sorted(list(set([person.meal_restrictions for person in people_that_day])))
+        arrival_date__lte=meal.day,  departure_date__gte=meal.day
+        ).prefetch_related('meal_restrictions')
 
-    positions = {role_display: [] for role_code, role_display in MealShift.Roles if role_code != MealShift.Chef}
+    people_by_restriction = defaultdict(list)
+    for camper in people_that_day:
+        for restriction in camper.meal_restrictions.all():
+            people_by_restriction[restriction.name].append(camper.display_name)
+
+    for restriction in people_by_restriction:
+        people_by_restriction[restriction].sort()
+
+    positions = {
+        role_display: []
+        for role_code, role_display in MealShift.Roles
+        if role_code != MealShift.Chef
+    }
 
     return {
         'day': meal.day,
@@ -172,7 +185,7 @@ def _initial_meal(meal):
         'meal': meal.kind,
         'serving': meal.public_notes,
         'positions': positions,
-        'restrictions': ", ".join(restrictions) if restrictions else "None",
+        'restrictions': people_by_restriction,
         'num_served': people_that_day.count()
     }
 
@@ -191,8 +204,9 @@ def meal_schedule(request):
 
         shifts_by_meal.append(meal_summary)
 
+    print shifts_by_meal[0]['restrictions'].items()
     context_dict = {'shifts_by_meal': shifts_by_meal}
-    return render(request, "meal_schedule.html", RequestContext(request, context_dict))
+    return render(request, "meal_schedule.html", context_dict)
 
 @login_required
 def profile(request):
@@ -200,8 +214,7 @@ def profile(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            userprofile = form.save(commit=False)
-            userprofile.save()
+            form.save()
             return redirect('profile')
 
     return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
