@@ -52,6 +52,9 @@
 										<li>{% show_restrictions meal.restrictions restriction %}
 									{% endfor %}
 								</ul>
+								{% if meal.other_restrictions %}
+								  Also: {{ meal.other_restrictions }}
+								{% endif %}
 							</td>
 							</tr>
 						{% endfor %}

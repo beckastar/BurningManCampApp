@@ -165,8 +165,10 @@ def _initial_meal(meal):
         arrival_date__lte=meal.day,  departure_date__gte=meal.day
         ).prefetch_related('meal_restrictions')
 
+    other_restrictions = []
     people_by_restriction = defaultdict(list)
     for camper in people_that_day:
+        other_restrictions.append(camper.other_restrictions)
         for restriction in camper.meal_restrictions.all():
             people_by_restriction[restriction.name].append(camper.display_name)
 
@@ -186,6 +188,7 @@ def _initial_meal(meal):
         'serving': meal.public_notes,
         'positions': positions,
         'restrictions': people_by_restriction,
+        'other_restrictions': ", ".join(other_restrictions),
         'num_served': people_that_day.count()
     }
 
