@@ -215,6 +215,9 @@ class MealRestriction(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ('name',)
+
 class User(AbstractUser):
     # FIXME: if we don't want these nullable, we should have them as part of
     # signup.
