@@ -14,13 +14,13 @@
 		<tr>
 			{% for day, campers in campers_by_day %}
 				<td class="weekdaycell">
-	    		<p>In camp:</p>
-	    		{% for camper in campers %}
-	    			{{camper.username}}
-	    			<p>Can't eat: {{camper.meal_restrictions}}</p>
-	    			<p>{{camper.other_restrictions}}</p>
-	    		{% endfor %}
-	    		</td>
+				<p>In camp:</p>
+				<ul>
+				{% for camper in campers %}
+					<li>{{camper}}</li>
+				{% endfor %}
+				</ul>
+				</td>
 			{% endfor %}
 		</tr>
 		<tr>

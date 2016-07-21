@@ -97,6 +97,9 @@ Restrictions = (
 )
 
 class UserProfileForm(ModelForm):
+    def clean_other_restrictions(self):
+      return self.cleaned_data['other_restrictions'].strip()
+
     def clean(self):
       cleaned_data = super(UserProfileForm, self).clean()
       arr = cleaned_data.get('arrival_date')

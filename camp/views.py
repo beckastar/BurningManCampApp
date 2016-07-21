@@ -168,9 +168,12 @@ def _initial_meal(meal):
     other_restrictions = []
     people_by_restriction = defaultdict(list)
     for camper in people_that_day:
-        other_restrictions.append(camper.other_restrictions)
+        if camper.other_restrictions:
+            other_restrictions.append(camper.other_restrictions)
         for restriction in camper.meal_restrictions.all():
             people_by_restriction[restriction.name].append(camper.display_name)
+    if other_restrictions:
+        other_restrictions = ", ".join(other_restrictions)
 
     for restriction in people_by_restriction:
         people_by_restriction[restriction].sort()
@@ -188,7 +191,7 @@ def _initial_meal(meal):
         'serving': meal.public_notes,
         'positions': positions,
         'restrictions': people_by_restriction,
-        'other_restrictions': ", ".join(other_restrictions),
+        'other_restrictions': other_restrictions,
         'num_served': people_that_day.count()
     }
 
