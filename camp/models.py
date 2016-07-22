@@ -237,7 +237,7 @@ class User(AbstractUser):
     looking_for_ticket = models.BooleanField(default=True)
     camping_this_year = models.BooleanField(default=False)
 
-    meal_restrictions = models.ManyToManyField(MealRestriction, related_name="campers")
+    meal_restrictions = models.ManyToManyField(MealRestriction, related_name="campers", blank=True)
 
     @property
     def display_name(self):
