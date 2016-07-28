@@ -35,6 +35,7 @@ $(document).ready(function () {
 	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 	}
 
+/*
 	$(function () {
 	  $("#profilebutton").click(function(e){
 	    var obj = null;
@@ -151,7 +152,7 @@ $(document).ready(function () {
 	    });
 	  });
 	});
-
+*/
 
 
 
