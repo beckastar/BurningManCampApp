@@ -22,14 +22,14 @@
 		    	{% if form.non_field_errors %}
 		    	<tr><td colspan=2 class="form-error">{{ form.non_field_errors }}</td></tr>
 		    	{% endif %}
-			    <tr><td>What kind of structure are you sleeping in? </td><td>{{form.sleeping_arrangement}}</td></tr>
+			    <tr><td>What kind of structure are you sleeping in? </td><td>{{form.sleeping_arrangement}}{{form.sleeping_arrangement.errors}}</td></tr>
 			    <tr><td colspan=2>Provide details below only if your own shelter:</td></tr>
-			    <tr><td>If it's a tent, how many people does it sleep (according to the manufacturer)? </td><td>{{form.number_of_people_tent_sleeps}}</td></tr>
-			    <tr><td>Do you need space under the Ubertent? </td><td>{{form.sleeping_under_ubertent}}
+			    <tr><td>If it's a tent, how many people does it sleep (according to the manufacturer)? </td><td>{{form.number_of_people_tent_sleeps}}{{form.number_of_people_tent_sleeps.errors}}</td></tr>
+			    <tr><td>Do you need space under the Ubertent? </td><td>{{form.sleeping_under_ubertent}}{{form.sleeping_under_ubertent.errors}}
 			    </td></tr>
-				<tr><td>How wide (in feet) is your shelter? </td><td>{{form.width}}
+				<tr><td>How wide (in feet) is your shelter? </td><td>{{form.width}}{{form.width.errors}}
 			    </td></tr>			    
-				<tr><td>How long (in feet) is your shelter? </td><td>{{form.length}}
+				<tr><td>How long (in feet) is your shelter? </td><td>{{form.length}}{{form.length.errors}}
 			    </td></tr>			    
 
 	</table>

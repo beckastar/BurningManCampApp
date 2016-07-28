@@ -232,8 +232,9 @@ def vehicle(request):
     except Vehicle.DoesNotExist:
         instance = None
 
-    form = VehicleForm(request.POST, instance=instance)
+    form = VehicleForm(instance=instance)
     if request.method == 'POST':
+        form = VehicleForm(request.POST, instance=instance)
         if form.is_valid():
             vehicle = form.save(commit=False)
             vehicle.user = request.user

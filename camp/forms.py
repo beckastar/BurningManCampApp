@@ -133,7 +133,10 @@ class UserProfileForm(ModelForm):
 class VehicleForm(ModelForm):
   class Meta:
     model = Vehicle
-    fields = ('primary_driver_in_your_party', 'model_of_car', 'make_of_car')
+    fields = (
+      'primary_driver_in_your_party', 'model_of_car', 'make_of_car',
+      'width', 'length'
+    )
 
   def clean(self):
     cleaned_data = super(VehicleForm, self).clean()
@@ -150,7 +153,11 @@ class VehicleForm(ModelForm):
 class ShelterForm(ModelForm):
   class Meta:
     model = Shelter
-    fields = '__all__'
+
+    fields = (
+        'sleeping_arrangement', 'number_of_people_tent_sleeps', 'sleeping_under_ubertent',
+        'width', 'length'
+    )
 
 class BikeForm(ModelForm):
     class Meta:
