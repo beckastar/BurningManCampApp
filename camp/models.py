@@ -321,8 +321,8 @@ class Vehicle(models.Model):
     model_of_car = models.CharField(max_length=25, blank=True, default=None)
     make_of_car = models.CharField(max_length=15, blank=True, default=None)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    width = models.FloatField(choices=SIZE_CHOICES)
-    length = models.FloatField(choices=SIZE_CHOICES)
+    width = models.FloatField(choices=SIZE_CHOICES, null=True)
+    length = models.FloatField(choices=SIZE_CHOICES, null=True)
 
     def __unicode__(self):
         return '%s, %s, %s, %s' %(

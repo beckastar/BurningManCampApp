@@ -245,7 +245,7 @@ def vehicle(request):
 @login_required
 def shelter(request):
     try:
-        shelter = Shelter.objects.filter(user=request.user).get()
+        shelter = Shelter.objects.get(user=request.user)
     except Shelter.DoesNotExist:
         shelter = None
 
@@ -256,6 +256,8 @@ def shelter(request):
             shelter = form.save(commit=False)
             shelter.user = request.user
             shelter.save()
+
+            return redirect('shelter')
 
     return render(request, "shelter.html", RequestContext(request, {'form': form}))
 

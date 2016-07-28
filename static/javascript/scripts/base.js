@@ -37,7 +37,6 @@ $(document).ready(function () {
 
 	$(function () {
 	  $("#profilebutton").click(function(e){
-	    e.preventDefault();
 	    var obj = null;
 	    $('<div></div>').appendTo('#profile_message')
 	    .html('<div><h3> Next, tell us about how you\'re getting here. </h3></div>')
@@ -77,7 +76,6 @@ $(document).ready(function () {
 
 		$(function () {
 	  $("#vehiclebutton").click(function(e){
-	    e.preventDefault();
 	    var obj = null;
 	    $('<div></div>').appendTo('#vehicle_message')
 	    .html('<div><h3> Next, tell us about your sleeping arrangements. </h3></div>')
@@ -117,7 +115,6 @@ $(document).ready(function () {
 
 		$(function () {
 	  $("#shelterbutton").click(function(e){
-	    e.preventDefault();
 	    var obj = null;
 	    $('<div></div>').appendTo('#shelter_message')
 	    .html('<div><h3> Next, pick your meal shifts. </h3></div>')
