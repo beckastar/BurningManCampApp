@@ -364,7 +364,7 @@ class BikeMutationSchedule(models.Model):
     date = models.DateField()
 
     def __unicode__(self):
-        return '%s %s %s %s'%(self.shift, self.worker, self.date)
+        return '%s %s %s' % (self.shift, self.worker, self.date)
 
 class Inventory(models.Model):
     item = models.CharField(max_length=20, blank=True)

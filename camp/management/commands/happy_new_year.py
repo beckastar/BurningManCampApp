@@ -52,7 +52,8 @@ class Command(BaseCommand):
 
             if day.weekday() in range(5): # (monday through friday)
                 for kind, _ in PYB_shifts:
-                    BikeMutationSchedule.objects.create(event=event, date=day, shift=kind)
+                    for i in range(4):
+                        BikeMutationSchedule.objects.create(event=event, date=day, shift=kind)
 
         # No need to reset shifts, as we keep old events and shifts (which are tied to events).
 
