@@ -238,8 +238,9 @@ def vehicle(request):
             vehicle = form.save(commit=False)
             vehicle.user = request.user
             vehicle.save()
-        else:
-            print(messages.error(request, "Error"))
+
+            return redirect('vehicle')
+
     return render(request, "vehicle.html", RequestContext(request, {'form': form, 'profile': profile,}))
 
 @login_required
