@@ -138,6 +138,9 @@ class VehicleForm(forms.ModelForm):
   def __init__(self, user=None, **kwargs):
     self.user = user
     super(VehicleForm, self).__init__(**kwargs)
+    providers = User.objects.filter(vehicle__transit_arrangement=DRIVING
+      ).exclude(vehicle__user=user) # can't share with self
+    self.fields['transit_provider'].queryset = providers
 
   class Meta:
     model = Vehicle
@@ -163,6 +166,12 @@ class ShelterForm(forms.ModelForm):
   def __init__(self, user=None, **kwargs):
     self.user = user
     super(ShelterForm, self).__init__(**kwargs)
+
+    providers = User.objects.exclude(shelter=None # declared a shelter
+      ).exclude(shelter__sleeping_arrangement=sharing_someone_elses # not sharing
+      ).exclude(shelter__user=user) # not yourself
+
+    self.fields['shelter_provider'].queryset = providers
 
   def clean(self):
     cleaned_data = super(ShelterForm, self).clean()

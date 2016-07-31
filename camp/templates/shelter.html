@@ -20,7 +20,7 @@
 					<ul>
 					<li>If sleeping in your vehicle, you'll need to tell us about it on <a href="{% url 'vehicle' %}">Getting here</a></li>
 				</td></tr>
-			    <tr><td>If sharing a shelter, whose?</td><td>{{ form.shelter_provider }}{{ form.shelter_provider.errors }}</td>
+			    <tr><td>If sharing a shelter, whose? (Not in the list? Ask them to register.)</td><td>{{ form.shelter_provider }}{{ form.shelter_provider.errors }}</td>
 			    <tr><td colspan=2>If you’re bringing your own tent, tell us about it:</td></tr>
 			    <tr><td>According to the manufacturer, how many people does it sleep?</td><td>{{form.number_of_people_tent_sleeps}}{{form.number_of_people_tent_sleeps.errors}}</td></tr>
 			    <tr><td>Do you need space under <a href="https://www.flickr.com/photos/suldrew/8649495627" target="_blank">the Ubertent</a>? </td><td>{{form.sleeping_under_ubertent}}{{form.sleeping_under_ubertent.errors}}
