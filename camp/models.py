@@ -22,6 +22,18 @@ Sleeping_arrangements = (
     (other, "Other"),
 )
 
+UNDETERMINED = 0
+DRIVING = 1
+RIDING_WITH = 2
+OTHER = 3
+
+Transit_arrangements = (
+    (UNDETERMINED, "Not sure yet"),
+    (DRIVING, "Primary driver"),
+    (RIDING_WITH, "Riding with someone else"),
+    (OTHER, "Some other transit")
+)
+
 PYB_days = (
     (0, "Monday"), # python day ints
     (1, "Tuesday"),
@@ -230,6 +242,7 @@ class Shelter(models.Model):
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
     shelter_provider = models.ForeignKey(User, blank=True, null=True, related_name='provided_shelter')
+
     number_of_people_tent_sleeps = models.IntegerField(blank=True)
     sleeping_under_ubertent = models.BooleanField(default=False)
     width = models.FloatField(choices=SIZE_CHOICES)
@@ -240,17 +253,18 @@ class Shelter(models.Model):
 
 class Vehicle(models.Model):
     user = models.OneToOneField(User)
-
-    primary_driver_in_your_party = models.BooleanField(default=False)
-    model_of_car = models.CharField(max_length=25, blank=True, default=None)
-    make_of_car = models.CharField(max_length=15, blank=True, default=None)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    transit_arrangement = models.IntegerField(choices=Transit_arrangements)
+    transit_provider = models.ForeignKey(User, blank=True, null=True, related_name='provided_transit')
+
+    model_of_car = models.CharField(max_length=25, blank=True, default='')
+    make_of_car = models.CharField(max_length=15, blank=True, default='')
     width = models.FloatField(choices=SIZE_CHOICES)
     length = models.FloatField(choices=SIZE_CHOICES)
 
     def __unicode__(self):
         return '%s, %s, %s, %s' %(
-            self.user, self.primary_driver_in_your_party, self.model_of_car,
+            self.user, self.transit_arrangement, self.model_of_car,
             self.make_of_car
             )
 

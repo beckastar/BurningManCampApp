@@ -8,7 +8,10 @@ from arrow.parser import ParserError
 from .models import (
     Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
     Meal, MealShift, Shelter, User, Vehicle)
-from .models import sharing_someone_elses, bringing_own_tent, sleep_in_vehicle, SIZE_CHOICES
+from .models import ( #shelter
+  sharing_someone_elses, bringing_own_tent, sleep_in_vehicle, SIZE_CHOICES)
+from .models import ( #transit
+  DRIVING, RIDING_WITH)
 
 class ChefForm(forms.Form):
     MAX_WORKERS = [(i, i) for i in range(5)]
@@ -132,21 +135,28 @@ class UserProfileForm(forms.ModelForm):
         }
 
 class VehicleForm(forms.ModelForm):
+  def __init__(self, user=None, **kwargs):
+    self.user = user
+    super(VehicleForm, self).__init__(**kwargs)
+
   class Meta:
     model = Vehicle
     fields = (
-      'primary_driver_in_your_party', 'model_of_car', 'make_of_car',
+      'transit_arrangement', 'transit_provider',
+      'model_of_car', 'make_of_car',
       'width', 'length'
     )
 
   def clean(self):
     cleaned_data = super(VehicleForm, self).clean()
-    if cleaned_data['primary_driver_in_your_party']:
+    if cleaned_data['transit_arrangement'] == DRIVING:
       if not (cleaned_data['model_of_car'] and cleaned_data['make_of_car']):
-        raise ValidationError('Please supply your car\'s make and model if you are the primary driver in your party')
-    else:
-      if (cleaned_data['model_of_car'] or cleaned_data['make_of_car']):
-        raise ValidationError('If you are not the primary driver in your party, please leave the make and model fields blank')
+        raise ValidationError("Please supply your car's make and model if you are the primary driver in your party.")
+
+    if cleaned_data['transit_arrangement'] == RIDING_WITH:
+      if (not cleaned_data['transit_provider']):
+        raise ValidationError("If you're riding with someone, you must tell us who.")
+
     return cleaned_data
 
 class ShelterForm(forms.ModelForm):
