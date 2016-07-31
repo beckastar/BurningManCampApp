@@ -236,6 +236,7 @@ class User(AbstractUser):
     has_ticket = models.BooleanField(default=False)
     looking_for_ticket = models.BooleanField(default=True)
     camping_this_year = models.BooleanField(default=False)
+    public_notes = models.TextField(blank=True, help_text="Tell us stuff that doesn't fit elsewhere.")
 
     meal_restrictions = models.ManyToManyField(MealRestriction, related_name="campers", blank=True)
 

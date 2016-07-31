@@ -121,7 +121,8 @@ class UserProfileForm(ModelForm):
           'meal_restrictions', 'other_restrictions',
           'arrival_date', 'departure_date',
           'has_ticket',
-          'looking_for_ticket', 'camping_this_year', 'email'
+          'looking_for_ticket', 'camping_this_year', 'email',
+          'public_notes'
           )
 
         widgets = {
