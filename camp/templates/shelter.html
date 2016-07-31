@@ -25,14 +25,12 @@
 			    <tr><td>What shelter are you planning? </td><td>{{form.sleeping_arrangement}}{{form.sleeping_arrangement.errors}}</td></tr>
 				<tr><td colspan=2>
 					<ul>
-					<li>If bringing a tent, please tell us about it.</li>
 					<li>If sleeping in your vehicle, you'll need to tell us about it on <a href="{% url 'vehicle' %}">Getting here</a></li>
-					<li>If sharing someone else's shelter, please tell us who.</li>
-					</ul>
 				</td></tr>
-			    <tr><td>Provided by:</td><td>{{ form.shelter_provider }}{{ form.shelter_provider.errors }}</td>
-			    <tr><td>If it's a tent, how many people does it sleep (according to the manufacturer)? </td><td>{{form.number_of_people_tent_sleeps}}{{form.number_of_people_tent_sleeps.errors}}</td></tr>
-			    <tr><td>Do you need space under the Ubertent? </td><td>{{form.sleeping_under_ubertent}}{{form.sleeping_under_ubertent.errors}}
+			    <tr><td>If sharing a shelter, whose?</td><td>{{ form.shelter_provider }}{{ form.shelter_provider.errors }}</td>
+			    <tr><td colspan=2>If you’re bringing your own tent, tell us about it:</td></tr>
+			    <tr><td>According to the manufacturer, how many people does it sleep?</td><td>{{form.number_of_people_tent_sleeps}}{{form.number_of_people_tent_sleeps.errors}}</td></tr>
+			    <tr><td>Do you need space under <a href="https://www.flickr.com/photos/suldrew/8649495627" target="_blank">the Ubertent</a>? </td><td>{{form.sleeping_under_ubertent}}{{form.sleeping_under_ubertent.errors}}
 			    </td></tr>
 				<tr><td>How wide (in feet) is your shelter? </td><td>{{form.width}}{{form.width.errors}}
 			    </td></tr>			    
