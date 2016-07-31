@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 # Each meal needs a chef, who will define further shift needs.
                 MealShift.objects.create(meal=meal, role=MealShift.Chef)
 
-            if day.weekday() in range(5): # (monday through friday)
+            if day.weekday() in range(4): # (monday through thursday)
                 for kind, _ in PYB_shifts:
                     for i in range(4):
                         BikeMutationSchedule.objects.create(event=event, date=day, shift=kind)
