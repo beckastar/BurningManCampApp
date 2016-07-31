@@ -1,14 +1,14 @@
 from collections import defaultdict
 
 from django import forms
-from django.forms import Form, ModelForm
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from arrow.parser import ParserError
 
 from .models import (
     Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
     Meal, MealShift, Shelter, User, Vehicle)
+from .models import sharing_someone_elses, bringing_own_tent, sleep_in_vehicle, SIZE_CHOICES
 
 class ChefForm(forms.Form):
     MAX_WORKERS = [(i, i) for i in range(5)]
@@ -42,7 +42,7 @@ class ChefForm(forms.Form):
         }
         return ChefForm(data=data, initial=initial, prefix=prefix, meal=meal)
 
-class UserForm(ModelForm):
+class UserForm(forms.ModelForm):
     password = forms.CharField(widget = forms.PasswordInput())
 
     class Meta:
@@ -96,7 +96,7 @@ Restrictions = (
   (Nuts, "Nuts")
 )
 
-class UserProfileForm(ModelForm):
+class UserProfileForm(forms.ModelForm):
     def clean_other_restrictions(self):
       return self.cleaned_data['other_restrictions'].strip()
 
@@ -131,7 +131,7 @@ class UserProfileForm(ModelForm):
             'departure_date': forms.widgets.SelectDateWidget()
         }
 
-class VehicleForm(ModelForm):
+class VehicleForm(forms.ModelForm):
   class Meta:
     model = Vehicle
     fields = (
@@ -149,33 +149,59 @@ class VehicleForm(ModelForm):
         raise ValidationError('If you are not the primary driver in your party, please leave the make and model fields blank')
     return cleaned_data
 
+class ShelterForm(forms.ModelForm):
+  def __init__(self, user=None, **kwargs):
+    self.user = user
+    super(ShelterForm, self).__init__(**kwargs)
 
+  def clean(self):
+    cleaned_data = super(ShelterForm, self).clean()
+    if cleaned_data['sleeping_arrangement'] == bringing_own_tent:
+      # gotta tell us details of tent
+      size_values = [value for name, value in SIZE_CHOICES]
+      if not (cleaned_data.get('width') in size_values and
+              cleaned_data.get('length') in size_values):
+        raise ValidationError("If you're bringing your own tent, you must tell us how big it is.")
+    elif cleaned_data['sleeping_arrangement'] == sharing_someone_elses:
+      if cleaned_data.get('shelter_provider') is None:
+        self.add_error('shelter_provider', "If you are sharing someone else's shelter, you must tell us who.")
+    elif cleaned_data['sleeping_arrangement'] == sleep_in_vehicle:
+      # you have to put in a vehicle.
+      try:
+        vehicle = self.user.vehicle
+        if not vehicle.primary_driver_in_your_party:
+          raise ValidationError("If you sleep in your vehicle, you must be the primary driver.")
+      except ObjectDoesNotExist:
+        raise ValidationError("If you sleep in your vehicle, you must tell us about it.")
+    else: # whatever you want
+      pass
+    return cleaned_data
 
-class ShelterForm(ModelForm):
   class Meta:
     model = Shelter
-
     fields = (
-        'sleeping_arrangement', 'number_of_people_tent_sleeps', 'sleeping_under_ubertent',
+        'sleeping_arrangement',
+        'shelter_provider',
+        'number_of_people_tent_sleeps', 'sleeping_under_ubertent',
         'width', 'length'
     )
 
-class BikeForm(ModelForm):
+class BikeForm(forms.ModelForm):
     class Meta:
         model = Bike
         fields = '__all__'
 
-class BikeMaterialForm(ModelForm):
+class BikeMaterialForm(forms.ModelForm):
     class Meta:
         model = BicycleMutationInventory
         fields = '__all__'
 
-class InventoryForm(ModelForm):
+class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
         fields = '__all__'
 
-class BikeMutationScheduleForm(ModelForm):
+class BikeMutationScheduleForm(forms.ModelForm):
     class Meta:
       model = BikeMutationSchedule
       fields = "__all__"

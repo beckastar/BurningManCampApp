@@ -6,100 +6,21 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import AbstractUser
 
-
-RV = "RV"
-sedan = "sedan"
-small_suv = "small_suv"
-large_suv = "large_suv"
-x_large_suv = "x_large_suv"
-small_pickup = "small_pickup"
-med_pickup = "med_pickup"
-large_pickup = "large_pickup"
-rocket_ship = "rocket_ship"
-
-
-bringing_own_tent = "bringing_own_tent"
-sharing_someone_elses_tent = "sharing someone else's tent"
-using_camp_yurt = "using camp yurt"
-sharing_rv = "sharing rv"
+undetermined = "dunno"
+sharing_someone_elses = "sharing"
+bringing_own_tent = "bringing"
+sleep_in_vehicle = "car"
+using_camp_yurt = "yurt"
 other = "other"
 
 Sleeping_arrangements = (
-    (bringing_own_tent, "bringing own tent"),
-    (sharing_someone_elses_tent, "sharing someone else's tent" ),
-    (using_camp_yurt, "using camp yurt"),
-    (sharing_rv, "sharing rv"),
-    (other, "other")
-    )
-
-three_feet = "three feet"
-four_feet = "four feet"
-five_feet = "five feet"
-six_feet = "six feet"
-seven_feet = "seven feet"
-eight_feet = "eight feet"
-
-one_inch = "one inch"
-two_inches = "two inches"
-three_inches = "three inches"
-four_inches = "four inches"
-five_inches = "five inches"
-six_inches = "six inches"
-seven_inches = "seven inches"
-eight_inches = "eight inches"
-nine_inches = "nine inches"
-ten_inches = "ten inches"
-eleven_inches = "eleven inches"
-
-
-
-tent_size_length_feet = (
-    (three_feet, "three feet"),
-    (four_feet, "four feet"),
-    (five_feet, "five feet"),
-    (six_feet, "six feet"),
-    (seven_feet, "seven feet"),
-    (eight_feet, "eight feet")
-    )
-
-
-tent_size_length_inches = (
-    (one_inch, "one inch"),
-    (two_inches, "two inches"),
-    (three_inches, "three inches"),
-    (four_inches, "four inches"),
-    (five_inches, "five inches"),
-    (six_inches, "six inches"),
-    (seven_inches, "seven inches"),
-    (eight_inches, "eight inches"),
-    (nine_inches, "nine inches"),
-    (ten_inches, "ten inches"),
-    (eleven_inches, "eleven inches")
-    )
-
-tent_size_width_feet = (
-    (three_feet, "three feet"),
-    (four_feet, "four feet"),
-    (five_feet, "five feet"),
-    (six_feet, "six feet"),
-    (seven_feet, "seven feet"),
-    (eight_feet, "eight feet")
-    )
-
-
-tent_size_width_inches = (
-    (one_inch, "one inch"),
-    (two_inches, "two inches"),
-    (three_inches, "three inches"),
-    (four_inches, "four inches"),
-    (five_inches, "five inches"),
-    (six_inches, "six inches"),
-    (seven_inches, "seven inches"),
-    (eight_inches, "eight inches"),
-    (nine_inches, "nine inches"),
-    (ten_inches, "ten inches"),
-    (eleven_inches, "eleven inches")
-    )
+    (undetermined, "Not sure yet"),
+    (bringing_own_tent, "Bringing own tent"),
+    (sleep_in_vehicle, "Sleeping in own vehicle"),
+    (using_camp_yurt, "Using camp yurt"),
+    (sharing_someone_elses, "Sharing someone else's" ),
+    (other, "Other"),
+)
 
 PYB_days = (
     (0, "Monday"), # python day ints
@@ -306,10 +227,11 @@ SIZE_CHOICES = [(i/12.0, i/12.0) for i in range(3*12, 20*12, 6)]
 
 class Shelter(models.Model):
     user = models.OneToOneField(User)
-    sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
-    number_of_people_tent_sleeps = models.IntegerField()
-    sleeping_under_ubertent = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
+    shelter_provider = models.ForeignKey(User, blank=True, null=True, related_name='provided_shelter')
+    number_of_people_tent_sleeps = models.IntegerField(blank=True)
+    sleeping_under_ubertent = models.BooleanField(default=False)
     width = models.FloatField(choices=SIZE_CHOICES)
     length = models.FloatField(choices=SIZE_CHOICES)
 
@@ -318,6 +240,7 @@ class Shelter(models.Model):
 
 class Vehicle(models.Model):
     user = models.OneToOneField(User)
+
     primary_driver_in_your_party = models.BooleanField(default=False)
     model_of_car = models.CharField(max_length=25, blank=True, default=None)
     make_of_car = models.CharField(max_length=15, blank=True, default=None)
@@ -328,7 +251,7 @@ class Vehicle(models.Model):
     def __unicode__(self):
         return '%s, %s, %s, %s' %(
             self.user, self.primary_driver_in_your_party, self.model_of_car,
-            self.make_of_car, self.date
+            self.make_of_car
             )
 
 class Bike(models.Model):

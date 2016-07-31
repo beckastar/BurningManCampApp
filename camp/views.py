@@ -251,9 +251,9 @@ def shelter(request):
     except Shelter.DoesNotExist:
         shelter = None
 
-    form = ShelterForm(instance=shelter)
+    form = ShelterForm(user=request.user, instance=shelter)
     if request.method == 'POST':
-        form = ShelterForm(request.POST, instance=shelter)
+        form = ShelterForm(user=request.user, data=request.POST, instance=shelter)
         if form.is_valid():
             shelter = form.save(commit=False)
             shelter.user = request.user

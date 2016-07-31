@@ -22,8 +22,15 @@
 		    	{% if form.non_field_errors %}
 		    	<tr><td colspan=2 class="form-error">{{ form.non_field_errors }}</td></tr>
 		    	{% endif %}
-			    <tr><td>What kind of structure are you sleeping in? </td><td>{{form.sleeping_arrangement}}{{form.sleeping_arrangement.errors}}</td></tr>
-			    <tr><td colspan=2>Provide details below only if your own shelter:</td></tr>
+			    <tr><td>What shelter are you planning? </td><td>{{form.sleeping_arrangement}}{{form.sleeping_arrangement.errors}}</td></tr>
+				<tr><td colspan=2>
+					<ul>
+					<li>If bringing a tent, please tell us about it.</li>
+					<li>If sleeping in your vehicle, you'll need to tell us about it on <a href="{% url 'vehicle' %}">Getting here</a></li>
+					<li>If sharing someone else's shelter, please tell us who.</li>
+					</ul>
+				</td></tr>
+			    <tr><td>Sharing with:</td><td>{{ form.shelter_provider }}{{ form.shelter_provider.errors }}</td>
 			    <tr><td>If it's a tent, how many people does it sleep (according to the manufacturer)? </td><td>{{form.number_of_people_tent_sleeps}}{{form.number_of_people_tent_sleeps.errors}}</td></tr>
 			    <tr><td>Do you need space under the Ubertent? </td><td>{{form.sleeping_under_ubertent}}{{form.sleeping_under_ubertent.errors}}
 			    </td></tr>
