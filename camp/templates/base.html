@@ -32,8 +32,13 @@
         </div>
           <div id="wrap">
             <ul id="nav">
+              <li><a href="#">Getting started</a>
+                <ul>
+                    <li><a href={% url 'about' %}>About Bio</a></li>
+                    <li><a href={% url 'prep' %}>Prep for the burn</a></li>
+                </ul>
+              </li>
               {% if user.is_authenticated %}
-              <li><a href={% url "logout" %}>Logout</a></li>
               <li><a href="#">Registration</a>
                  <ul>
                   <li><a href={% url 'profile' %}>Basic info</a>
@@ -52,18 +57,10 @@
                   <li><a href={% url 'inventory' %}>Truck Inventory</a></li>
                 </ul>
               </li>
+              <li><a href={% url "logout" %}>Logout</a></li>
               {%else %}
               <li><a href="/login/">Login</a></li> 
               {% endif %}
-              <li><a href="#">Resources</a>
-                <ul>
-                    <li><a href={% url 'about' %}>About Bio</a></li>
-                    <li><a href={% url 'prep' %}>Prep for the burn</a></li>
-                </ul> 
-              </li>
-                <ul>
-                </ul> 
-              </li>
             </ul>
           </div>
         </div>
