@@ -34,44 +34,31 @@
             <ul id="nav">
               {% if user.is_authenticated %}
               <li><a href={% url "logout" %}>Logout</a></li>
-              <li><a href="">Edit Your Profile</a>
+              <li><a href="#">Registration</a>
                  <ul>
                   <li><a href={% url 'profile' %}>Basic info</a>
                   <li><a href={% url 'vehicle' %}>Getting here</a></li>
-                  <li><a href={% url 'shelter' %}>Sleeping here</a></li>
+                  <li><a href={% url 'shelter' %}>Shelter</a></li>
+                  <li><a href={% url 'meal_shifts' %}>Meal shifts</a></li>
+                  <li><a href={% url 'bms_shifts' %}>Bike shifts</a></li>
+                  <li><a href={% url 'bikemutation' %}>Bike materials</a></li>
                 </ul>
               </li>
-              <li><a href={% url 'campers' %}>Campers</a></li>
-              <li><a href="#">Meals</a>
-                <ul>
-                  <li><a href={% url 'meal_shifts' %}>Sign up for kitchen shifts</a></li>
-                  <li><a href={% url 'meal_schedule' %}>Chef's view for meals</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Bike Mutation</a>
-                <ul>
-                  <li><a href={% url 'bms_shifts' %}>Sign up for shifts</a></li>
-                  <li><a href={% url 'bikemutation' %}>Input materials</a></li>
-                </ul>
-              </li>
-              <li><a href={% url 'calendar' %}>Bio Calendar</a></li>
               <li><a href="#">Operations</a>
                 <ul>
-                  <li><a href={% url 'bikes' %}>Camp Bikes</a></li>
+                  <li><a href={% url 'campers' %}>Campers</a></li>
+                  <li><a href={% url 'meal_schedule' %}>Chef's view for meals</a></li>
+                  <li><a href={% url 'calendar' %}>Bio Calendar</a></li>
                   <li><a href={% url 'inventory' %}>Truck Inventory</a></li>
                 </ul>
-              </li>               
+              </li>
               {%else %}
               <li><a href="/login/">Login</a></li> 
-              <li><a href={% url 'about' %}>About Bio</a>
-                <ul>
-                    <li><a href="#">Join us</a></li>
-                </ul> 
               {% endif %}
               <li><a href="#">Resources</a>
                 <ul>
+                    <li><a href={% url 'about' %}>About Bio</a></li>
                     <li><a href={% url 'prep' %}>Prep for the burn</a></li>
-                    <li><a href="#">Photo Galleries</a></li>
                 </ul> 
               </li>
                 <ul>
