@@ -12,8 +12,6 @@
 		<form action="/vehicle/" method="post" id='vehicle_form'>
 	<table id="vehicle_table" class="gradienttable table_with_form">	
 			{% csrf_token %}
-
-				<thead><tr id="profile_submit_row"><td>Click here to enter your vehicle data</td><td><input id="vehicle_button" class="table_button" type="submit" value="enter vehicle info"></td></tr>
 				{% if form.non_field_errors %}
 				<tr><td colspan=2 class="form-error">{{ form.non_field_errors }}</td></tr>
 				{% endif %}
@@ -28,7 +26,7 @@
 				</td></tr>
 				<tr><td>How long (in feet) is your vehicle? </td><td>{{form.length}}{{form.length.errors}}
 				</td></tr>
-
+				<tr><td colspan=2><input id="vehicle_button" class="table_button" type="submit" value="Save vehicle info"></td></tr>
 	</table>
 			</form>
 </div> 

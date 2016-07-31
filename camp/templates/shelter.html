@@ -12,13 +12,6 @@
 		<form action="/shelter/" method="post" id='shelter_form'>
 	<table id="shelter_table" class="gradienttable table_with_form">	
 			{% csrf_token %}
-		    	<thead>
-		    	<tr id="profile_submit_row">
-		    		<td>Click here to enter your data</td>
-		    		<td>
-		    			<input id="shelterbutton" class="table_button" type="submit" value="enter shelter info" />
-		    		</td></td>
-		    	</tr>
 		    	{% if form.non_field_errors %}
 		    	<tr><td colspan=2 class="form-error">{{ form.non_field_errors }}</td></tr>
 		    	{% endif %}
@@ -36,6 +29,10 @@
 			    </td></tr>			    
 				<tr><td>How long (in feet) is your shelter? </td><td>{{form.length}}{{form.length.errors}}
 			    </td></tr>			    
+		    	<tr>
+		    		<td colspan=2><input class="table_button" type="submit" value="Save shelter info" />
+		    		</td></td>
+		    	</tr>
 
 	</table>
 			</form>
