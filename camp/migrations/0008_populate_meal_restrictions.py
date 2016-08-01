@@ -10,7 +10,7 @@ def populate_restrictions(apps, schema_editor):
 
     restrictions = [
         'Vegetarian', 'Vegan', 'Dairy', 'Lactose', 'Artificial sweetener', 'Cilantro',
-        'Mushroom', 'Shellfish', 'Olives', 'Capers', 'Gluten', 'Nightshade']
+        'Mushroom', 'Shellfish', 'Olives', 'Capers', 'Gluten', 'Nightshade', 'Cucumber']
     for restriction in restrictions:
         MealRestriction.objects.create(name=restriction)
 

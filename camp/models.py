@@ -235,7 +235,11 @@ class MealShift(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.meal, self.role)
 
-SIZE_CHOICES = [(i/12.0, i/12.0) for i in range(3*12, 20*12, 6)]
+
+def half_feet(start, stop):
+    return [(i/12.0, i/12.0) for i in range(start * 12, stop * 12, 6)]
+
+SIZE_CHOICES = half_feet(3, 20)
 
 class Shelter(models.Model):
     user = models.OneToOneField(User)
@@ -243,13 +247,15 @@ class Shelter(models.Model):
     sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
     shelter_provider = models.ForeignKey(User, blank=True, null=True, related_name='provided_shelter')
 
-    number_of_people_tent_sleeps = models.IntegerField(blank=True)
+    number_of_people_tent_sleeps = models.IntegerField(blank=True, default=0)
     sleeping_under_ubertent = models.BooleanField(default=False)
-    width = models.FloatField(choices=SIZE_CHOICES)
-    length = models.FloatField(choices=SIZE_CHOICES)
+    width = models.FloatField(choices=SIZE_CHOICES, blank=True, null=True)
+    length = models.FloatField(choices=SIZE_CHOICES, blank=True, null=True)
 
     def __unicode__(self):
         return '%s in %s' % (self.user, self.sleeping_arrangement)
+
+GIANT_SIZE_CHOICES = SIZE_CHOICES + half_feet(20, 99)
 
 class Vehicle(models.Model):
     user = models.OneToOneField(User)
@@ -259,8 +265,8 @@ class Vehicle(models.Model):
 
     model_of_car = models.CharField(max_length=25, blank=True, default='')
     make_of_car = models.CharField(max_length=15, blank=True, default='')
-    width = models.FloatField(choices=SIZE_CHOICES)
-    length = models.FloatField(choices=SIZE_CHOICES)
+    width = models.FloatField(choices=SIZE_CHOICES, blank=True, null=True)
+    length = models.FloatField(choices=GIANT_SIZE_CHOICES, blank=True, null=True)
 
     def __unicode__(self):
         return '%s, %s, %s, %s' %(

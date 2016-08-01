@@ -234,7 +234,8 @@ def vehicle(request):
 
     form = VehicleForm(user=request.user, instance=instance)
     if request.method == 'POST':
-        form = VehicleForm(user=request.user, data=request.POST, instance=instance)
+        post_data = request.POST
+        form = VehicleForm(user=request.user, data=post_data, instance=instance)
         if form.is_valid():
             vehicle = form.save(commit=False)
             vehicle.user = request.user
