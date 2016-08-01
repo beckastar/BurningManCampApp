@@ -288,9 +288,8 @@ class Bike(models.Model):
     notes = models.CharField(max_length=30, null=True, blank=True)
 
     def __unicode__(self):
-        return '%s %s %s %s %s'%(
-            self.bike_name, self.bike_owner, self.bike_size_inches,
-            self.needs_repairs, self.in_bike_pool_this_year)
+        return '%s %s %s'%(
+            self.bike_name, self.bike_owner, self.needs_repairs)
 
 class BicycleMutationInventory(models.Model):
     material = models.CharField(max_length=30)
