@@ -154,9 +154,12 @@ def prep(request):
      return render_to_response('prep.html', RequestContext(request))
 
 def campers(request):
-    campers = User.objects.all()
-    campers_this_year = User.objects.filter(camping_this_year=True)
-    context_dict = {'campers':campers, 'campers_this_year':campers_this_year}
+    campers = User.objects.all().prefetch_related('meal_restrictions')
+
+    for camper in campers:
+        camper.restrictions = ", ".join(camper.meal_restrictions.all()) or "None"
+
+    context_dict = {'campers':campers}
     return render_to_response('campers.html', RequestContext(request, context_dict))
 
 
