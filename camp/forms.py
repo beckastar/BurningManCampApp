@@ -189,8 +189,8 @@ class ShelterForm(forms.ModelForm):
       # you have to put in a vehicle.
       try:
         vehicle = self.user.vehicle
-        if not vehicle.primary_driver_in_your_party:
-          raise ValidationError("If you sleep in your vehicle, you must be the primary driver.")
+        if not vehicle.transit_arrangement == DRIVING:
+          raise ValidationError("If you sleep in your vehicle, you must indicate that you are driving.")
       except ObjectDoesNotExist:
         raise ValidationError("If you sleep in your vehicle, you must tell us about it.")
     else: # whatever you want

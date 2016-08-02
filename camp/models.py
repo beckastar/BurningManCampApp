@@ -247,7 +247,7 @@ class Shelter(models.Model):
     sleeping_arrangement = models.CharField(max_length=25, choices=Sleeping_arrangements)
     shelter_provider = models.ForeignKey(User, blank=True, null=True, related_name='provided_shelter')
 
-    number_of_people_tent_sleeps = models.IntegerField(blank=True, default=0)
+    number_of_people_tent_sleeps = models.IntegerField(blank=True, null=True)
     sleeping_under_ubertent = models.BooleanField(default=False)
     width = models.FloatField(choices=SIZE_CHOICES, blank=True, null=True)
     length = models.FloatField(choices=SIZE_CHOICES, blank=True, null=True)

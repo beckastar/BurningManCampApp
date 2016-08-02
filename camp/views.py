@@ -157,7 +157,7 @@ def campers(request):
     campers = User.objects.all().prefetch_related('meal_restrictions')
 
     for camper in campers:
-        camper.restrictions = ", ".join(camper.meal_restrictions.all()) or "None"
+        camper.restrictions = ", ".join(map(str, camper.meal_restrictions.all())) or "None"
 
     context_dict = {'campers':campers}
     return render_to_response('campers.html', RequestContext(request, context_dict))
