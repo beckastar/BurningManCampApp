@@ -118,6 +118,7 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = (
           'first_name', 'last_name', 'playa_name',
+          'sponsor',
           'picture', 'city', 'cell_number',
           'email',
           'emergency_contact_name', 'emergency_contact_phone',

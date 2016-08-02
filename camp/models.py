@@ -157,6 +157,7 @@ class User(AbstractUser):
     # FIXME: if we want to track attendance, we should pull out year-specific
     #  stuff to a separate model.
     playa_name = models.CharField(max_length=255, blank=True)
+    sponsor = models.ForeignKey('self', null=True, blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True, null=True)
     city = models.CharField(max_length=20, blank=True)
     cell_number = models.CharField(max_length=15, blank=True)
@@ -175,8 +176,7 @@ class User(AbstractUser):
 
     @property
     def display_name(self):
-        return self.playa_name or \
-            "%s %s" % (self.first_name, self.last_name) or \
+        return "%s %s" % (self.first_name, self.last_name) or \
             self.username
 
     def __unicode__(self):

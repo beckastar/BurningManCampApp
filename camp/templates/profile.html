@@ -15,10 +15,9 @@
 				  <tr><td colspan=2 class="form-error">{{ form.non_field_errors }}</td></tr>
 				{% endif %}
 
-		    	<tr><td class="table_instructions">Check here if you're camping with Bio this year. Otherwise, leave this box blank.</td><td class="squaredTwo"> {{form.camping_this_year}}
-		    	{{form.camping_this_year.errors}}</td></tr>
 			    <tr><td class="table_instructions">First name: </td><td>{{form.first_name}}{{form.first_name.errors}}</td></tr>
 			    <tr><td class="table_instructions">Last name: </td><td>{{form.last_name}}{{form.last_name.errors}}</td></tr>
+			    <tr><td class="table_instructions">If it's your first year, who is your sponsor? </td><td>{{form.sponsor}}{{form.sponsor.errors}}</td></tr>			    
 			    <tr><td class="table_instructions">Playa name: </td><td>{{form.playa_name}}{{form.playa_name.errors}}</td></tr>
 
 			    <tr><td class="table_instructions">Upload a profile pic.</td><td> {{form.picture}} {{form.picture.errors}}.</td></tr>
