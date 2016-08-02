@@ -316,6 +316,6 @@ class Inventory(models.Model):
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __unicode__(self):
-        return '%s %s'%(self.item, self.quantity, self.needs_repairs)
+        return '%s %s'%(self.item, self.quantity)
 
 
