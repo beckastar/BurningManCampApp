@@ -30,7 +30,7 @@
 				<div>
 					{% for meal in shifts_by_meal %}
 						<tr class="datarow">
-							<td>{{ meal.day }}, {{ meal.meal }}<br>
+							<td>{{ meal.day|date }}, {{ meal.meal }}<br>
 							{% if meal.chef %}by {{ meal.chef }}{% else %}No chef yet.  <a href="{% url 'meal_shifts' %}">Claim it?</a>{% endif %}</td>
 							<td>
 							{% for position in meal.positions.items %}
