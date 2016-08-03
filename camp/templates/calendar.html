@@ -7,7 +7,7 @@
 	   <thead>
 	   <tr>
 	   {% for day in days %}
-	     <th>{{ day }}</th>
+	     <th>{{ day|date:"D d M" }}</th>
 	   {% endfor %}
 	   </tr>
 	   </thead>
