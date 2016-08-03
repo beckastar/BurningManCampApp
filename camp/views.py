@@ -159,6 +159,7 @@ def about(request):
 def prep(request):
      return render_to_response('prep.html', RequestContext(request))
 
+@login_required
 def campers(request):
     campers = User.objects.all().prefetch_related('meal_restrictions')
 
@@ -204,7 +205,7 @@ def _initial_meal(meal):
         'num_served': people_that_day.count()
     }
 
-
+@login_required
 def meal_schedule(request):
     # FIXME: maybe urls should include the event they are related to?
     event = get_current_event()
@@ -300,6 +301,7 @@ def edit_bike(request, bike_id):
     context_dict = {'form':form}
     return render_to_response('edit_bike.html', context_dict, RequestContext(request))
 
+@login_required
 def show_bike_form(request):
     bicycles = Bike.objects.all()
 
@@ -317,7 +319,7 @@ def show_bike_form(request):
             }, RequestContext(request))
     # currently owner's last year is required. probably good to remove that field.
 
-
+@login_required
 def remove_items_from_bikemutation(request):
     if request.method == 'POST':
         form = BikeMaterialForm()
@@ -329,6 +331,7 @@ def remove_items_from_bikemutation(request):
             'form':form, 'materials':materials
             }, RequestContext(request))
 
+@login_required
 def edit_bikemutation(request):
     materials= BicycleMutationInventory.objects.all()
 
@@ -352,7 +355,7 @@ def edit_bikemutation(request):
             }
     return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
-# items getting into database....
+@login_required
 def bikemutation(request):
     materials = BicycleMutationInventory.objects.all()
     if request.method == "POST":
@@ -366,6 +369,7 @@ def bikemutation(request):
     context_dict = {'form':form, 'materials':materials}
     return render_to_response('bikemutation.html', context_dict, RequestContext(request))
 
+@login_required
 def remove_items_from_truck(request):
     if request.method == 'POST':
         form = InventoryForm()
@@ -377,6 +381,7 @@ def remove_items_from_truck(request):
             'form':form, 'truck_inventory':truck_inventory,
             }, RequestContext(request))
 
+@login_required
 def edit_truck_inventory(request):
     truck_inventory = Inventory.objects.all()
 
@@ -399,6 +404,7 @@ def edit_truck_inventory(request):
 
     return render_to_response('inventory.html', context_dict, RequestContext(request))
 
+@login_required
 def show_inventory_form(request):
     truck_inventory = Inventory.objects.all()
     if request.method == "POST":
@@ -462,6 +468,7 @@ def bms_worker_signup(request, shift_id):
 
         return redirect('bms_shifts')
 
+@login_required
 def bms_shifts(request):
     event = get_current_event()
     shifts = BikeMutationSchedule.objects.filter(event=event).order_by('date', '-shift')
@@ -473,6 +480,7 @@ def bms_shifts(request):
     return render_to_response('bikemutationsignup.html',
         RequestContext(request, context_dict,))
 
+@login_required
 def calendarview(request):
     # FIXME: DRY
     # campers present and meal restrictions
