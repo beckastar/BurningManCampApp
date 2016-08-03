@@ -473,21 +473,28 @@ def calendarview(request):
     event = get_current_event()
 
     days = list(event.days)
-    campers_by_day = []
+    counts_by_day = []
     meal_shifts_by_day = []
     bike_shifts_by_day = []
-    for day in days:
-        campers_by_day.append((day, User.objects.exclude(
-            arrival_date__gte=day).exclude(departure_date__lt=day)))
 
-        meal_shifts_by_day.append((day, MealShift.objects.filter(
-            meal__day=day, worker__isnull=False).prefetch_related('meal')))
-        bike_shifts_by_day.append((day, BikeMutationSchedule.objects.filter(
-            date=day, worker__isnull=False)))
+    for day in days:
+        arriving = User.objects.filter(arrival_date=day).count()
+        departing = User.objects.filter(departure_date=day).count()
+        staying = User.objects.exclude(
+            arrival_date__gte=day).exclude(departure_date__lte=day).count()
+        counts_by_day.append({
+            'arriving': arriving,
+            'departing': departing,
+            'staying': staying})
+
+        meal_shifts_by_day.append(MealShift.objects.filter(
+            meal__day=day, worker__isnull=False).prefetch_related('meal'))
+        bike_shifts_by_day.append(BikeMutationSchedule.objects.filter(
+            date=day, worker__isnull=False))
 
     context_dict = {
         'days': days,
-        'campers_by_day': campers_by_day,
+        'counts_by_day': counts_by_day,
         'meal_shifts_by_day': meal_shifts_by_day,
         'bike_shifts_by_day': bike_shifts_by_day
     }

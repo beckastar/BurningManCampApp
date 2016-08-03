@@ -182,6 +182,9 @@ class User(AbstractUser):
     def __unicode__(self):
         return '%s' % self.display_name
 
+    class Meta:
+        ordering = ('last_name', 'first_name')
+
 class Meal(models.Model):
     Breakfast = "Breakfast"
     Dinner = "Dinner"

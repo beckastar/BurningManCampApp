@@ -12,20 +12,19 @@
 	   </tr>
 	   </thead>
 		<tr>
-			{% for day, campers in campers_by_day %}
+			{% for counts in counts_by_day %}
 				<td class="weekdaycell">
-				<p>In camp:</p>
 				<ul>
-				{% for camper in campers %}
-					<li>{{camper}}</li>
-				{% endfor %}
+					<li>Arriving: {{ counts.arriving }}</li>
+					<li>Staying: {{ counts.staying }}</li>
+					<li>Departing: {{ counts.departing }}</li>
 				</ul>
 				</td>
 			{% endfor %}
 		</tr>
 		<tr>
-		{% for day, shifts in meal_shifts_by_day %}
-			<td>
+		{% for shifts in meal_shifts_by_day %}
+			<td class="weekdaycell">
 			<p>cooking:</p>
 			{% for shift in shifts %}
 				<p>{{ shift.meal.kind }} - {{shift.role}}:{{shift.worker}}</p>
@@ -34,8 +33,8 @@
 		{% endfor %}
 		</tr>
 		<tr>
-		{% for day, shifts in bike_shifts_by_day %}
-			<td>
+		{% for shifts in bike_shifts_by_day %}
+			<td class="weekdaycell">
 			<p>bikes:</p>
 			{% for shift in shifts %}
 				<p>{{shift.shift}}:{{shift.worker}}</p>
