@@ -4,6 +4,7 @@ from collections import defaultdict
 from itertools import groupby
 
 from django.db.transaction import atomic
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
@@ -480,12 +481,18 @@ def calendarview(request):
     for day in days:
         arriving = User.objects.filter(arrival_date=day).count()
         departing = User.objects.filter(departure_date=day).count()
-        staying = User.objects.exclude(
-            arrival_date__gte=day).exclude(departure_date__lte=day).count()
+
+        unconfirmed_criteria = Q(departure_date__isnull=True) | Q(arrival_date__isnull=True)
+        unconfirmed = User.objects.filter(unconfirmed_criteria).count()
+        staying = User.objects.exclude(unconfirmed_criteria
+            ).exclude(arrival_date__gte=day
+            ).exclude(departure_date__lte=day).count()
+
         counts_by_day.append({
             'arriving': arriving,
             'departing': departing,
-            'staying': staying})
+            'staying': staying,
+            'unconfirmed': unconfirmed})
 
         meal_shifts_by_day.append(MealShift.objects.filter(
             meal__day=day, worker__isnull=False).prefetch_related('meal'))
