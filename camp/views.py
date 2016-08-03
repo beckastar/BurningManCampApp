@@ -117,11 +117,16 @@ def worker_signup(request, shift_id):
         if shift.worker_id is not None:
             raise ValueError("A worker is already working that shift.")
         # nobody is signed up yet.
-        shift.worker = request.user
+        with atomic():
+            # you can only work one shift per meal.
+            shift.meal.shifts.filter(worker=request.user
+                ).update(worker=None)
+            shift.worker = request.user
+            shift.save()
     else:
         # step down from the shift.
         shift.worker = None
-    shift.save()
+        shift.save()
 
     return redirect('meal_shifts')
 

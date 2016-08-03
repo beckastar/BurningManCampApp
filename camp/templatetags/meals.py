@@ -46,7 +46,9 @@ def shift_widget(context, shift, user):
             })
         else:
             # show worker
-            return shift.worker.username
+            return render_template(req, "meals/worker_other.html", {
+                "shift": shift
+            })
     else:
         return render_template(req, "meals/worker_signup.html", {
             "shift": shift
