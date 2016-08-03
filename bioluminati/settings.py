@@ -89,6 +89,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bioluminati.wsgi.application'
 
 
+DATE_FORMAT = "D d M"
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
