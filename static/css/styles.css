@@ -722,6 +722,17 @@ s
     top: 10%;*/
 }
 
+.profile_pic {
+    width: 150px;
+    height: 100px;
+    max-width: 150px;
+}
+
+.profile_pic img {
+    width: auto;
+    height: 100%;
+}
+
 .squaredTwo #id_camping_this_year, .squaredTwo #id_has_ticket, .squaredTwo #id_looking_for_ticket, .squaredTwo #id_primary_driver_in_your_party {
   width: 28px;
   height: 28px;
