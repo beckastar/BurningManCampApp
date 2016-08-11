@@ -11,3 +11,4 @@ factory_boy==2.6.1
 django-crispy-forms==1.6.0
 raven>=3
 arrow==0.7.0
+unicodecsv==0.14.1

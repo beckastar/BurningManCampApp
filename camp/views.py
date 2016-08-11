@@ -1,7 +1,11 @@
 from __future__ import absolute_import
 
+import datetime, zipfile
+from cStringIO import StringIO
 from collections import defaultdict
 from itertools import groupby
+
+import unicodecsv
 
 from django.db.transaction import atomic
 from django.db.models import Q
@@ -9,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response, get_object_or_404
+from django.template.defaultfilters import date
 from django.template.context_processors import csrf
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -521,3 +526,77 @@ def calendarview(request):
     return render_to_response('calendar.html',
         RequestContext(request, context_dict))
 
+def _user_to_row(user):
+    simple_attrs = [
+        'first_name', 'last_name', 'email',
+        'playa_name', 'sponsor', 'city', 'cell_number',
+        'emergency_contact_name', 'emergency_contact_phone',
+        'has_ticket', 'looking_for_ticket',
+        'camping_this_year', 'public_notes']
+
+    row = [getattr(user, attr) for attr in simple_attrs]
+
+    row.extend([date(user.arrival_date), date(user.departure_date)])
+
+    std_restrictions = list(user.meal_restrictions.all())
+    restrictions = ",".join(map(str, std_restrictions + [user.other_restrictions]))
+    row.append(restrictions)
+
+    try:
+        v = user.vehicle
+        row.extend([v.get_transit_arrangement_display(), v.transit_provider,
+            v.model_of_car, v.make_of_car,
+            v.width, v.length])
+    except Vehicle.DoesNotExist:
+        row.extend([""] * 6)
+
+    try:
+        s = user.shelter
+        row.extend([s.get_sleeping_arrangement_display(), s.shelter_provider,
+            s.number_of_people_tent_sleeps, s.sleeping_under_ubertent,
+            s.width, s.length])
+    except Shelter.DoesNotExist:
+        row.extend([""] * 6)
+
+    return row
+
+@staff_member_required
+def export(request):
+    # User
+    #     Vehicle
+    #     Shelter
+    # Meal
+    #     MealShift
+    user_fields = [
+        'first_name', 'last_name', 'email',
+        'playa_name', 'sponsor', 'city', 'cell_number',
+        'emergency_contact_name', 'emergency_contact_phone',
+        'has_ticket', 'looking_for_ticket',
+        'camping_this_year', 'public_notes'] + [
+        'arrival_date', 'departure_date', 'restrictions',
+        'transit_arrangement', 'transit_provider', 'model', 'make',
+        'width', 'length',
+        'sleeping_arrangement', 'shelter_provider', 'sleeps', 'sleeping_under_ubertent',
+        'width', 'length']
+
+    user_csv = StringIO()
+    writer = unicodecsv.writer(user_csv)
+    writer.writerow(user_fields)
+
+    users = User.objects.all().prefetch_related('meal_restrictions').select_related('vehicle', 'shelter')
+    for user in users:
+        row = _user_to_row(user)
+        if len(row) != len(user_fields):
+            raise ValueError("row length mismatch")
+        writer.writerow(row)
+    user_csv.seek(0)
+
+    dest = StringIO()
+    date_rel = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+    with zipfile.ZipFile(file=dest, mode='w', compression=zipfile.ZIP_DEFLATED) as z:
+        z.writestr('%s/user.csv' % date_rel, user_csv.read())
+
+    dest.seek(0)
+    response = HttpResponse(dest.read(), content_type="application/zip")
+    response['Content-Disposition'] = 'attachment; filename="bioluminati-%s.zip"' % date_rel
+    return response

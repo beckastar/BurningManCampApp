@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^profile/', views.profile, name='profile'),
     url(r'^vehicle/', views.vehicle, name='vehicle'),
     url(r'^shelter/', views.shelter, name='shelter'),
+
     # chef signup
     url(r'^meal_shifts/$', views.meal_shifts, name='meal_shifts'),
     url(r'^chef_signup/(?P<meal_id>[^/]+)/$', views.chef_signup, name='chef_signup'),
@@ -57,4 +58,5 @@ urlpatterns = [
     url(r'^edit_bikemutation_item/', views.edit_bikemutation, name="edit_bikemutation"),    #change this
     url(r'^bikemutation/schedule/$', views.bikemutation, name='bikemutation'),
     # url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^export/', views.export, name='export'),
 ]
