@@ -215,19 +215,32 @@ def meal_schedule(request):
     # FIXME: maybe urls should include the event they are related to?
     event = get_current_event()
 
+    # prod data is doing 55 queries here, but can get to 2x query per meal by:
+    # FIXME: hoist meal restrictions up (map people to restrictions)
+    # FIXME: hoist presence up (map day to people)
+
+    # from django.db import connections
+    # conn = connections['default']
+    # start_q = len(conn.queries)
     shifts_by_meal = []
-    for meal in Meal.objects.filter(event=event):
+    for meal in Meal.objects.filter(event=event).select_related('chef').prefetch_related('shifts__worker'):
         meal_summary = _initial_meal(meal)
 
-        for shift in meal.shifts.all().prefetch_related('worker'):
+        for shift in meal.shifts.all():
             if shift.role != MealShift.Chef:
                 meal_summary['positions'][shift.get_role_display()].append(shift)
 
         shifts_by_meal.append(meal_summary)
 
-    print shifts_by_meal[0]['restrictions'].items()
     context_dict = {'shifts_by_meal': shifts_by_meal}
-    return render(request, "meal_schedule.html", context_dict)
+    # view_q = len(conn.queries) - start_q
+    ret = render(request, "meal_schedule.html", context_dict)
+    # temp_q = len(conn.queries) - view_q
+    # print view_q, temp_q
+    # for q in conn.queries[start_q:]:
+    #     print q['sql']
+    return ret
+
 
 @login_required
 def profile(request):
