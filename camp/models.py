@@ -188,10 +188,12 @@ class User(AbstractUser):
 class Meal(models.Model):
     Breakfast = "Breakfast"
     Dinner = "Dinner"
+    Midnight = "Midnight"
 
     Kinds = (
          (Breakfast, "Breakfast"),
          (Dinner, "Dinner"),
+         (Midnight, "Midnight BBQ"),
     )
 
     event = models.ForeignKey(Event, help_text="What year/regional is this for?")

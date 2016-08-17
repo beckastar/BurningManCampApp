@@ -9,6 +9,9 @@
 
 <h1>Meal shift signups</h1>
 
+<p>
+All breakfasts and dinners need chefs.  Midnight BBQs are optional, if someone would like to put one on.</p>
+
 {% for meal in meals %}
    <h2>{{ meal.day|date }} {{ meal.kind }} <a name="meal-{{meal.id}}"></a><a href="#meal-{{meal.id}}">#</a></h2>
    {% chef_widget meal user %}
