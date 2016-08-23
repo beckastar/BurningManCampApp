@@ -205,7 +205,7 @@ def _initial_meal(meal):
         'meal': meal.kind,
         'serving': meal.public_notes,
         'positions': positions,
-        'restrictions': people_by_restriction,
+        'restrictions': people_by_restriction, # fixme - reformat for sorting: [{'restriction':x, people:[]}]
         'other_restrictions': other_restrictions,
         'num_served': people_that_day.count()
     }
@@ -506,7 +506,8 @@ def calendarview(request):
 
     days = list(event.days)
     counts_by_day = []
-    meal_shifts_by_day = []
+    meals_by_day = []
+
     bike_shifts_by_day = []
 
     for day in days:
@@ -525,15 +526,17 @@ def calendarview(request):
             'staying': staying,
             'unconfirmed': unconfirmed})
 
-        meal_shifts_by_day.append(MealShift.objects.filter(
-            meal__day=day, worker__isnull=False).prefetch_related('meal'))
+        meals_by_day.append(Meal.objects.filter(day=day
+            ).order_by('kind'
+            ).prefetch_related('shifts__worker'))
+
         bike_shifts_by_day.append(BikeMutationSchedule.objects.filter(
             date=day, worker__isnull=False))
 
     context_dict = {
         'days': days,
         'counts_by_day': counts_by_day,
-        'meal_shifts_by_day': meal_shifts_by_day,
+        'meals_by_day': meals_by_day,
         'bike_shifts_by_day': bike_shifts_by_day
     }
     return render_to_response('calendar.html',

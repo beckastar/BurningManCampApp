@@ -24,11 +24,15 @@
 			{% endfor %}
 		</tr>
 		<tr>
-		{% for shifts in meal_shifts_by_day %}
+		{% for meals in meals_by_day %}
 			<td class="weekdaycell">
-			<p>cooking:</p>
-			{% for shift in shifts %}
-				<p>{{ shift.meal.kind }} - {{shift.role}}:{{shift.worker}}</p>
+			{% for meal in meals %}
+				{{ meal.kind }} - {{ meal.chef }}
+				<ul>
+				{% for shift in meal.shifts.all %}
+					<li>{{ shift.get_role_display }}: {{shift.worker}}</li>
+				{% endfor %}
+				</ul>
 			{% endfor %}
 			</td>
 		{% endfor %}

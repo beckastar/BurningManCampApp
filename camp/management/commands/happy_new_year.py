@@ -46,6 +46,8 @@ class Command(BaseCommand):
         for i in range(num_days):
             day = start_date + timedelta(days=i)
             for kind, _ in Meal.Kinds:
+                # FIXME: midnight bbqs shouldn't be every day, rather core tuesday - sat.
+                # FIXME: shouldn't create chef shifts since they are on the meal.chef fk.
                 meal = Meal.objects.create(event=event, day=day, kind=kind)
                 # Each meal needs a chef, who will define further shift needs.
                 MealShift.objects.create(meal=meal, role=MealShift.Chef)
