@@ -26,7 +26,8 @@ from django.contrib import messages
 
 from .shortcuts import get_current_event
 from .models import Event, Meal, MealShift, User, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
-from .forms import UserProfileForm, VehicleForm, UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm
+from .forms import (UserProfileForm, UserAttendanceForm, VehicleForm,
+    UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm)
 
 
 @login_required
@@ -176,8 +177,13 @@ def campers(request):
 
 
 def _initial_meal(meal):
-    people_that_day = User.objects.filter(
+    attendees = UserAttendance.objects.attendees()
+
+    attendees_that_day = attendees.filter(
         arrival_date__lte=meal.day,  departure_date__gte=meal.day
+        ).values_list('user', flat=True)
+
+    people_that_day = User.objects.filter(pk__in=people_that_day
         ).prefetch_related('meal_restrictions')
 
     other_restrictions = []
@@ -245,13 +251,22 @@ def meal_schedule(request):
 @login_required
 def profile(request):
     form = UserProfileForm(instance=request.user)
+    attendance_form = UserAttendanceForm(instance=request.user.attendance)
+
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
+        attendance_form = UserAttendanceForm(request.POST, request.FILES,
+            instance=request.user.attendance)
+        if form.is_valid() and attendance_form.is_valid():
+            with atomic():
+                form.save()
+                attendance_form.save()
             return redirect('profile')
 
-    return render(request, "profile.html", RequestContext(request, {'form': form, 'profile': profile,}))
+    return render(request, "profile.html", RequestContext(request, {
+            'form': form,
+            'attendance_form': attendance_form,
+            'profile': profile}))
 
 @login_required
 def vehicle(request):
@@ -510,13 +525,14 @@ def calendarview(request):
 
     bike_shifts_by_day = []
 
+    attendees = UserAttendance.objects.attendees()
     for day in days:
-        arriving = User.objects.filter(arrival_date=day).count()
-        departing = User.objects.filter(departure_date=day).count()
+        arriving = attendees.filter(arrival_date=day).count()
+        departing = attendees.filter(departure_date=day).count()
 
         unconfirmed_criteria = Q(departure_date__isnull=True) | Q(arrival_date__isnull=True)
-        unconfirmed = User.objects.filter(unconfirmed_criteria).count()
-        staying = User.objects.exclude(unconfirmed_criteria
+        unconfirmed = attendees.filter(unconfirmed_criteria).count()
+        staying = attendees.exclude(unconfirmed_criteria
             ).exclude(arrival_date__gte=day
             ).exclude(departure_date__lte=day).count()
 
@@ -547,12 +563,14 @@ def _user_to_row(user):
         'first_name', 'last_name', 'email',
         'playa_name', 'sponsor', 'city', 'cell_number',
         'emergency_contact_name', 'emergency_contact_phone',
-        'has_ticket', 'looking_for_ticket',
-        'camping_this_year', 'public_notes']
+        'public_notes']
 
     row = [getattr(user, attr) for attr in simple_attrs]
 
-    row.extend([date(user.arrival_date), date(user.departure_date)])
+    attendance = user.attendance
+
+    row.extend([attendance.has_ticket, attendance.looking_for_ticket, attendance.camping_this_year])
+    row.extend([date(attendance.arrival_date), date(attendance.departure_date)])
 
     std_restrictions = list(user.meal_restrictions.all())
     restrictions = ",".join(map(str, std_restrictions + [user.other_restrictions]))
@@ -586,14 +604,17 @@ def export(request):
     user_fields = [
         'first_name', 'last_name', 'email',
         'playa_name', 'sponsor', 'city', 'cell_number',
-        'emergency_contact_name', 'emergency_contact_phone',
+        'emergency_contact_name', 'emergency_contact_phone', 'public_notes'
+        'camping_this_year',
         'has_ticket', 'looking_for_ticket',
-        'camping_this_year', 'public_notes'] + [
-        'arrival_date', 'departure_date', 'restrictions',
+        'arrival_date', 'departure_date',
+        'restrictions',
         'transit_arrangement', 'transit_provider', 'model', 'make',
         'width', 'length',
         'sleeping_arrangement', 'shelter_provider', 'sleeps', 'sleeping_under_ubertent',
-        'width', 'length']
+        'width', 'length',
+        ]
+
 
     user_csv = StringIO()
     writer = unicodecsv.writer(user_csv)

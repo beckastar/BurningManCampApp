@@ -7,16 +7,16 @@
 </div>
 <div id="profile">
 		<div class="title" id="profile_title">We're so glad you're joining us. Tell us a little about yourself.</div>
-		
+
 		<form action="/profile/" method="post"  enctype="multipart/form-data">
-	<table id="profile_table" class="table_with_form">	
+	<table id="profile_table" class="table_with_form">
 			{% csrf_token %}
 				{% if form.non_field_errors %}
 				  <tr><td colspan=2 class="form-error">{{ form.non_field_errors }}</td></tr>
 				{% endif %}
 			    <tr><td class="table_instructions">First name: </td><td>{{form.first_name}}{{form.first_name.errors}}</td></tr>
 			    <tr><td class="table_instructions">Last name: </td><td>{{form.last_name}}{{form.last_name.errors}}</td></tr>
-			    <tr><td class="table_instructions">If it's your first year, who is your sponsor? </td><td>{{form.sponsor}}{{form.sponsor.errors}}</td></tr>			    
+			    <tr><td class="table_instructions">If it's your first year, who is your sponsor? </td><td>{{form.sponsor}}{{form.sponsor.errors}}</td></tr>
 			    <tr><td class="table_instructions">Playa name: </td><td>{{form.playa_name}}{{form.playa_name.errors}}</td></tr>
 
 			    <tr><td class="table_instructions">Upload a profile pic.</td><td> {{form.picture}} {{form.picture.errors}}.</td></tr>
@@ -25,19 +25,22 @@
 			    <tr><td class="table_instructions">What's your email address?'?</td><td>{{form.email}}{{form.email.errors}}</td></tr>
 			    <tr><td class="table_instructions">Emergency contact name: </td><td>{{form.emergency_contact_name}}{{form.emergency_contact_name.errors}}</td></tr>
 			    <tr><td class="table_instructions">Emergency contact number:</td><td>{{form.emergency_contact_phone}}{{form.emergency_contact_phone.errors}}</td></tr>
-				<tr><td class="table_instructions">Camping this year: </td><td>{{form.camping_this_year}}{{form.camping_this_year.errors}}</td></tr>
-			    <tr><td class="table_instructions">What day will you arrive at the Burn?</td><td>{{form.arrival_date}}{{form.arrival_date.errors}}</td></tr>
-				<tr><td class="table_instructions">What day will you leave?</td><td>{{form.departure_date}}{{form.departure_date.errors}}</td></tr>
 			    <tr id="food_restrictions"><td>Note any dietary restrictions. (If one is missing, <a href="mailto:biolumunatiops@gmail.com">contact an admin</a>.)</td><td>{{form.meal_restrictions}}{{form.meal_restrictions.errors}}</td></tr></div>
 			    <tr><td class="table_instructions">Please list any additional restrictions. </td><td>{{form.other_restrictions}}{{form.other_restrictions.errors}}</td></tr>
-			    <tr><td class="table_instructions">Check this box when you have a ticket</td><td class="squaredTwo">{{form.has_ticket}}{{form.has_ticket.errors}}</td></tr>
-			    <tr><td class="table_instructions">Check this box if you need a ticket</td><td class="squaredTwo">{{form.looking_for_ticket}}{{form.looking_for_ticket.errors}}</td></tr>
+
 			    <tr><td class="table_instructions">Tell us anything that doesn't fit elsewhere.</td><td class="squaredTwo">{{form.public_notes}}{{form.public_notes.errors}}</td></tr>
+
+				<tr><td class="table_instructions">Camping this year: </td><td>{{attendance_form.camping_this_year}}{{attendance_form.camping_this_year.errors}}</td></tr>
+			    <tr><td class="table_instructions">What day will you arrive at the Burn?</td><td>{{attendance_form.arrival_date}}{{attendance_form.arrival_date.errors}}</td></tr>
+				<tr><td class="table_instructions">What day will you leave?</td><td>{{attendance_form.departure_date}}{{attendance_form.departure_date.errors}}</td></tr>
+
+			    <tr><td class="table_instructions">Check this box when you have a ticket</td><td class="squaredTwo">{{attendance_form.has_ticket}}{{attendance_form.has_ticket.errors}}</td></tr>
+			    <tr><td class="table_instructions">Check this box if you need a ticket</td><td class="squaredTwo">{{attendance_form.looking_for_ticket}}{{attendance_form.looking_for_ticket.errors}}</td></tr>
 				<tr><td colspan=2><input id="profile_button" class="table_button" type="submit" value="Save basic info" id="profilebutton"></td></tr>
 	</table>
 			</form>
 	<div class="message_container" id="profile_message">
 	</div>
-</div> 
+</div>
 
 {% endblock %}

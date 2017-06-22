@@ -3,6 +3,9 @@ from django.core.management.base import BaseCommand
 from django.utils.encoding import smart_str
 from datetime import datetime, timedelta
 from camp.models import Event, Meal, User, MealShift, BikeMutationSchedule, PYB_shifts
+# FIXME: gross, fix 2 kinds of undetermined.
+from camp.models import undetermined, UNDETERMINED
+
 import csv
 
 
@@ -57,11 +60,7 @@ class Command(BaseCommand):
                     for i in range(4):
                         BikeMutationSchedule.objects.create(event=event, date=day, shift=kind)
 
+        Shelter.objects.update(sleeping_arrangement=undetermined)
+        Vehicle.objects.update(transit_arrangement=UNDETERMINED)
         # No need to reset shifts, as we keep old events and shifts (which are tied to events).
 
-        # Reset camper fields that are year-specific, though.
-        User.objects.update(has_ticket=False, looking_for_ticket=False,
-            camping_this_year=False, date=None,
-            arrival_date=None, departure_date=None)
-
-        print "Done setting up %s" % event_name

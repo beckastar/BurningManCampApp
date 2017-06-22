@@ -7,7 +7,7 @@ from arrow.parser import ParserError
 
 from .models import (
     Bike, BicycleMutationInventory, BikeMutationSchedule, Inventory,
-    Meal, MealShift, Shelter, User, Vehicle)
+    Meal, MealShift, Shelter, User, UserAttendance, Vehicle)
 from .models import ( #shelter
   sharing_someone_elses, bringing_own_tent, sleep_in_vehicle, SIZE_CHOICES)
 from .models import ( #transit
@@ -103,8 +103,25 @@ class UserProfileForm(forms.ModelForm):
     def clean_other_restrictions(self):
       return self.cleaned_data['other_restrictions'].strip()
 
+    class Meta:
+
+        model = User
+        fields = (
+          'first_name', 'last_name', 'playa_name',
+          'sponsor',
+          'picture', 'city', 'cell_number',
+          'email', 'public_notes',
+          'emergency_contact_name', 'emergency_contact_phone',
+          'meal_restrictions', 'other_restrictions',
+          )
+
+        widgets = {
+            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(),
+        }
+
+class UserAttendanceForm(forms.ModelForm):
     def clean(self):
-      cleaned_data = super(UserProfileForm, self).clean()
+      cleaned_data = super(UserAttendanceForm, self).clean()
       arr = cleaned_data.get('arrival_date')
       dept = cleaned_data.get('departure_date')
       if bool(arr) != bool(dept):
@@ -114,26 +131,19 @@ class UserProfileForm(forms.ModelForm):
           raise ValidationError("Arrival date must be before departure date.")
 
     class Meta:
+      model = UserAttendance
 
-        model = User
-        fields = (
-          'first_name', 'last_name', 'playa_name',
-          'sponsor',
-          'picture', 'city', 'cell_number',
-          'email',
-          'emergency_contact_name', 'emergency_contact_phone',
-          'meal_restrictions', 'other_restrictions',
+      fields = (
           'arrival_date', 'departure_date',
-          'has_ticket',
-          'looking_for_ticket', 'camping_this_year', 'email',
-          'public_notes'
-          )
+          'has_ticket', 'looking_for_ticket',
+          'camping_this_year'
+      )
 
-        widgets = {
-            'meal_restrictions': forms.widgets.CheckboxSelectMultiple(),
-            'arrival_date': forms.widgets.SelectDateWidget(),
-            'departure_date': forms.widgets.SelectDateWidget()
-        }
+      widgets = {
+          'arrival_date': forms.widgets.SelectDateWidget(),
+          'departure_date': forms.widgets.SelectDateWidget()
+      }
+
 
 class VehicleForm(forms.ModelForm):
   def __init__(self, user=None, **kwargs):

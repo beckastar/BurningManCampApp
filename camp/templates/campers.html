@@ -22,11 +22,11 @@
 						<tr class="datarow">
 							<td  class="profile_pic">{% image camper.picture %}</td>
 							<td>{{camper.first_name}} {{camper.last_name}}</td>
-							<td>{{camper.city}}</td> 
+							<td>{{camper.city}}</td>
 							<td>{{camper.restrictions}}
 								{{camper.other_restrictions}}</td>
-							<td>{{camper.arrival_date}}</td>
-							<td>{{camper.departure_date}}</td>
+							<td>{{camper.attendance.arrival_date}}</td>
+							<td>{{camper.attendance.departure_date}}</td>
 						</tr>
 					{% endfor %}
 			</table>

@@ -2,9 +2,12 @@ from __future__ import unicode_literals
 
 from datetime import timedelta
 
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.forms import ModelForm
-from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+
+from .shortcuts import get_current_event
 
 undetermined = "dunno"
 sharing_someone_elses = "sharing"
@@ -151,6 +154,38 @@ class MealRestriction(models.Model):
     class Meta:
         ordering = ('name',)
 
+
+class UserManager(BaseUserManager):
+    def _create_user(self, email, password,
+                     is_staff, is_superuser, **extra_fields):
+        """
+        Creates and saves a User with the given email and password.
+        """
+        now = timezone.now()
+        if not email:
+            raise ValueError('The given email must be set')
+
+        extra_fields['has_ticket'] = False
+        extra_fields['looking_for_ticket'] = True
+        extra_fields['camping_this_year'] = True
+
+        email = self.normalize_email(email)
+        user = self.model(email=email,
+                          is_staff=is_staff, is_active=True,
+                          is_superuser=is_superuser, last_login=now,
+                          date_joined=now, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        return self._create_user(email, password, False, False,
+                                 **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        return self._create_user(email, password, True, True,
+                                 **extra_fields)
+
 class User(AbstractUser):
     # FIXME: if we don't want these nullable, we should have them as part of
     # signup.
@@ -164,26 +199,44 @@ class User(AbstractUser):
     emergency_contact_name = models.CharField(max_length=40, blank=True)
     emergency_contact_phone = models.CharField(max_length=15, blank=True)
     other_restrictions = models.CharField(max_length=100, blank=True)
-    arrival_date =  models.DateTimeField(null=True, blank=True)
-    departure_date = models.DateTimeField(null=True, blank=True)
-    date = models.DateTimeField(auto_now_add=True, null=True)
-    has_ticket = models.BooleanField(default=False)
-    looking_for_ticket = models.BooleanField(default=True)
-    camping_this_year = models.BooleanField(default=False)
     public_notes = models.TextField(blank=True, help_text="Tell us stuff that doesn't fit elsewhere.")
 
     meal_restrictions = models.ManyToManyField(MealRestriction, related_name="campers", blank=True)
+
+    objects = UserManager()
 
     @property
     def display_name(self):
         return "%s %s" % (self.first_name, self.last_name) or \
             self.username
 
+    @property
+    def attendance(self):
+        return UserAttendance.objects.get_or_create(
+            user=self, event=get_current_event())[0]
+
     def __unicode__(self):
         return '%s' % self.display_name
 
     class Meta:
         ordering = ('last_name', 'first_name')
+
+class UserAttendance(models.Model):
+    user = models.ForeignKey(User)
+    event = models.ForeignKey(Event)
+
+    arrival_date =  models.DateTimeField(null=True, blank=True)
+    departure_date = models.DateTimeField(null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    has_ticket = models.BooleanField(default=False)
+    looking_for_ticket = models.BooleanField(default=True)
+    camping_this_year = models.BooleanField(default=False)
+
+    def attendees(self):
+        return self.filter(event=get_current_event())
+
+    class Meta:
+        unique_together = (('user', 'event'),)
 
 class Meal(models.Model):
     Breakfast = "Breakfast"

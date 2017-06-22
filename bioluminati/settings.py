@@ -33,7 +33,7 @@ CURRENT_EVENT_ID = None
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "bioluminati-prod.herokuapp.com", "bioluminati.org", "bioluminati.com"]
+ALLOWED_HOSTS = ["localhost", "localhost:8000", "bioluminati-prod.herokuapp.com", "bioluminati.org", "bioluminati.com"]
 
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
