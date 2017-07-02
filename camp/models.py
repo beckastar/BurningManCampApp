@@ -221,6 +221,11 @@ class User(AbstractUser):
     class Meta:
         ordering = ('last_name', 'first_name')
 
+class UserAttendanceQS(models.QuerySet):
+    def attendees(self):
+        return self.filter(event=get_current_event())
+
+
 class UserAttendance(models.Model):
     user = models.ForeignKey(User)
     event = models.ForeignKey(Event)
@@ -231,12 +236,16 @@ class UserAttendance(models.Model):
     has_ticket = models.BooleanField(default=False)
     looking_for_ticket = models.BooleanField(default=True)
     camping_this_year = models.BooleanField(default=False)
+    paid_dues = models.BooleanField(default=False)
 
-    def attendees(self):
-        return self.filter(event=get_current_event())
+    objects = UserAttendanceQS.as_manager()
 
     class Meta:
         unique_together = (('user', 'event'),)
+
+    def __unicode__(self):
+        event = get_current_event()
+        return u'%s attending %s' % (self.user, self.event)
 
 class Meal(models.Model):
     Breakfast = "Breakfast"

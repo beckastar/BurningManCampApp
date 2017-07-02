@@ -25,7 +25,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.contrib import messages
 
 from .shortcuts import get_current_event
-from .models import Event, Meal, MealShift, User, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
+from .models import Event, Meal, MealShift, User, UserAttendance, Bike, Vehicle, Inventory, Shelter, BicycleMutationInventory, BikeMutationSchedule, Inventory
 from .forms import (UserProfileForm, UserAttendanceForm, VehicleForm,
     UserForm, BikeForm, BikeMaterialForm, InventoryForm, ShelterForm, ChefForm)
 
@@ -183,7 +183,7 @@ def _initial_meal(meal):
         arrival_date__lte=meal.day,  departure_date__gte=meal.day
         ).values_list('user', flat=True)
 
-    people_that_day = User.objects.filter(pk__in=people_that_day
+    people_that_day = User.objects.filter(pk__in=attendees_that_day
         ).prefetch_related('meal_restrictions')
 
     other_restrictions = []
@@ -604,7 +604,7 @@ def export(request):
     user_fields = [
         'first_name', 'last_name', 'email',
         'playa_name', 'sponsor', 'city', 'cell_number',
-        'emergency_contact_name', 'emergency_contact_phone', 'public_notes'
+        'emergency_contact_name', 'emergency_contact_phone', 'public_notes',
         'camping_this_year',
         'has_ticket', 'looking_for_ticket',
         'arrival_date', 'departure_date',
