@@ -48,6 +48,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'crispy_forms',
     'raven.contrib.django.raven_compat',
     # 'django_tables2',
@@ -100,6 +102,7 @@ DATE_FORMAT = "D d M"
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
 
 db_config = dj_database_url.config()
 

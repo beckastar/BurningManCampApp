@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^confirm/', views.register, name='confirm'),
     url(r'^about/', views.about, name='about'),
     url(r'^prep/', views.prep, name='prep'),
+    url(r'^pages/', include('django.contrib.flatpages.urls')),
     url(r'^profile/', views.profile, name='profile'),
     url(r'^vehicle/', views.vehicle, name='vehicle'),
     url(r'^shelter/', views.shelter, name='shelter'),
