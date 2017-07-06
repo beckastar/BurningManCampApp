@@ -32,7 +32,7 @@ from .forms import (UserProfileForm, UserAttendanceForm, VehicleForm,
 
 @login_required
 def meal_shifts(request):
-    meals = Meal.objects.all().prefetch_related('shifts')
+    meals = Meal.objects.filter(event=get_current_event()).prefetch_related('shifts')
 
     return render(request, 'meal_shifts.html',
         {'meals':meals})
