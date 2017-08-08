@@ -167,7 +167,10 @@ def prep(request):
 
 @login_required
 def campers(request):
-    campers = User.objects.all().prefetch_related('meal_restrictions')
+    event = get_current_event()
+    campers = User.objects.filter(userattendance__event=event,
+            userattendance__camping_this_year=True
+        ).prefetch_related('meal_restrictions')
 
     for camper in campers:
         camper.restrictions = ", ".join(map(str, camper.meal_restrictions.all())) or "None"

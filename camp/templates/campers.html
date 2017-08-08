@@ -5,6 +5,7 @@
 
 <div id="campers">
 	<div class="campertable shown">
+		{% if campers %}
 		<div class="camperheading"><h2 id="camper_heading hidden">All Bioluminauts</h2></div>
 		<div class="tablewrap">
 			<table class="gradienttable">
@@ -31,6 +32,9 @@
 					{% endfor %}
 			</table>
 		</div>
+		{% else %}
+		No campers yet!
+		{% endif %}
 	</div>
 
 </div>

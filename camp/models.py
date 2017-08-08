@@ -223,7 +223,7 @@ class User(AbstractUser):
 
 class UserAttendanceQS(models.QuerySet):
     def attendees(self):
-        return self.filter(event=get_current_event())
+        return self.filter(event=get_current_event(), camping_this_year=True)
 
 
 class UserAttendance(models.Model):
