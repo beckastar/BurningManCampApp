@@ -21,20 +21,20 @@ All breakfasts and dinners need chefs.  Midnight BBQs are optional, if someone w
         <td>
           <h3>{{ meal.kind }}</h3>
           {% chef_widget meal user %}
+          <h3>Shifts:</h3>
+          <ul>
           {% if not meal|is_chef:user %}
             {% if meal.shifts.non_chef %}
-              <h3>Shifts:</h3>
-              <ul>
               {% for shift in meal.shifts.non_chef %}
                 {% shift_widget shift user %}
               {% endfor %}
-              </ul>
             {% endif %}
           {% else %}
             {% for shift in meal.shifts.non_chef %}
               {% chef_worker_widget shift %}
             {% endfor %}
           {% endif %}
+          </ul>
         {% endfor %}
         </td>
       {% endif %}

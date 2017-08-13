@@ -1,6 +1,8 @@
-<h4>{{ shift.get_role_display }}</h4>
+<li>
+{{ shift.get_role_display }}:
 {% if shift.worker_id %}
-   <div>{{ shift.worker.username }}</div>
+  {{ shift.worker.username }}
 {% else %}
-  No worker yet.
+  <b>No worker yet.</b>
 {% endif %}
+</li>
