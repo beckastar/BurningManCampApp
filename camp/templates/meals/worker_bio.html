@@ -1,7 +1,7 @@
 <li>
 {{ shift.get_role_display }}:
 {% if shift.worker_id %}
-  {{ shift.worker.username }}
+  {{ shift.worker }}
 {% else %}
   <b>No worker yet.</b>
 {% endif %}
