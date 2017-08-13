@@ -32,10 +32,39 @@ from .forms import (UserProfileForm, UserAttendanceForm, VehicleForm,
 
 @login_required
 def meal_shifts(request):
-    meals = Meal.objects.filter(event=get_current_event()).prefetch_related('shifts')
+    event = get_current_event()
+
+    def week_and_day(d):
+        return d.isocalendar()[1:]
+
+    def coord(d, base):
+        week = d[0] - base[0]
+
+        if d[1] == 7:
+            week += 1
+
+        return week, d[1] % 7
+
+    base_coord = week_and_day(event.start_date)
+
+    meals = list(Meal.objects.filter(event=event
+        ).prefetch_related('shifts'))
+
+    # arrange meals by day and by kind, into rows of weeks
+    meals_by_week = []
+
+    for meal in meals:
+        raw_coord = week_and_day(meal.day)
+        meal_coord = coord(raw_coord, base_coord)
+        while len(meals_by_week) <= meal_coord[0]:
+            meals_by_week.append([])
+        meals_by_day = meals_by_week[meal_coord[0]]
+        while len(meals_by_day) <= meal_coord[1]:
+            meals_by_day.append([])
+        meals_by_day[meal_coord[1]].append(meal)
 
     return render(request, 'meal_shifts.html',
-        {'meals':meals})
+        {'meals_by_week':meals_by_week})
 
 @login_required
 def chef_signup(request, meal_id):
