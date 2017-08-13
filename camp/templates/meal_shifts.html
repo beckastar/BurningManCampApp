@@ -13,33 +13,31 @@
 All breakfasts and dinners need chefs.  Midnight BBQs are optional, if someone would like to put one on.</p>
 
 <table>
-{% for meal_week in meals_by_week %}
+{% for meals in meals_by_day %}
+    {% if meals %}
     <tr>
-    {% for meal_day in meal_week %}
-      <td>
-      {% if not meal_day %}
-        No meals
-      {% else %}
-        <h2>{{ meal_day.0.day|date }}</h2>
-        {% for meal in meal_day %}
-          <h3>{{ meal.kind }} </h3>
+        <th>{{ meals.0.day|date }}</th>
+        {% for meal in meals %}
+        <td>
+          <h3>{{ meal.kind }}</h3>
           {% chef_widget meal user %}
           {% if not meal|is_chef:user %}
-            {% for shift in meal.shifts.non_chef %}
-            {% if forloop.first %}
-               <h3>Available shifts:</h3>
+            {% if meal.shifts.non_chef %}
+              <h3>Shifts:</h3>
+              <ul>
+              {% for shift in meal.shifts.non_chef %}
+                {% shift_widget shift user %}
+              {% endfor %}
+              </ul>
             {% endif %}
-            {% shift_widget shift user %}
-            {% endfor %}
           {% else %}
             {% for shift in meal.shifts.non_chef %}
               {% chef_worker_widget shift %}
             {% endfor %}
           {% endif %}
         {% endfor %}
+        </td>
       {% endif %}
-      </td>
-    {% endfor %}
     </tr>
 {% endfor %}
 
