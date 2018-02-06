@@ -155,6 +155,7 @@ class MealRestriction(models.Model):
         ordering = ('name',)
 
 
+
 class UserManager(BaseUserManager):
     def _create_user(self, email, password,
                      is_staff, is_superuser, **extra_fields):
