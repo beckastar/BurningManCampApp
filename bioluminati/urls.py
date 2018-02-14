@@ -27,7 +27,7 @@ urlpatterns = [
     # FIXME: should the public be able to register?
     #  Likely should have a prompt to contact council or seek sponsor
     #  url(r'^register/', views.register, name='register'),
-    url(r'^login/', login, name='foo',kwargs={'template_name': 'login.html'}),
+    url(r'^login/', login, name='login',kwargs={'template_name': 'login.html'}),
     url(r'^logout/$', logout, name='logout', kwargs={'next_page': '/'}),
     url(r'^confirm/', views.register, name='confirm'),
     url(r'^about/', views.about, name='about'),
